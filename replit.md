@@ -1,27 +1,27 @@
-# Workspace
+# La Domotienda — Landing 3D
 
-## Overview
+Single-page experience that scrolls through a Three.js scene of a smart home, layered with GSAP-driven overlays in Spanish. Sells four IoT devices (smart bulb, WiFi switch, AI camera, smart trash bin) with a 50%/50% payment model and WhatsApp checkout.
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+## Estructura
 
-## Stack
+- `artifacts/domotienda/index.html` — Página completa, autocontenida (Three.js r128, GSAP 3.12 + ScrollTrigger, Font Awesome 6.5 vía CDN). No depende de React.
+- `attached_assets/exports/domotienda-3d.html` — Copia descargable del archivo final.
+- `artifacts/api-server/`, `artifacts/mockup-sandbox/` — andamios sin uso para este proyecto.
 
-- **Monorepo tool**: pnpm workspaces
-- **Node.js version**: 24
-- **Package manager**: pnpm
-- **TypeScript version**: 5.9
-- **API framework**: Express 5
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+## Configuración relevante
 
-## Key Commands
+- WhatsApp: `573052332703`
+- Calendly placeholder: `https://calendly.com/tu-usuario/visita-domotica`
+- Vite sirve directamente el `index.html` estático (sin entry React); HMR overlay desactivado.
 
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- `pnpm --filter @workspace/api-server run dev` — run API server locally
+## Cambios aplicados sobre el HTML original
 
-See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+1. Diseño responsive (≤760 px y ≤420 px).
+2. Modelos 3D detallados: bombilla esfera + rosca anillada, interruptor con anillo táctil + LED, cámara con cuerpo semiesférico + lente + LED rojo + base, contenedor con cuerpo cilíndrico + tapa + anillo LED + sensor.
+3. Overlays con frosted glass sólido (`backdrop-filter:blur(24px)`, fondo `rgba(6,13,14,.85/.92)`) y `text-shadow` global para contraste.
+4. Número WhatsApp real + botón Calendly en Hero y modal de pago.
+5. Eliminado widget kWh del header y todo lo relacionado con métricas de ahorro.
+6. FAQ reducido a 3 preguntas (sin garantía).
+7. Stats del Hero sin `%`: 50, 100, 30.
+8. Acto III renombrado a "Catálogo inteligente".
+9. Barra de progreso 3 px con glow doble.

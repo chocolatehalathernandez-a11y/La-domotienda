@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Domotienda — Hogar Inteligente 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+/* ─────────────────────────────────────────────
+   RESET & TOKENS
+───────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --c:#00F0FF; --p:#7B61FF;
+  --bg:#060d0e; --sf:#0d1a1c; --s2:#111e20;
+}
+html{scroll-behavior:auto} /* GSAP controla el scroll */
+body{
+  background:var(--bg);
+  color:#e0ecec;
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--c);border-radius:2px}
+
+/* ─────────────────────────────────────────────
+   CANVAS FIJO (z:0) — nunca tapa botones
+───────────────────────────────────────────── */
+#stage{
+  position:fixed;inset:0;
+  z-index:0;pointer-events:none;
+  /* vignette sobre el canvas */
+  box-shadow:inset 0 0 120px rgba(0,0,0,.7);
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLTRIGGER SPACER
+───────────────────────────────────────────── */
+#scroll-driver{height:600vh;position:relative;z-index:1;pointer-events:none}
+
+/* ─────────────────────────────────────────────
+   BARRA DE PROGRESO
+───────────────────────────────────────────── */
+#pbar{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:linear-gradient(90deg,var(--p),var(--c));
+  z-index:9999;transition:width .05s linear;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+───────────────────────────────────────────── */
+#hdr{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 2rem;
+  background:rgba(6,13,14,.7);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,240,255,.08);
+}
+.logo{display:flex;align-items:center;gap:.55rem}
+.logo i{color:var(--c);font-size:1.15rem}
+.logo span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:-.01em}
+.logo sub{font-size:.65rem;color:#3a5555;display:block;margin-top:-2px;line-height:1}
+#kwh-hdr{font-family:'Space Grotesk',sans-serif;font-size:.8rem;text-align:right;line-height:1.4}
+#kwh-hdr span{display:block;color:#3a5555;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em}
+#kwh-val{color:var(--c);font-weight:600}
+#cart-btn{
+  position:relative;padding:.55rem .7rem;border-radius:10px;
+  background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);
+  cursor:pointer;transition:all .25s;flex-shrink:0;
+}
+#cart-btn:hover{background:rgba(0,240,255,.14);border-color:rgba(0,240,255,.4)}
+#cart-btn i{color:#b0d8d8;font-size:.95rem}
+#cbadge{
+  background:var(--c);color:#000;font-size:.58rem;font-weight:700;
+  min-width:16px;height:16px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  position:absolute;top:-4px;right:-4px;
+  font-family:'Space Grotesk',sans-serif;
+}
+#cbadge.bump{animation:bump .26s}
+@keyframes bump{50%{transform:scale(1.5)}}
+
+/* ─────────────────────────────────────────────
+   OVERLAYS (position:fixed, z:10)
+   Cada acto: opacidad controlada por GSAP
+───────────────────────────────────────────── */
+.ov{
+  position:fixed;inset:0;z-index:10;
+  opacity:0;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ── ACT 1: HERO ── */
+#a1 .wrap{
+  text-align:center;max-width:860px;padding:0 1.5rem;
+  display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+}
+#a1 .lbl{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.68rem;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--c);
+}
+#a1 h1{
+  font-size:clamp(2.8rem,7vw,5.6rem);
+  font-weight:700;color:#fff;
+  line-height:1.06;letter-spacing:-.025em;
+}
+.neon{color:var(--c);text-shadow:0 0 18px rgba(0,240,255,.55),0 0 40px rgba(0,240,255,.22)}
+#a1 p{
+  font-size:clamp(.95rem,2.2vw,1.18rem);
+  color:#7a9a9c;max-width:560px;line-height:1.72;
+}
+#a1 .btns{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center}
+.btn-c{
+  background:linear-gradient(135deg,var(--c),#00b5c0);
+  color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;
+  border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.85rem 1.9rem;border-radius:12px;font-size:.9rem;
+  box-shadow:0 0 22px rgba(0,240,255,.32);
+  transition:transform .25s,box-shadow .25s;
+}
+.btn-c:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 0 38px rgba(0,240,255,.55)}
+.btn-o{
+  background:transparent;
+  border:1px solid rgba(0,240,255,.42);color:var(--c);
+  font-family:'Space Grotesk',sans-serif;font-weight:500;
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.85rem 1.9rem;border-radius:12px;font-size:.9rem;
+  cursor:pointer;transition:all .25s;
+}
+.btn-o:hover{background:rgba(0,240,255,.09);border-color:rgba(0,240,255,.7)}
+.stats{display:flex;flex-wrap:wrap;gap:2rem;align-items:center;justify-content:center;margin-top:.5rem}
+.stat p:first-child{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#fff}
+.stat p:last-child{font-size:.68rem;color:#3a5555;margin-top:1px}
+.divider{width:1px;height:36px;background:rgba(255,255,255,.08)}
+.scroll-hint{
+  font-size:.75rem;color:#2a4040;
+  display:flex;align-items:center;gap:.5rem;
+  animation:bob 1.9s ease-in-out infinite;
+}
+.scroll-hint i{color:var(--c)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ── ACT 2: CÓMO FUNCIONA ── */
+#a2{align-items:stretch;padding:6rem 4% 2rem}
+#a2-left{
+  flex:0 0 min(300px,42%);display:flex;flex-direction:column;
+  justify-content:center;gap:.6rem;
+}
+@media(max-width:700px){#a2{flex-direction:column;padding:5rem 4% 2rem} #a2-left{flex:none}}
+#a2 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+#a2 h2{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:700;color:#fff;line-height:1.1;margin:.4rem 0 .6rem}
+#a2 .sub{font-size:.85rem;color:#4a6868;line-height:1.65}
+#a2-steps{flex:1;display:flex;flex-direction:column;gap:.7rem;justify-content:center;padding-left:min(4rem,5%)}
+@media(max-width:700px){#a2-steps{padding-left:0;margin-top:1.5rem}}
+.step{
+  background:rgba(0,240,255,.04);
+  border:1px solid rgba(0,240,255,.16);
+  border-radius:14px;padding:1.1rem 1.3rem;
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+}
+.step:hover{border-color:rgba(0,240,255,.4);box-shadow:0 0 28px rgba(0,240,255,.1);transform:translateX(5px)}
+.step-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.snum{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--c),var(--p));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#000;font-size:.9rem;
+  box-shadow:0 0 14px rgba(0,240,255,.4);
+}
+.step h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#e0ecec}
+.step p{font-size:.8rem;color:#4a6868;line-height:1.62}
+
+/* ── ACT 3: PRODUCTOS ── */
+#a3{pointer-events:none}
+#a3-top{
+  position:absolute;top:9%;left:50%;transform:translateX(-50%);
+  text-align:center;width:90%;
+}
+#a3-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+#a3-top h2{font-size:clamp(1.2rem,2.5vw,1.9rem);font-weight:700;color:#fff;margin:.35rem 0}
+.pcard{
+  position:absolute;right:3.5%;top:50%;transform:translateY(-50%);
+  width:min(310px,88vw);
+  opacity:0;pointer-events:none;
+  transition:opacity .15s;
+}
+@media(max-width:760px){.pcard{right:50%;transform:translate(50%,calc(-50% + 60px));top:auto;bottom:9%}}
+.pcard-inner{
+  background:rgba(6,13,14,.88);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(0,240,255,.2);border-radius:16px;padding:1.4rem;
+}
+.pcard-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.pcard h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#dceaec}
+.pcard .desc{font-size:.78rem;color:#4a6868;line-height:1.62;margin:.5rem 0 1rem}
+.pcard .price-row{display:flex;align-items:center;justify-content:space-between}
+.pcard .price{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700}
+.pcard .half{font-size:.68rem;color:#3a5555;margin-top:2px}
+.padd{
+  padding:.55rem 1rem;border-radius:10px;font-size:.78rem;
+  pointer-events:auto;
+}
+.pnum{font-size:.62rem;color:#3a5555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem}
+
+/* ── ACT 4: TESTIMONIOS ── */
+#a4{align-items:flex-end;padding-bottom:5%;flex-direction:column;justify-content:space-between;padding-top:7%}
+#a4-top{width:100%;text-align:center}
+#a4-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+#a4-top h2{font-size:clamp(1.1rem,2.3vw,1.8rem);font-weight:700;color:#fff;margin:.35rem 0}
+#a4-cards{
+  width:100%;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1rem;padding:0 2%;
+}
+@media(max-width:860px){#a4-cards{grid-template-columns:1fr}}
+.tcard{
+  background:rgba(6,13,14,.88);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(123,97,255,.18);border-radius:14px;padding:1.2rem;
+}
+.tcard:hover{border-color:rgba(123,97,255,.42)}
+.tav{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--p),var(--c));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#000;font-size:.88rem;
+}
+.tcard .tname{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;color:#dceaec}
+.tcard .tcity{font-size:.68rem;color:#3a5555}
+.tcard .tbody{font-size:.78rem;color:#4a6868;line-height:1.65;margin-top:.7rem}
+.stars{display:flex;gap:2px;margin:.55rem 0}
+.stars i{font-size:.65rem;color:var(--c)}
+
+/* ── ACT 5: VIDEO ── */
+#a5{flex-direction:column;gap:1rem}
+#a5 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+#a5 h2{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;color:#fff;margin:.4rem 0 1.2rem;text-align:center}
+.vid-wrap{
+  width:min(640px,92vw);
+  /* Para usar: reemplaza el div.vid-ph por
+     <iframe style="width:100%;aspect-ratio:16/9;border-radius:14px"
+       src="https://www.youtube.com/embed/TU_ID" frameborder="0" allowfullscreen></iframe>
+     o: <video src="video.mp4" controls style="width:100%;border-radius:14px"></video> */
+  pointer-events:auto;
+}
+.vid-ph{
+  aspect-ratio:16/9;
+  background:rgba(0,10,14,.88);
+  border:1px solid rgba(0,240,255,.22);border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color .3s,box-shadow .3s;
+}
+.vid-ph:hover{border-color:rgba(0,240,255,.5);box-shadow:0 0 40px rgba(0,240,255,.12)}
+.vid-ph::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 55% 55% at 50% 50%,rgba(0,240,255,.04),transparent 70%);
+  pointer-events:none;
+}
+.play-ring{
+  width:66px;height:66px;border-radius:50%;
+  background:rgba(0,240,255,.1);
+  border:2px solid rgba(0,240,255,.38);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;margin-bottom:1.1rem;
+}
+.vid-ph:hover .play-ring{background:rgba(0,240,255,.2);transform:scale(1.1);box-shadow:0 0 28px rgba(0,240,255,.3)}
+.vid-ph .vtitle{font-family:'Space Grotesk',sans-serif;font-size:.95rem;color:#b0c8ca;position:relative;z-index:1}
+.vid-ph .vsub{font-size:.7rem;color:#2a4040;margin-top:.35rem;z-index:1;position:relative}
+
+/* ─────────────────────────────────────────────
+   SECCIONES POST-SCROLL (flujo normal, bg sólido)
+───────────────────────────────────────────── */
+#post{position:relative;z-index:30;background:var(--bg)}
+.section{padding:5rem 1.5rem;max-width:900px;margin:0 auto}
+.sec-lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);display:block;margin-bottom:.6rem}
+.sec-h{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:.6rem}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.06)}
+.faq-q{
+  cursor:pointer;padding:1.1rem 0;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:.97rem;
+  color:#b0c8ca;transition:color .2s;user-select:none;
+}
+.faq-q:hover{color:var(--c)}
+.faq-ic{transition:transform .3s;color:var(--c);flex-shrink:0;margin-left:.6rem}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .38s ease,padding .3s;color:#4a6868;line-height:1.72;font-size:.9rem}
+.faq-item.open .faq-a{max-height:240px;padding-bottom:1.1rem}
+.faq-item.open .faq-ic{transform:rotate(45deg)}
+
+/* ─────────────────────────────────────────────
+   CART DRAWER
+───────────────────────────────────────────── */
+#cov{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);z-index:2000;opacity:0;pointer-events:none;transition:opacity .3s}
+#cov.open{opacity:1;pointer-events:all}
+#cdr{
+  position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);
+  background:#0a1618;border-left:1px solid rgba(0,240,255,.1);
+  box-shadow:-16px 0 50px rgba(0,0,0,.7);z-index:2001;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+#cdr.open{transform:translateX(0)}
+#cdr-head{padding:1.1rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+#cdr-head h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;color:#e0ecec;display:flex;align-items:center;gap:.5rem}
+#cdr-head h3 i{color:var(--c)}
+#cdr-close{width:30px;height:30px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem}
+#cdr-items{flex:1;overflow-y:auto;padding:.9rem}
+#cdr-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+#cdr-empty i{font-size:2.2rem;color:#1a2e2e;margin-bottom:.9rem}
+#cdr-empty p{font-family:'Space Grotesk',sans-serif;color:#2a4040;font-size:.95rem}
+.ci{border-bottom:1px solid rgba(255,255,255,.05);padding:.7rem 0;display:flex;align-items:center;gap:.7rem}
+.ci-ic{width:36px;height:36px;border-radius:7px;background:rgba(0,240,255,.06);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-info p{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:500;color:#b0c8ca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-info small{font-size:.7rem;font-weight:600;display:block;margin-top:1px}
+.ci-ctrl{display:flex;align-items:center;gap:.2rem;flex-shrink:0}
+.ci-ctrl button{width:24px;height:24px;border-radius:6px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem}
+.ci-ctrl span{width:16px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:.8rem}
+.ci-del{width:24px;height:24px;border-radius:6px;background:var(--s2);border:none;color:#c0392b;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;margin-left:.15rem}
+#cdr-foot{padding:1.1rem 1.2rem;border-top:1px solid rgba(255,255,255,.06)}
+.tot-row{display:flex;justify-content:space-between;font-size:.82rem;color:#4a6868;margin-bottom:.3rem}
+.tot-main{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:.98rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.06);margin-top:.3rem;margin-bottom:.25rem}
+.tot-half{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--c);font-size:.82rem;margin-bottom:.9rem}
+
+/* ─────────────────────────────────────────────
+   MODAL PAGO
+───────────────────────────────────────────── */
+#mov{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(16px);z-index:3000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;padding:1rem}
+#mov.open{opacity:1;pointer-events:all}
+#mbox{
+  background:linear-gradient(145deg,#0a1618,#0d1e20);
+  border:1px solid rgba(0,240,255,.2);border-radius:18px;
+  box-shadow:0 0 50px rgba(0,240,255,.12),0 24px 60px rgba(0,0,0,.6);
+  max-width:490px;width:100%;max-height:90vh;overflow-y:auto;padding:1.6rem;
+  transform:scale(.9) translateY(18px);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+#mov.open #mbox{transform:scale(1) translateY(0)}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
+.mh-l{display:flex;align-items:center;gap:.7rem}
+.mh-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--c),var(--p));display:flex;align-items:center;justify-content:center}
+.mh-icon i{color:#000;font-size:1.1rem}
+.mh h3{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:1.02rem}
+.mh small{font-size:.66rem;color:#3a5555}
+.mh-close{width:28px;height:28px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem}
+.mblock{background:var(--sf);border-radius:10px;padding:.9rem;margin-bottom:1rem;border:1px solid rgba(255,255,255,.04)}
+.mblock label{font-size:.62rem;color:#3a5555;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.6rem}
+.mblock .mrow{display:flex;justify-content:space-between;font-size:.82rem;color:#4a6868;padding:.2rem 0}
+.mblock .mrow.main{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;border-top:1px solid rgba(255,255,255,.06);margin-top:.3rem;padding-top:.4rem}
+.mblock .mrow.half{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--c);font-size:.82rem}
+.info-box{background:linear-gradient(90deg,rgba(0,240,255,.05),rgba(123,97,255,.05));border:1px solid rgba(0,240,255,.12);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;gap:.6rem}
+.info-box i{color:var(--c);flex-shrink:0;margin-top:2px}
+.info-box strong{font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:#e0ecec;display:block;margin-bottom:.25rem}
+.info-box p{font-size:.76rem;color:#4a6868;line-height:1.55}
+.m-cancel{width:100%;padding:.65rem;background:none;border:none;color:#3a5555;cursor:pointer;font-size:.82rem;margin-top:.5rem;transition:color .2s}
+.m-cancel:hover{color:#6a8888}
+
+/* ─────────────────────────────────────────────
+   TOAST
+───────────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:1.8rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#0d1e20;border:1px solid rgba(0,240,255,.28);
+  border-radius:11px;padding:.65rem 1.3rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.84rem;
+  z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 24px rgba(0,0,0,.5);white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ─────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────── */
+footer{
+  border-top:1px solid rgba(255,255,255,.045);
+  padding:2.5rem 1.5rem;
+  position:relative;z-index:30;background:var(--bg);
+}
+.footer-inner{max-width:1260px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.2rem}
+.footer-inner .logo span{font-size:1rem}
+.flinks{display:flex;gap:1.5rem;font-size:.82rem}
+.flinks a{color:#2a4040;text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--c)}
+.fcopy{font-size:.7rem;color:#1e3030}
+
+@media(max-width:560px){
+  #hdr{padding:.7rem 1rem}
+  #kwh-hdr{display:none}
+  .btn-c,.btn-o{padding:.75rem 1.3rem;font-size:.82rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ── CANVAS THREE.JS ──────────────────────────────── -->
+<canvas id="stage"></canvas>
+
+<!-- ── BARRA PROGRESO ───────────────────────────────── -->
+<div id="pbar"></div>
+
+<!-- ── HEADER ───────────────────────────────────────── -->
+<header id="hdr">
+  <div class="logo">
+    <i class="fa-solid fa-house-signal"></i>
+    <div>
+      <span>La Domotienda</span>
+      <sub>Automatiza tu hogar</sub>
+    </div>
+  </div>
+  <div id="kwh-hdr">
+    <span>Ahorro energético</span>
+    <span id="kwh-val">0 kWh ahorrados</span>
+  </div>
+  <button id="cart-btn">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <span id="cbadge" style="display:none">0</span>
+  </button>
+</header>
+
+<!-- ── SCROLL DRIVER (600vh de espacio) ─────────────── -->
+<div id="scroll-driver"></div>
+
+<!-- ════════════════════════════════════════════════════
+     OVERLAYS FIJOS (z:10) — controlados por GSAP
+════════════════════════════════════════════════════ -->
+
+<!-- ACTO I: HERO -->
+<div id="a1" class="ov">
+  <div class="wrap">
+    <span class="lbl">Domótica · Colombia · 2025</span>
+    <h1>Tecnología que<br><span class="neon">simplifica</span> tu vida</h1>
+    <p>Domótica de última generación para tu hogar colombiano.<br>
+       <strong style="color:var(--c)">Paga el 50 % al instalar, el resto contra entrega.</strong></p>
+    <div class="btns">
+      <button class="btn-c" onclick="scrollTo3D()">
+        <i class="fa-solid fa-cube"></i> Comenzar tour 3D
+      </button>
+      <button class="btn-o" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">
+        <i class="fa-solid fa-circle-info"></i> Más información
+      </button>
+    </div>
+    <div class="stats">
+      <div class="stat"><p>50<span style="color:var(--c)">%</span></p><p>Pago inicial</p></div>
+      <div class="divider"></div>
+      <div class="stat"><p>100<span style="color:var(--c)">%</span></p><p>Garantía</p></div>
+      <div class="divider"></div>
+      <div class="stat"><p>30<span style="color:var(--c)">%</span></p><p>Ahorro energético</p></div>
+    </div>
+    <p class="scroll-hint"><i class="fa-solid fa-chevron-down"></i> Desplázate para recorrer la casa</p>
+  </div>
+</div>
+
+<!-- ACTO II: CÓMO FUNCIONA -->
+<div id="a2" class="ov" style="display:flex;gap:2rem;padding:6rem 4% 2rem">
+  <div id="a2-left">
+    <span class="lbl">Cómo funciona</span>
+    <h2>Así de <span class="neon">simple</span></h2>
+    <p class="sub">La cámara recorre tu futuro hogar mientras cada dispositivo se activa en tiempo real.</p>
+  </div>
+  <div id="a2-steps">
+    <div class="step">
+      <div class="step-head"><div class="snum">1</div><h3>Eliges tu equipo</h3></div>
+      <p>Explora el catálogo y selecciona los dispositivos que transformarán tu hogar.</p>
+    </div>
+    <div class="step">
+      <div class="step-head"><div class="snum">2</div><h3>Pagas solo el 50 %</h3></div>
+      <p>Confirma tu pedido con la mitad del valor. El resto lo pagas cuando estés 100 % satisfecho.</p>
+    </div>
+    <div class="step">
+      <div class="step-head"><div class="snum">3</div><h3>Instalamos, pagas el resto</h3></div>
+      <p>Técnicos certificados instalan todo. Garantía de 12 meses. Sin letra pequeña.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ACTO III: TOUR DE PRODUCTOS -->
+<div id="a3" class="ov">
+  <div id="a3-top">
+    <span class="lbl">Tour de productos</span>
+    <h2>La cámara te presenta cada <span class="neon">dispositivo</span></h2>
+  </div>
+
+  <!-- Card 1: Luces LED -->
+  <div id="p1" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 1 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.25)">
+          <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.1rem"></i>
+        </div>
+        <h3>Kit Luces LED Inteligentes</h3>
+      </div>
+      <p class="desc">16M colores, escenas automáticas y 80 % de ahorro en iluminación. Control total desde el móvil.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#FFD700">$180.000 COP</p><p class="half">50% inicial: $90.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Interruptor WiFi -->
+  <div id="p2" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 2 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(123,97,255,.12);border:1px solid rgba(123,97,255,.28)">
+          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.1rem"></i>
+        </div>
+        <h3>Interruptor Táctil WiFi</h3>
+      </div>
+      <p class="desc">Control de iluminación desde cualquier parte del mundo. Compatible con Alexa y Google Home.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#7B61FF">$140.000 COP</p><p class="half">50% inicial: $70.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Cámara IA -->
+  <div id="p3" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 3 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.25)">
+          <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.1rem"></i>
+        </div>
+        <h3>Cámara Seguridad IA</h3>
+      </div>
+      <p class="desc">Seguimiento automático con IA, visión nocturna 4K y alertas instantáneas en tu teléfono.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#FF4444">$480.000 COP</p><p class="half">50% inicial: $240.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(4)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Contenedor Basura -->
+  <div id="p4" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 4 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(0,170,136,.1);border:1px solid rgba(0,170,136,.25)">
+          <i class="fa-solid fa-trash-can" style="color:#00AA88;font-size:1.1rem"></i>
+        </div>
+        <h3>Contenedor Basura Inteligente</h3>
+      </div>
+      <p class="desc">Apertura automática, sensor de llenado y estadísticas de uso desde la app. Sin tocar la tapa.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#00AA88">$350.000 COP</p><p class="half">50% inicial: $175.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTO IV: TESTIMONIOS -->
+<div id="a4" class="ov" style="flex-direction:column;align-items:center;justify-content:space-between;padding:7% 2% 5%">
+  <div id="a4-top">
+    <span class="lbl">Testimonios</span>
+    <h2>Tu hogar <span class="neon">iluminado</span>, tu seguridad confirmada</h2>
+  </div>
+  <div id="a4-cards">
+    <div class="tcard">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
+        <div class="tav">JM</div>
+        <div><p class="tname">Jorge Martínez</p><p class="tcity">Bogotá, Cundinamarca</p></div>
+      </div>
+      <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+      <p class="tbody">"El modelo 50/50 me dio total tranquilidad. La diferencia en mi factura fue inmediata."</p>
+    </div>
+    <div class="tcard">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
+        <div class="tav">LC</div>
+        <div><p class="tname">Lucía Cárdenas</p><p class="tcity">Medellín, Antioquia</p></div>
+      </div>
+      <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+      <p class="tbody">"El técnico llegó puntual, explicó todo el proceso. Configuración desde el celular, increíble."</p>
+    </div>
+    <div class="tcard">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
+        <div class="tav">AR</div>
+        <div><p class="tname">Andrés Restrepo</p><p class="tcity">Cali, Valle del Cauca</p></div>
+      </div>
+      <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star" style="color:var(--p)"></i></div>
+      <p class="tbody">"La instalación fue perfecta y el sistema domótico centralizado es de primer nivel."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ACTO V: VIDEO -->
+<div id="a5" class="ov">
+  <span class="lbl">Experiencia en vivo</span>
+  <h2>El hogar inteligente <span class="neon">en acción</span></h2>
+  <div class="vid-wrap">
+    <div class="vid-ph" onclick="showToast('¡Pronto! Reemplaza este bloque con tu iframe o video.')">
+      <div class="play-ring"><i class="fa-solid fa-play" style="color:var(--c);font-size:1.3rem;margin-left:3px"></i></div>
+      <p class="vtitle">Video: Sistema completo de domótica en acción</p>
+      <p class="vsub">Reemplaza este bloque con tu &lt;iframe&gt; o &lt;video&gt;</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     POST-SCROLL: FAQ + FOOTER (bg sólido, z:30)
+════════════════════════════════════════════════════ -->
+<div id="post">
+  <div class="section">
+    <span class="sec-lbl">Preguntas frecuentes</span>
+    <h2 class="sec-h">Resolvemos tus dudas</h2>
+    <div id="faq-container"></div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="logo">
+        <i class="fa-solid fa-house-signal"></i>
+        <div><span>La Domotienda</span></div>
+      </div>
+      <nav class="flinks">
+        <a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Contacto</a>
+      </nav>
+      <p class="fcopy">© 2025 La Domotienda · Todos los derechos reservados</p>
+    </div>
+  </footer>
+</div>
+
+<!-- CART DRAWER -->
+<div id="cov"></div>
+<div id="cdr">
+  <div id="cdr-head">
+    <h3><i class="fa-solid fa-bag-shopping"></i> Tu Carrito</h3>
+    <button id="cdr-close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div id="cdr-items"></div>
+  <div id="cdr-empty">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <p>Tu carrito está vacío</p>
+  </div>
+  <div id="cdr-foot" style="display:none">
+    <div class="tot-row"><span>Subtotal</span><span id="cs"></span></div>
+    <div class="tot-row"><span>IVA (19%)</span><span id="ci2"></span></div>
+    <div class="tot-main"><span>Total</span><span id="ct"></span></div>
+    <div class="tot-half"><span>Pago inicial (50%)</span><span id="ch"></span></div>
+    <button class="btn-c" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="checkout-btn">
+      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Pagar el 50% inicial
+    </button>
+  </div>
+</div>
+
+<!-- MODAL PAGO -->
+<div id="mov">
+  <div id="mbox">
+    <div class="mh">
+      <div class="mh-l">
+        <div class="mh-icon"><i class="fa-brands fa-whatsapp"></i></div>
+        <div><h3>Confirmar Pedido</h3><small>Modo Demostración</small></div>
+      </div>
+      <button class="mh-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="mblock">
+      <label>Resumen del pedido</label>
+      <div id="m-items"></div>
+      <div class="mrow" style="display:flex;justify-content:space-between;font-size:.78rem;color:#3a5555;padding:.15rem 0"><span>Subtotal</span><span id="ms"></span></div>
+      <div class="mrow" style="display:flex;justify-content:space-between;font-size:.78rem;color:#3a5555;padding:.15rem 0"><span>IVA 19%</span><span id="mi"></span></div>
+      <div class="mrow main"><span>Total</span><span id="mt"></span></div>
+      <div class="mrow half" style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--c);padding:.15rem 0;font-weight:600"><span>🔐 Pago inicial 50%</span><span id="mh"></span></div>
+    </div>
+    <div class="info-box">
+      <i class="fa-solid fa-circle-info"></i>
+      <div><strong>Modo Demostración Activo</strong><p>Al confirmar serás redirigido a WhatsApp para coordinar tu instalación con un asesor.</p></div>
+    </div>
+    <button class="btn-c" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="confirm-wa">
+      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Confirmar y enviar pedido a WhatsApp
+    </button>
+    <button class="m-cancel" id="modal-cancel">Cancelar y seguir comprando</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-msg"></span></div>
+
+<!-- ════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─────────────────────────────────────────────────────
+   DATOS
+───────────────────────────────────────────────────── */
+const PRODUCTS = [
+  { id:1, name:'Contenedor Basura Inteligente', price:350000, icon:'fa-trash-can',  col:'#00AA88' },
+  { id:2, name:'Interruptor Táctil WiFi',       price:140000, icon:'fa-toggle-on',  col:'#7B61FF' },
+  { id:3, name:'Kit Luces LED Inteligentes',    price:180000, icon:'fa-lightbulb',  col:'#FFD700' },
+  { id:4, name:'Cámara Seguridad IA',           price:480000, icon:'fa-video',      col:'#FF4444' },
+];
+const FAQS = [
+  { q:'¿Cómo funciona exactamente el pago del 50%?',
+    a:'Al confirmar tu pedido por WhatsApp, pagas el 50% del total como anticipo. El 50% restante solo lo pagas cuando el técnico finaliza la instalación y estás completamente satisfecho. Sin letra pequeña.' },
+  { q:'¿Qué garantía tienen los productos?',
+    a:'Todos los productos tienen garantía de 12 meses en partes y mano de obra. Si algo falla dentro del período de garantía, nuestro equipo técnico visita tu hogar sin costo adicional.' },
+  { q:'¿Cuánto tiempo demora la instalación?',
+    a:'Un dispositivo individual toma 30–60 minutos. Un kit completo del hogar puede tomar 2–4 horas. Recibirás una estimación exacta antes de agendar.' },
+  { q:'¿Funcionan sin conexión a internet?',
+    a:'Las funciones básicas (encendido manual) funcionan offline. Para control remoto, automatizaciones y alertas necesitas WiFi de mínimo 10 Mbps.' },
+];
+
+const fmtCOP = n => '$' + n.toLocaleString('es-CO') + ' COP';
+
+/* ─────────────────────────────────────────────────────
+   CARRITO
+───────────────────────────────────────────────────── */
+let cart = JSON.parse(localStorage.getItem('domo3d_cart') || '[]');
+const saveCart = () => localStorage.setItem('domo3d_cart', JSON.stringify(cart));
+
+function cartTotals(){
+  const sub = cart.reduce((s,i) => s + i.price*i.qty, 0);
+  const iva = Math.round(sub*.19);
+  const tot = sub + iva;
+  return { sub, iva, tot, half: Math.round(tot*.5) };
+}
+
+function updateBadge(){
+  const b = document.getElementById('cbadge');
+  const n = cart.reduce((s,i) => s+i.qty, 0);
+  if(n > 0){ b.textContent=n; b.style.display='flex'; }
+  else b.style.display='none';
+}
+
+function addToCart(id){
+  const p = PRODUCTS.find(x => x.id===id);
+  const ex = cart.find(x => x.id===id);
+  ex ? ex.qty++ : cart.push({id:p.id,name:p.name,price:p.price,qty:1});
+  saveCart(); updateBadge(); renderCart();
+  const b = document.getElementById('cbadge');
+  b.classList.add('bump'); setTimeout(()=>b.classList.remove('bump'),300);
+  showToast(`<i class="fa-solid fa-circle-check" style="color:var(--c);margin-right:.4rem"></i>${p.name} agregado al carrito`);
+}
+
+function removeFromCart(id){ cart=cart.filter(x=>x.id!==id); saveCart(); updateBadge(); renderCart(); }
+function changeQty(id,d){ const i=cart.find(x=>x.id===id); if(i){i.qty=Math.max(1,i.qty+d); saveCart(); updateBadge(); renderCart();} }
+
+function renderCart(){
+  const el = document.getElementById('cdr-items');
+  const em = document.getElementById('cdr-empty');
+  const ft = document.getElementById('cdr-foot');
+  el.innerHTML='';
+  if(!cart.length){ el.style.display='none'; em.style.display='flex'; ft.style.display='none'; return; }
+  el.style.display='block'; em.style.display='none'; ft.style.display='block';
+  cart.forEach(item => {
+    const p = PRODUCTS.find(x=>x.id===item.id);
+    const d = document.createElement('div'); d.className='ci';
+    d.innerHTML=`
+      <div class="ci-ic"><i class="fa-solid ${p.icon}" style="font-size:.8rem;color:${p.col}"></i></div>
+      <div class="ci-info">
+        <p>${item.name}</p>
+        <small style="color:${p.col}">${fmtCOP(item.price)}</small>
+      </div>
+      <div class="ci-ctrl">
+        <button onclick="changeQty(${item.id},-1)"><i class="fa-solid fa-minus"></i></button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${item.id},1)"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <button class="ci-del" onclick="removeFromCart(${item.id})"><i class="fa-solid fa-trash"></i></button>`;
+    el.appendChild(d);
+  });
+  const {sub,iva,tot,half}=cartTotals();
+  document.getElementById('cs').textContent=fmtCOP(sub);
+  document.getElementById('ci2').textContent=fmtCOP(iva);
+  document.getElementById('ct').textContent=fmtCOP(tot);
+  document.getElementById('ch').textContent=fmtCOP(half);
+}
+
+/* ─────────────────────────────────────────────────────
+   DRAWER + MODAL
+───────────────────────────────────────────────────── */
+const openCart  = () => { document.getElementById('cov').classList.add('open'); document.getElementById('cdr').classList.add('open'); document.body.style.overflow='hidden'; };
+const closeCart = () => { document.getElementById('cov').classList.remove('open'); document.getElementById('cdr').classList.remove('open'); document.body.style.overflow=''; };
+const closeModal= () => { document.getElementById('mov').classList.remove('open'); document.body.style.overflow=''; };
+
+function openModal(){
+  const {sub,iva,tot,half}=cartTotals();
+  document.getElementById('m-items').innerHTML=cart.map(i=>`
+    <div style="display:flex;justify-content:space-between;padding:.18rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;color:#6a8888">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:.6rem">${i.name} ×${i.qty}</span>
+      <span style="color:#b0c8ca;flex-shrink:0;font-weight:500">${fmtCOP(i.price*i.qty)}</span>
+    </div>`).join('');
+  document.getElementById('ms').textContent=fmtCOP(sub);
+  document.getElementById('mi').textContent=fmtCOP(iva);
+  document.getElementById('mt').textContent=fmtCOP(tot);
+  document.getElementById('mh').textContent=fmtCOP(half);
+  document.getElementById('mov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+document.getElementById('cart-btn').addEventListener('click', openCart);
+document.getElementById('cdr-close').addEventListener('click', closeCart);
+document.getElementById('cov').addEventListener('click', closeCart);
+document.getElementById('checkout-btn').addEventListener('click', ()=>{ if(!cart.length)return; closeCart(); setTimeout(openModal,200); });
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+document.getElementById('mov').addEventListener('click', e=>{ if(e.target.id==='mov') closeModal(); });
+document.getElementById('confirm-wa').addEventListener('click', ()=>{
+  const {tot,half}=cartTotals();
+  const list=cart.map(i=>`${i.qty}x ${i.name} (${fmtCOP(i.price*i.qty)})`).join(', ');
+  const msg=encodeURIComponent(`Hola La Domotienda, quiero comprar: ${list}. Total: ${fmtCOP(tot)}. Aplico al 50% inicial: ${fmtCOP(half)}.`);
+  window.open(`https://wa.me/573000000000?text=${msg}`,'_blank');
+  closeModal();
+});
+
+/* ─────────────────────────────────────────────────────
+   FAQ
+───────────────────────────────────────────────────── */
+function renderFAQ(){
+  const c=document.getElementById('faq-container');
+  FAQS.forEach(f=>{
+    const d=document.createElement('div'); d.className='faq-item';
+    d.innerHTML=`<div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>${f.q}</span><i class="fa-solid fa-plus faq-ic"></i></div><div class="faq-a">${f.a}</div>`;
+    c.appendChild(d);
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   TOAST
+───────────────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').innerHTML=msg;
+  t.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+function scrollTo3D(){
+  window.scrollTo({top: window.innerHeight*.1, behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════════════════════════
+   THREE.JS — ESCENA 3D CINEMATOGRÁFICA
+═══════════════════════════════════════════════════════ */
+
+/* ── Variables globales de escena ── */
+let renderer, scene, camera;
+let clock;
+
+/* Materiales que necesitan actualizarse */
+const tracked = {
+  bulbLight:null, bulbMat:null,
+  swMat:null, swLight:null,
+  camMat:null, camLedMat:null,
+  trashMat:null, trashLight:null,
+  winMats:[],
+  houseWallMats:[],
+  roofMat:null,
+  netLineMat:null, netPtMat:null,
+  screenMat:null, screenLight:null,
+  cityMats:[],
+  personMeshes:[],
+};
+
+/* Cámara suavizada */
+const camTarget  = {x:0,y:22,z:6,  lx:0,ly:0,lz:0};
+const camCurrent = {x:0,y:22,z:6,  lx:0,ly:0,lz:0};
+
+/* ─────────────────────────────────────────────────────
+   KEYFRAMES DE CÁMARA
+   Cada frame: t (0-1), pos [x,y,z], look [x,y,z]
+───────────────────────────────────────────────────── */
+const KF = [
+  // Acto I: Vista cenital, orbita suave
+  { t:0.00, p:[ 0,  22,  6], l:[0,0, 0] },
+  { t:0.08, p:[ 7,  17, 14], l:[0,1, 0] },
+  { t:0.15, p:[ 2,  14, 16], l:[0,2, 0] },
+  // Acto II: Descenso hacia puerta
+  { t:0.20, p:[ 1,   9, 17], l:[0,2.5,0] },
+  { t:0.27, p:[ 0,   5, 11], l:[0,3,  0] },
+  { t:0.34, p:[-1, 3.8,  7], l:[0,3.5,0] },
+  // Acto III: 4 puntos de interés internos
+  // 3a: Bombilla techo (centro sala)
+  { t:0.40, p:[ 0, 4.5,  2], l:[ 0, 5,   -0.5] },
+  // 3b: Interruptor pared derecha
+  { t:0.51, p:[ 3, 3.2,  0.5], l:[5.2, 3,  0  ] },
+  // 3c: Cámara pared izquierda
+  { t:0.61, p:[-2.5, 4.2, -0.5], l:[-5.5, 3.8, -1] },
+  // 3d: Contenedor suelo
+  { t:0.70, p:[ 1.5, 2.5,  4], l:[3.5, 0.8, 3.5] },
+  // Acto IV: Plano general iluminado
+  { t:0.77, p:[-11, 12, 20], l:[0,2,0] },
+  { t:0.88, p:[  0,  9, 23], l:[0,2,0] },
+  // Acto V: Pantalla de video (frente a la casa)
+  { t:0.93, p:[  0,  7, 21], l:[0,5,12] },
+  { t:1.00, p:[  0,  5, 19], l:[0,4.5,12] },
+];
+
+function smoothstep(x){ return x*x*(3-2*x) }
+
+function interpCam(t){
+  let i=0;
+  while(i < KF.length-2 && KF[i+1].t <= t) i++;
+  const a=KF[i], b=KF[i+1];
+  const span = b.t - a.t;
+  const s = smoothstep(span>0 ? Math.max(0,Math.min(1,(t-a.t)/span)) : 0);
+  return {
+    x: a.p[0]+(b.p[0]-a.p[0])*s, y: a.p[1]+(b.p[1]-a.p[1])*s, z: a.p[2]+(b.p[2]-a.p[2])*s,
+    lx:a.l[0]+(b.l[0]-a.l[0])*s, ly:a.l[1]+(b.l[1]-a.l[1])*s, lz:a.l[2]+(b.l[2]-a.l[2])*s,
+  };
+}
+
+/* ─────────────────────────────────────────────────────
+   INIT THREE
+───────────────────────────────────────────────────── */
+function initThree(){
+  const canvas = document.getElementById('stage');
+  renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x040c0d);
+  scene.fog = new THREE.FogExp2(0x040c0d, 0.016);
+
+  camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 200);
+  camera.position.set(0,22,6);
+
+  clock = new THREE.Clock();
+
+  window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  buildLights();
+  buildGround();
+  buildHouse();
+  buildDevices();
+  buildNetwork();
+  buildCity();
+  buildVideoScreen();
+  buildPeople();
+  startRenderLoop();
+}
+
+/* ─────────────────────────────────────────────────────
+   LUCES
+───────────────────────────────────────────────────── */
+function buildLights(){
+  scene.add(new THREE.AmbientLight(0x061416, 1.0));
+
+  const sun = new THREE.DirectionalLight(0x1a3336, 0.5);
+  sun.position.set(12,20,12); sun.castShadow=true;
+  sun.shadow.mapSize.set(1024,1024);
+  scene.add(sun);
+
+  // Luz cyan de relleno
+  const fill = new THREE.PointLight(0x00F0FF, 1.8, 35);
+  fill.position.set(0,10,10);
+  scene.add(fill); window._fillLight=fill;
+
+  // Luz púrpura de acento
+  const accent = new THREE.PointLight(0x7B61FF, 1.2, 22);
+  accent.position.set(-6,8,-4);
+  scene.add(accent);
+
+  // Luz interior (se activa con el scroll)
+  const interior = new THREE.PointLight(0x00C4CC, 0.0, 14);
+  interior.position.set(0,4.5,0);
+  scene.add(interior); tracked.interiorLight=interior;
+}
+
+/* ─────────────────────────────────────────────────────
+   SUELO
+───────────────────────────────────────────────────── */
+function buildGround(){
+  const mat = new THREE.MeshPhongMaterial({ color:0x030c0c, shininess:3 });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(120,120), mat);
+  mesh.rotation.x=-Math.PI/2; mesh.position.y=-0.1; mesh.receiveShadow=true;
+  scene.add(mesh);
+
+  // Grid lines
+  const verts=[]; const lmat=new THREE.LineBasicMaterial({color:0x001616,transparent:true,opacity:.35});
+  for(let i=-60;i<=60;i+=2){ verts.push(i,0,-60,i,0,60); verts.push(-60,0,i,60,0,i); }
+  const lgeo=new THREE.BufferGeometry();
+  lgeo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+  const grid=new THREE.LineSegments(lgeo,lmat); grid.position.y=-0.05;
+  scene.add(grid);
+}
+
+/* ─────────────────────────────────────────────────────
+   CASA (geometrías primitivas)
+───────────────────────────────────────────────────── */
+function makeWallMat(){
+  const m=new THREE.MeshPhongMaterial({
+    color:0x091a1c, emissive:0x010a0b, emissiveIntensity:.15,
+    specular:0x003344, shininess:22, side:THREE.DoubleSide
+  });
+  tracked.houseWallMats.push(m);
+  return m;
+}
+
+function addEdges(mesh, color=0x00F0FF, opacity=0.18){
+  const m=new THREE.LineBasicMaterial({color,transparent:true,opacity});
+  const e=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry),m);
+  mesh.add(e);
+}
+
+function buildHouse(){
+  const wm = ()=>makeWallMat();
+
+  const box = (w,h,d,x,y,z,ry=0,mat=null)=>{
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat||wm());
+    m.position.set(x,y,z); if(ry) m.rotation.y=ry;
+    m.castShadow=true; m.receiveShadow=true;
+    scene.add(m); return m;
+  };
+
+  // Piso interior
+  box(10,0.1,8, 0,0.05,0);
+  // Techo
+  const ceil=box(10,0.1,8, 0,5.05,0);
+  addEdges(ceil,0x00F0FF,.08);
+  // Pared trasera
+  box(10,5,0.1, 0,2.5,-4);
+  // Pared izquierda
+  box(0.1,5,8, -5,2.5,0);
+  // Pared derecha
+  box(0.1,5,8, 5,2.5,0);
+  // Frente: dos paneles laterales + dintel
+  box(3,5,0.1, -3.5,2.5,4);
+  box(3,5,0.1,  3.5,2.5,4);
+  box(4,1.85,0.1, 0,4.07,4);
+
+  // Tejado piramidal
+  const roofMat=new THREE.MeshPhongMaterial({
+    color:0x062020, emissive:0x010c0c, emissiveIntensity:.2, shininess:30
+  });
+  tracked.roofMat=roofMat;
+  const roof=new THREE.Mesh(new THREE.ConeGeometry(8.5,3.8,4,1),roofMat);
+  roof.position.set(0,7,0); roof.rotation.y=Math.PI/4;
+  roof.castShadow=true; scene.add(roof);
+  addEdges(roof,0x00F0FF,.1);
+
+  // Puerta
+  const doorMat=new THREE.MeshPhongMaterial({color:0x020d0e,emissive:0x000406});
+  const door=new THREE.Mesh(new THREE.BoxGeometry(2,3.2,0.07),doorMat);
+  door.position.set(0,1.6,4.06); scene.add(door);
+  addEdges(door,0x00F0FF,.25);
+
+  // Ventanas (con material rastreado para activar brillo)
+  [[(-5.06), 3.2,(-1.5),0],[(- 5.06),3.2,1.5,0],
+   [5.06,3.2,-1.5,0],[5.06,3.2,1.5,0],
+   [-2.5,3.2,-4.06,Math.PI/2],[2.5,3.2,-4.06,Math.PI/2]
+  ].forEach(([px,py,pz,ry])=>{
+    const wm2=new THREE.MeshPhongMaterial({
+      color:0x001520, emissive:0x000d16, transparent:true, opacity:.82, shininess:55
+    });
+    tracked.winMats.push(wm2);
+    const win=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.1,0.06),wm2);
+    win.position.set(px,py,pz); if(ry) win.rotation.y=ry;
+    scene.add(win); addEdges(win,0x00F0FF,.18);
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   DISPOSITIVOS
+───────────────────────────────────────────────────── */
+function buildDevices(){
+  /* 1. BOMBILLA techo */
+  const bm=new THREE.MeshPhongMaterial({
+    color:0xFFD700, emissive:0x220800, specular:0xFFFF88, shininess:90
+  });
+  tracked.bulbMat=bm;
+  const bulb=new THREE.Mesh(new THREE.SphereGeometry(0.4,14,14),bm);
+  bulb.position.set(0,4.65,0); scene.add(bulb);
+  const cord=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.42,6),
+    new THREE.MeshPhongMaterial({color:0x222222}));
+  cord.position.set(0,4.87,0); scene.add(cord);
+  const bl=new THREE.PointLight(0xFFCC44,0,9);
+  bl.position.set(0,4.2,0); scene.add(bl); tracked.bulbLight=bl;
+
+  /* 2. INTERRUPTOR pared derecha */
+  const sm=new THREE.MeshPhongMaterial({
+    color:0x4a30aa, emissive:0x120040, specular:0x8877DD, shininess:55
+  });
+  tracked.swMat=sm;
+  const sw=new THREE.Mesh(new THREE.BoxGeometry(1.05,0.62,0.1),sm);
+  sw.position.set(4.95,3,0.5); scene.add(sw); addEdges(sw,0x7B61FF,.3);
+  const toggle=new THREE.Mesh(new THREE.BoxGeometry(0.38,0.5,0.09),
+    new THREE.MeshPhongMaterial({color:0x00F0FF, emissive:0x001a22}));
+  toggle.position.set(4.93,3.06,0.5); scene.add(toggle);
+  const swl=new THREE.PointLight(0x7B61FF,0,6);
+  swl.position.set(5,3,0.5); scene.add(swl); tracked.swLight=swl;
+
+  /* 3. CÁMARA pared izquierda */
+  const cm=new THREE.MeshPhongMaterial({
+    color:0x882222, emissive:0x200008, specular:0xFF5555, shininess:45
+  });
+  tracked.camMat=cm;
+  const cam=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.55,0.55),cm);
+  cam.position.set(-4.95,4,-1); scene.add(cam); addEdges(cam,0xFF4444,.25);
+  const lensMat=new THREE.MeshPhongMaterial({color:0x060606,emissive:0x001010,shininess:90});
+  const lens=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.12,0.32,10),lensMat);
+  lens.rotation.z=Math.PI/2; lens.position.set(-4.72,4,-1); scene.add(lens);
+  const ledM=new THREE.MeshPhongMaterial({color:0xFF0000,emissive:0xFF0000,emissiveIntensity:.5});
+  tracked.camLedMat=ledM;
+  const led=new THREE.Mesh(new THREE.SphereGeometry(0.06,6,6),ledM);
+  led.position.set(-4.63,4.18,-0.83); scene.add(led);
+
+  /* 4. CONTENEDOR suelo */
+  const tm=new THREE.MeshPhongMaterial({
+    color:0x004d3a, emissive:0x001208, specular:0x33CCAA, shininess:38
+  });
+  tracked.trashMat=tm;
+  const tb=new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.6,1.2,10),tm);
+  tb.position.set(3.5,0.6,3); scene.add(tb); addEdges(tb,0x00AA88,.25);
+  const lid=new THREE.Mesh(new THREE.CylinderGeometry(0.52,0.52,0.1,10),
+    new THREE.MeshPhongMaterial({color:0x003d2d,emissive:0x000e08}));
+  lid.position.set(3.5,1.25,3); scene.add(lid);
+  const sens=new THREE.Mesh(new THREE.SphereGeometry(0.07,8,8),
+    new THREE.MeshPhongMaterial({color:0x00F0FF,emissive:0x00F0FF,emissiveIntensity:.5}));
+  sens.position.set(3.5,1.36,3); scene.add(sens);
+  const tl=new THREE.PointLight(0x00AA88,0,6);
+  tl.position.set(3.5,2,3); scene.add(tl); tracked.trashLight=tl;
+}
+
+/* ─────────────────────────────────────────────────────
+   RED NEURONAL (partículas + líneas)
+───────────────────────────────────────────────────── */
+function buildNetwork(){
+  const N=90; const nodes=[];
+  for(let i=0;i<N;i++){
+    const th=Math.random()*Math.PI*2;
+    const ph=Math.acos(2*Math.random()-1);
+    const r=14+Math.random()*22;
+    nodes.push(new THREE.Vector3(
+      r*Math.sin(ph)*Math.cos(th),
+      r*Math.sin(ph)*Math.sin(ph)*0.55+4,
+      r*Math.cos(ph)
+    ));
+  }
+  // Points
+  const pgeo=new THREE.BufferGeometry();
+  pgeo.setAttribute('position',new THREE.Float32BufferAttribute(nodes.flatMap(n=>[n.x,n.y,n.z]),3));
+  const pmat=new THREE.PointsMaterial({color:0x00F0FF,size:.2,transparent:true,opacity:.5});
+  tracked.netPtMat=pmat;
+  const pts=new THREE.Points(pgeo,pmat);
+  scene.add(pts); window._netPts=pts;
+
+  // Lines
+  const lv=[];
+  for(let i=0;i<nodes.length;i++)
+    for(let j=i+1;j<nodes.length;j++)
+      if(nodes[i].distanceTo(nodes[j])<9){ lv.push(nodes[i].x,nodes[i].y,nodes[i].z,nodes[j].x,nodes[j].y,nodes[j].z); }
+  const lgeo=new THREE.BufferGeometry();
+  lgeo.setAttribute('position',new THREE.Float32BufferAttribute(lv,3));
+  const lmat=new THREE.LineBasicMaterial({color:0x00F0FF,transparent:true,opacity:.07});
+  tracked.netLineMat=lmat;
+  scene.add(new THREE.LineSegments(lgeo,lmat));
+}
+
+/* ─────────────────────────────────────────────────────
+   CIUDAD DE FONDO
+───────────────────────────────────────────────────── */
+function buildCity(){
+  for(let i=0;i<24;i++){
+    const w=.7+Math.random()*1.3, h=1+Math.random()*5, d=.7+Math.random()*1.3;
+    const em=Math.random()>.5 ? 0x001a22 : 0x0e0022;
+    const mat=new THREE.MeshPhongMaterial({color:0x020a0a,emissive:em,emissiveIntensity:.3+Math.random()*.45});
+    tracked.cityMats.push(mat);
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+    const ang=Math.random()*Math.PI*2, dist=24+Math.random()*30;
+    m.position.set(Math.cos(ang)*dist, h/2, Math.sin(ang)*dist);
+    scene.add(m);
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   PANTALLA DE VIDEO
+───────────────────────────────────────────────────── */
+function buildVideoScreen(){
+  const frameMat=new THREE.MeshPhongMaterial({color:0x081820,emissive:0x001428,shininess:55});
+  const frame=new THREE.Mesh(new THREE.BoxGeometry(13,7.8,0.18),frameMat);
+  frame.position.set(0,4.5,12.2); scene.add(frame); addEdges(frame,0x00F0FF,.28);
+
+  const scrMat=new THREE.MeshPhongMaterial({color:0x000a12,emissive:0x000e1a,shininess:75,transparent:true,opacity:.9});
+  tracked.screenMat=scrMat;
+  const scr=new THREE.Mesh(new THREE.PlaneGeometry(12.2,7),scrMat);
+  scr.position.set(0,4.5,12.3); scene.add(scr);
+
+  const sl=new THREE.PointLight(0x00F0FF,0,18);
+  sl.position.set(0,4.5,12); scene.add(sl); tracked.screenLight=sl;
+
+  // Ícono play (cilindro delgado)
+  const playMat=new THREE.MeshPhongMaterial({color:0x00F0FF,emissive:0x00F0FF,emissiveIntensity:.55});
+  const play=new THREE.Mesh(new THREE.CylinderGeometry(1,1,0.08,32),playMat);
+  play.rotation.x=Math.PI/2; play.position.set(0,4.5,12.35); scene.add(play);
+}
+
+/* ─────────────────────────────────────────────────────
+   PERSONAJES (Acto IV)
+───────────────────────────────────────────────────── */
+function buildPeople(){
+  const positions=[[-2,0,1],[1,0,-2.5],[3,0,-2.8]];
+  const bodyColors=[0x08141e,0x0e0820,0x051410];
+  positions.forEach(([px,py,pz],i)=>{
+    const bmat=new THREE.MeshPhongMaterial({color:bodyColors[i],emissive:0x010608,shininess:15});
+    const body=new THREE.Mesh(new THREE.BoxGeometry(.5,.8,.28),bmat);
+    body.position.set(px,py+.4,pz); body.visible=false;
+    const hmat=new THREE.MeshPhongMaterial({color:0xFFDDCC,emissive:0x100600});
+    const head=new THREE.Mesh(new THREE.SphereGeometry(.2,8,8),hmat);
+    head.position.set(0,.57,0); body.add(head);
+    scene.add(body);
+    tracked.personMeshes.push({mesh:body, baseY:py+.4, phase:i*1.5});
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   RENDER LOOP
+───────────────────────────────────────────────────── */
+let scrollProg = 0;   // actualizado por ScrollTrigger
+
+function startRenderLoop(){
+  function tick(){
+    requestAnimationFrame(tick);
+    const t = clock.getElapsedTime();
+
+    // Interpolar cámara
+    const kf = interpCam(scrollProg);
+    camTarget.x=kf.x; camTarget.y=kf.y; camTarget.z=kf.z;
+    camTarget.lx=kf.lx; camTarget.ly=kf.ly; camTarget.lz=kf.lz;
+
+    const ease=0.055;
+    for(const k of ['x','y','z','lx','ly','lz'])
+      camCurrent[k]+=(camTarget[k]-camCurrent[k])*ease;
+
+    camera.position.set(camCurrent.x,camCurrent.y,camCurrent.z);
+    camera.lookAt(camCurrent.lx,camCurrent.ly,camCurrent.lz);
+
+    // Luz fill sigue cámara
+    if(window._fillLight)
+      window._fillLight.position.lerp(new THREE.Vector3(camCurrent.x,camCurrent.y-2,camCurrent.z),.06);
+
+    // Red neuronal: pulso
+    const pulse = Math.sin(t*.75)*.055+.09;
+    if(tracked.netLineMat) tracked.netLineMat.opacity=pulse;
+    if(tracked.netPtMat)   tracked.netPtMat.opacity=.4+Math.sin(t*.5)*.1;
+    if(window._netPts)     window._netPts.rotation.y+=.00035;
+
+    // Activar dispositivos
+    updateDevices(scrollProg, t);
+
+    // Personajes bobbing
+    tracked.personMeshes.forEach(p=>{
+      const sh=Math.max(0,Math.min(1,(scrollProg-.72)/.08));
+      p.mesh.visible=sh>.01;
+      p.mesh.position.y=p.baseY+Math.sin(t*1.3+p.phase)*.055;
+    });
+
+    renderer.render(scene,camera);
+  }
+  tick();
+}
+
+/* ─────────────────────────────────────────────────────
+   ACTIVACIÓN DE DISPOSITIVOS
+───────────────────────────────────────────────────── */
+function bell(t,s,e){ if(t<s||t>e)return 0; return Math.sin(((t-s)/(e-s))*Math.PI); }
+function ramp(t,s,e){ return Math.max(0,Math.min(1,(t-s)/(e-s))); }
+
+function updateDevices(t, time){
+  const global = ramp(t,.32,.5);
+  const pulse  = 1+Math.sin(time*2.8)*.14;
+
+  // Bombilla
+  const ba = Math.max(bell(t,.36,.52), global*.3);
+  if(tracked.bulbMat){
+    tracked.bulbMat.emissiveIntensity = .12 + ba*2.2*pulse;
+    tracked.bulbMat.emissive.setHex(lerp32(0x220800,0xFFAA00,Math.min(1,ba*1.6)));
+  }
+  if(tracked.bulbLight) tracked.bulbLight.intensity = ba*2.8;
+
+  // Interruptor
+  const sa = Math.max(bell(t,.48,.63), global*.25);
+  if(tracked.swMat){
+    tracked.swMat.emissiveIntensity = .1 + sa*1.8*pulse;
+    tracked.swMat.emissive.setHex(lerp32(0x120040,0x5500CC,Math.min(1,sa*1.5)));
+  }
+  if(tracked.swLight) tracked.swLight.intensity = sa*1.5;
+
+  // Cámara
+  const ca = Math.max(bell(t,.58,.73), global*.2);
+  if(tracked.camMat){
+    tracked.camMat.emissiveIntensity = .1 + ca*1.8*pulse;
+    tracked.camMat.emissive.setHex(lerp32(0x200008,0xAA0000,Math.min(1,ca*1.5)));
+  }
+  if(tracked.camLedMat) tracked.camLedMat.emissiveIntensity = .4+ca*1.4;
+
+  // Contenedor
+  const ta = Math.max(bell(t,.66,.78), global*.2);
+  if(tracked.trashMat){
+    tracked.trashMat.emissiveIntensity = .1 + ta*1.8*pulse;
+    tracked.trashMat.emissive.setHex(lerp32(0x001208,0x00664A,Math.min(1,ta*1.5)));
+  }
+  if(tracked.trashLight) tracked.trashLight.intensity = ta*1.6;
+
+  // Paredes
+  const wallGlow = global*.28;
+  tracked.houseWallMats.forEach(m=>{ m.emissiveIntensity = .1+wallGlow; });
+  if(tracked.roofMat) tracked.roofMat.emissiveIntensity = .15+wallGlow*.8;
+
+  // Ventanas
+  const winBright = ramp(t,.3,.65);
+  tracked.winMats.forEach(m=>{
+    m.emissiveIntensity = .05+winBright*.9;
+    m.emissive.setHex(lerp32(0x000d16,0x003344,winBright));
+  });
+
+  // Interior light
+  if(tracked.interiorLight) tracked.interiorLight.intensity = ramp(t,.3,.55)*1.6;
+
+  // Pantalla video (Acto V)
+  const va = ramp(t,.87,.96);
+  if(tracked.screenMat) tracked.screenMat.emissiveIntensity = .05+va*.8;
+  if(tracked.screenLight) tracked.screenLight.intensity = va*2.5;
+}
+
+/* Helper: interpola dos colores hex */
+function lerp32(a,b,t){
+  const ar=(a>>16)&0xFF, ag=(a>>8)&0xFF, ab=a&0xFF;
+  const br=(b>>16)&0xFF, bg=(b>>8)&0xFF, bb=b&0xFF;
+  const r=Math.round(ar+(br-ar)*t);
+  const g=Math.round(ag+(bg-ag)*t);
+  const bl2=Math.round(ab+(bb-ab)*t);
+  return (r<<16)|(g<<8)|bl2;
+}
+
+/* ─────────────────────────────────────────────────────
+   GSAP SCROLL TRIGGER
+───────────────────────────────────────────────────── */
+function initScroll(){
+  gsap.registerPlugin(ScrollTrigger);
+
+  ScrollTrigger.create({
+    trigger:'#scroll-driver',
+    start:'top top',
+    end:'bottom bottom',
+    scrub:1.4,
+    onUpdate(self){
+      const p = self.progress;
+      scrollProg = p;
+      document.getElementById('pbar').style.width = (p*100)+'%';
+      updateOverlays(p);
+      updateKwh(p);
+    }
+  });
+
+  // Fade del canvas al llegar al post-scroll
+  ScrollTrigger.create({
+    trigger:'#post',
+    start:'top 96%',
+    end:'top 30%',
+    scrub:true,
+    onUpdate(self){
+      const op = Math.max(0, 1-self.progress*1.3);
+      document.getElementById('stage').style.opacity=op;
+      if(self.progress>.6) hideAllOverlays();
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   CONTROL DE OVERLAYS
+───────────────────────────────────────────────────── */
+function setOv(id, t, start, end, fade=0.032){
+  const el=document.getElementById(id); if(!el) return;
+  let op=0;
+  if(t<start) op=0;
+  else if(t<start+fade) op=(t-start)/fade;
+  else if(t<end-fade) op=1;
+  else if(t<end) op=(end-t)/fade;
+  else op=0;
+  el.style.opacity=op;
+  el.style.pointerEvents=op>.06 ? 'auto' : 'none';
+}
+
+function setPCard(id, t, start, end){
+  const el=document.getElementById(id); if(!el) return;
+  const fade=0.022;
+  let op=0;
+  if(t>=start && t<start+fade) op=(t-start)/fade;
+  else if(t>=start+fade && t<end-fade) op=1;
+  else if(t>=end-fade && t<end) op=(end-t)/fade;
+  el.style.opacity=op;
+  el.style.pointerEvents=op>.06 ? 'auto' : 'none';
+}
+
+function updateOverlays(t){
+  setOv('a1', t, 0,    0.175);
+  setOv('a2', t, 0.15, 0.375);
+  setOv('a3', t, 0.34, 0.78);
+  setOv('a4', t, 0.74, 0.925);
+  setOv('a5', t, 0.90, 0.995);
+  // Cards de producto individuales
+  setPCard('p1', t, 0.37, 0.51);
+  setPCard('p2', t, 0.49, 0.63);
+  setPCard('p3', t, 0.59, 0.73);
+  setPCard('p4', t, 0.68, 0.79);
+}
+
+function hideAllOverlays(){
+  ['a1','a2','a3','a4','a5'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.style.opacity=0; el.style.pointerEvents='none'; }
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   KWH WIDGET
+───────────────────────────────────────────────────── */
+function updateKwh(t){
+  const saved=Math.round(105000*Math.min(1,t*1.4));
+  const kwh=Math.round(105*Math.min(1,t*1.4));
+  const el=document.getElementById('kwh-val');
+  if(el) el.textContent = saved>0
+    ? `-${kwh} kWh · -${(saved/1000).toFixed(0)}K COP/mes`
+    : '0 kWh ahorrados';
+}
+
+/* ─────────────────────────────────────────────────────
+   INICIO
+───────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+  renderFAQ();
+  renderCart();
+  updateBadge();
+  initThree();
+  initScroll();
+  // Mostrar Acto I al cargar
+  const a1=document.getElementById('a1');
+  if(a1){ a1.style.opacity=1; a1.style.pointerEvents='auto'; }
+});
+</script>
+</body>
+</html>

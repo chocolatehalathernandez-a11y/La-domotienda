@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060d0e">
+<title>La Domotienda — Hogar Inteligente 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+/* ─────────────────────────────────────────────
+   RESET & TOKENS
+───────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --c:#00F0FF; --p:#7B61FF;
+  --bg:#060d0e; --sf:#0d1a1c; --s2:#111e20;
+  --glass:rgba(6, 13, 14, 0.85);
+  --glass-strong:rgba(6, 13, 14, 0.92);
+  --txt-shadow:0 2px 8px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.7);
+}
+html{scroll-behavior:auto;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:#e0ecec;
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--c);border-radius:2px}
+
+/* ─────────────────────────────────────────────
+   CANVAS FIJO (z:0)
+───────────────────────────────────────────── */
+#stage{
+  position:fixed;inset:0;
+  z-index:0;pointer-events:none;
+  box-shadow:inset 0 0 120px rgba(0,0,0,.7);
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLTRIGGER SPACER
+───────────────────────────────────────────── */
+#scroll-driver{height:600vh;position:relative;z-index:1;pointer-events:none}
+
+/* ─────────────────────────────────────────────
+   BARRA DE PROGRESO 3px + GLOW
+───────────────────────────────────────────── */
+#pbar{
+  position:fixed;top:0;left:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--p),var(--c));
+  z-index:9999;transition:width .05s linear;
+  box-shadow:
+    0 0 8px rgba(0,240,255,.7),
+    0 0 16px rgba(123,97,255,.45),
+    0 1px 4px rgba(0,240,255,.6);
+  border-radius:0 2px 2px 0;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+───────────────────────────────────────────── */
+#hdr{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 2rem;
+  background:rgba(6,13,14,.78);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,240,255,.1);
+}
+.logo{display:flex;align-items:center;gap:.55rem}
+.logo i{color:var(--c);font-size:1.15rem}
+.logo span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:-.01em}
+.logo sub{font-size:.65rem;color:#3a5555;display:block;margin-top:-2px;line-height:1}
+#hdr nav{display:flex;align-items:center;gap:1.5rem}
+#hdr nav a{color:#7a9a9c;text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s}
+#hdr nav a:hover{color:var(--c)}
+@media(max-width:760px){#hdr nav{display:none}}
+#cart-btn{
+  position:relative;padding:.55rem .7rem;border-radius:10px;
+  background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);
+  cursor:pointer;transition:all .25s;flex-shrink:0;
+}
+#cart-btn:hover{background:rgba(0,240,255,.14);border-color:rgba(0,240,255,.4)}
+#cart-btn i{color:#b0d8d8;font-size:.95rem}
+#cbadge{
+  background:var(--c);color:#000;font-size:.58rem;font-weight:700;
+  min-width:16px;height:16px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  position:absolute;top:-4px;right:-4px;
+  font-family:'Space Grotesk',sans-serif;
+}
+#cbadge.bump{animation:bump .26s}
+@keyframes bump{50%{transform:scale(1.5)}}
+
+/* ─────────────────────────────────────────────
+   OVERLAYS
+───────────────────────────────────────────── */
+.ov{
+  position:fixed;inset:0;z-index:10;
+  opacity:0;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .5s ease;
+  padding:0 1.2rem;
+}
+
+/* ── ACT 1: HERO ── */
+#a1 .wrap{
+  text-align:center;max-width:880px;width:100%;
+  padding:1.4rem 1.4rem;
+  display:flex;flex-direction:column;align-items:center;gap:1.1rem;
+  background:var(--glass);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,240,255,.18);
+  border-radius:22px;
+  box-shadow:0 8px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+  margin-top:4rem;
+}
+#a1 .lbl{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.68rem;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--c);
+  text-shadow:var(--txt-shadow);
+}
+#a1 h1{
+  font-size:clamp(2rem,6.5vw,5.4rem);
+  font-weight:700;color:#fff;
+  line-height:1.06;letter-spacing:-.025em;
+  text-shadow:var(--txt-shadow);
+}
+.neon{color:var(--c);text-shadow:0 0 18px rgba(0,240,255,.55),0 0 40px rgba(0,240,255,.22),0 2px 8px rgba(0,0,0,.85)}
+#a1 p{
+  font-size:clamp(.92rem,2vw,1.15rem);
+  color:#b8d4d6;max-width:580px;line-height:1.7;
+  text-shadow:var(--txt-shadow);
+}
+#a1 .btns{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+.btn-c{
+  background:linear-gradient(135deg,var(--c),#00b5c0);
+  color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;
+  border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  box-shadow:0 0 22px rgba(0,240,255,.32);
+  transition:transform .25s,box-shadow .25s;
+}
+.btn-c:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 0 38px rgba(0,240,255,.55)}
+.btn-o{
+  background:transparent;
+  border:1px solid rgba(0,240,255,.42);color:var(--c);
+  font-family:'Space Grotesk',sans-serif;font-weight:500;
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  cursor:pointer;transition:all .25s;
+}
+.btn-o:hover{background:rgba(0,240,255,.09);border-color:rgba(0,240,255,.7)}
+.btn-cal{
+  background:transparent;
+  border:1px solid rgba(123,97,255,.55);color:#b8a4ff;
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  cursor:pointer;transition:all .25s;
+  box-shadow:0 0 14px rgba(123,97,255,.18);
+}
+.btn-cal:hover{background:rgba(123,97,255,.12);border-color:rgba(123,97,255,.85);color:#fff;box-shadow:0 0 22px rgba(123,97,255,.4)}
+.btn-cal i{color:var(--p)}
+.btn-cal:hover i{color:#fff}
+.stats{display:flex;flex-wrap:wrap;gap:1.4rem;align-items:center;justify-content:center;margin-top:.4rem}
+.stat p:first-child{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;text-shadow:var(--txt-shadow)}
+.stat p:last-child{font-size:.66rem;color:#7a9a9c;margin-top:1px;text-shadow:var(--txt-shadow)}
+.divider{width:1px;height:36px;background:rgba(255,255,255,.1)}
+.scroll-hint{
+  font-size:.75rem;color:#5a7878;
+  display:flex;align-items:center;gap:.5rem;
+  animation:bob 1.9s ease-in-out infinite;
+  text-shadow:var(--txt-shadow);
+}
+.scroll-hint i{color:var(--c)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ── ACT 2: CÓMO FUNCIONA ── */
+#a2{align-items:stretch;padding:6rem 4% 2rem;gap:2rem;display:flex !important}
+#a2-left{
+  flex:0 0 min(300px,42%);display:flex;flex-direction:column;
+  justify-content:center;gap:.6rem;
+  background:var(--glass);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,240,255,.18);
+  border-radius:18px;
+  padding:1.4rem;
+  box-shadow:0 8px 40px rgba(0,0,0,.5);
+}
+#a2 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
+#a2 h2{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:700;color:#fff;line-height:1.1;margin:.4rem 0 .6rem;text-shadow:var(--txt-shadow)}
+#a2 .sub{font-size:.85rem;color:#a8c4c6;line-height:1.65;text-shadow:var(--txt-shadow)}
+#a2-steps{flex:1;display:flex;flex-direction:column;gap:.7rem;justify-content:center;padding-left:0}
+.step{
+  background:var(--glass);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,240,255,.2);
+  border-radius:14px;padding:1.1rem 1.3rem;
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+  box-shadow:0 4px 24px rgba(0,0,0,.4);
+}
+.step:hover{border-color:rgba(0,240,255,.45);box-shadow:0 0 28px rgba(0,240,255,.15);transform:translateX(5px)}
+.step-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.snum{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--c),var(--p));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#000;font-size:.9rem;
+  box-shadow:0 0 14px rgba(0,240,255,.4);
+}
+.step h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#e0ecec;text-shadow:var(--txt-shadow)}
+.step p{font-size:.8rem;color:#a0bcbe;line-height:1.62;text-shadow:var(--txt-shadow)}
+@media(max-width:760px){
+  #a2{flex-direction:column !important;padding:5rem 4% 2rem;overflow-y:auto;justify-content:flex-start}
+  #a2-left{flex:none}
+  #a2-steps{padding-left:0;margin-top:.4rem}
+}
+
+/* ── ACT 3: PRODUCTOS ── */
+#a3{pointer-events:none}
+#a3-top{
+  position:absolute;top:7%;left:50%;transform:translateX(-50%);
+  text-align:center;width:90%;max-width:560px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(0,240,255,.18);
+  border-radius:14px;
+  padding:.85rem 1.4rem;
+  box-shadow:0 6px 30px rgba(0,0,0,.5);
+}
+#a3-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
+#a3-top h2{font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:600;color:#fff;margin:.25rem 0 0;letter-spacing:-.01em;text-shadow:var(--txt-shadow)}
+
+/* Borde animado para pcard */
+@keyframes borderShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.pcard{
+  position:absolute;right:3.5%;top:50%;transform:translateY(-50%);
+  width:min(320px,92vw);
+  opacity:0;pointer-events:none;
+  transition:opacity .15s;
+}
+@media(max-width:760px){.pcard{right:50%;transform:translate(50%,calc(-50% + 80px));top:auto;bottom:6%;width:92vw}}
+.pcard-inner{
+  position:relative;
+  background:var(--glass-strong);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,240,255,.25);
+  border-radius:16px;padding:1.4rem;
+  box-shadow:0 10px 40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.pcard-inner::before{
+  content:'';position:absolute;inset:-1px;border-radius:17px;
+  padding:1px;
+  background:linear-gradient(120deg, rgba(0,240,255,.6), rgba(123,97,255,.5), rgba(0,240,255,.6), rgba(123,97,255,.4));
+  background-size:300% 300%;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  animation:borderShift 5.5s ease infinite;
+  pointer-events:none;opacity:.85;
+}
+.pcard-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.pcard h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#fff;text-shadow:var(--txt-shadow)}
+.pcard .desc{font-size:.78rem;color:#a8c4c6;line-height:1.62;margin:.5rem 0 1rem;text-shadow:var(--txt-shadow)}
+.pcard .price-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.pcard .price{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;text-shadow:var(--txt-shadow)}
+.pcard .half{font-size:.66rem;color:#7a9a9c;margin-top:2px;text-shadow:var(--txt-shadow)}
+.padd{
+  padding:.55rem 1rem;border-radius:10px;font-size:.78rem;
+  pointer-events:auto;
+}
+.pnum{font-size:.62rem;color:#5a7878;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;text-shadow:var(--txt-shadow)}
+
+/* ── ACT 4: TESTIMONIOS ── */
+#a4{align-items:center;padding-bottom:5%;flex-direction:column;justify-content:center;padding-top:7%;gap:1.2rem}
+#a4-top{width:100%;max-width:680px;text-align:center;
+  background:var(--glass);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(0,240,255,.18);
+  border-radius:14px;
+  padding:.85rem 1.4rem;
+  box-shadow:0 6px 30px rgba(0,0,0,.5);
+}
+#a4-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
+#a4-top h2{font-size:clamp(1.1rem,2.3vw,1.8rem);font-weight:700;color:#fff;margin:.35rem 0;text-shadow:var(--txt-shadow)}
+#a4-cards{
+  width:100%;max-width:1180px;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1rem;padding:0 2%;
+}
+@media(max-width:860px){#a4-cards{grid-template-columns:1fr}}
+.tcard{
+  background:var(--glass-strong);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(123,97,255,.22);border-radius:14px;padding:1.2rem;
+  box-shadow:0 6px 28px rgba(0,0,0,.55);
+}
+.tcard:hover{border-color:rgba(123,97,255,.5)}
+.tav{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--p),var(--c));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#000;font-size:.88rem;
+}
+.tcard .tname{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;color:#e8f0f0;text-shadow:var(--txt-shadow)}
+.tcard .tcity{font-size:.68rem;color:#7a9a9c;text-shadow:var(--txt-shadow)}
+.tcard .tbody{font-size:.78rem;color:#a8c4c6;line-height:1.65;margin-top:.7rem;text-shadow:var(--txt-shadow)}
+.stars{display:flex;gap:2px;margin:.55rem 0}
+.stars i{font-size:.65rem;color:var(--c)}
+
+/* ── ACT 5: VIDEO ── */
+#a5{flex-direction:column;gap:1rem}
+#a5 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
+#a5 h2{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;color:#fff;margin:.4rem 0 1.2rem;text-align:center;text-shadow:var(--txt-shadow)}
+.vid-wrap{
+  width:min(640px,92vw);
+  pointer-events:auto;
+}
+.vid-ph{
+  aspect-ratio:16/9;
+  background:var(--glass-strong);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(0,240,255,.28);border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color .3s,box-shadow .3s;
+  box-shadow:0 8px 40px rgba(0,0,0,.55);
+}
+.vid-ph:hover{border-color:rgba(0,240,255,.55);box-shadow:0 0 40px rgba(0,240,255,.18)}
+.vid-ph::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 55% 55% at 50% 50%,rgba(0,240,255,.06),transparent 70%);
+  pointer-events:none;
+}
+.play-ring{
+  width:66px;height:66px;border-radius:50%;
+  background:rgba(0,240,255,.12);
+  border:2px solid rgba(0,240,255,.45);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;margin-bottom:1.1rem;
+}
+.vid-ph:hover .play-ring{background:rgba(0,240,255,.22);transform:scale(1.1);box-shadow:0 0 28px rgba(0,240,255,.35)}
+.vid-ph .vtitle{font-family:'Space Grotesk',sans-serif;font-size:.95rem;color:#dceaec;position:relative;z-index:1;text-shadow:var(--txt-shadow)}
+.vid-ph .vsub{font-size:.7rem;color:#5a7878;margin-top:.35rem;z-index:1;position:relative;text-shadow:var(--txt-shadow)}
+
+/* ─────────────────────────────────────────────
+   SECCIONES POST-SCROLL
+───────────────────────────────────────────── */
+#post{position:relative;z-index:30;background:var(--bg)}
+.section{padding:5rem 1.5rem;max-width:900px;margin:0 auto}
+.sec-lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);display:block;margin-bottom:.6rem}
+.sec-h{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:.6rem}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.07)}
+.faq-q{
+  cursor:pointer;padding:1.1rem 0;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:.97rem;
+  color:#b0c8ca;transition:color .2s;user-select:none;
+}
+.faq-q:hover{color:var(--c)}
+.faq-ic{transition:transform .3s;color:var(--c);flex-shrink:0;margin-left:.6rem}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .38s ease,padding .3s;color:#7a9a9c;line-height:1.72;font-size:.9rem}
+.faq-item.open .faq-a{max-height:240px;padding-bottom:1.1rem}
+.faq-item.open .faq-ic{transform:rotate(45deg)}
+
+/* ─────────────────────────────────────────────
+   CART DRAWER
+───────────────────────────────────────────── */
+#cov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:2000;opacity:0;pointer-events:none;transition:opacity .3s}
+#cov.open{opacity:1;pointer-events:all}
+#cdr{
+  position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);
+  background:#0a1618;border-left:1px solid rgba(0,240,255,.12);
+  box-shadow:-16px 0 50px rgba(0,0,0,.7);z-index:2001;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+#cdr.open{transform:translateX(0)}
+#cdr-head{padding:1.1rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between}
+#cdr-head h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;color:#e0ecec;display:flex;align-items:center;gap:.5rem}
+#cdr-head h3 i{color:var(--c)}
+#cdr-close{width:30px;height:30px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem}
+#cdr-items{flex:1;overflow-y:auto;padding:.9rem}
+#cdr-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
+#cdr-empty i{font-size:2.2rem;color:#1a2e2e;margin-bottom:.9rem}
+#cdr-empty p{font-family:'Space Grotesk',sans-serif;color:#5a7878;font-size:.95rem}
+.ci{border-bottom:1px solid rgba(255,255,255,.06);padding:.7rem 0;display:flex;align-items:center;gap:.7rem}
+.ci-ic{width:36px;height:36px;border-radius:7px;background:rgba(0,240,255,.06);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-info p{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:500;color:#b0c8ca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-info small{font-size:.7rem;font-weight:600;display:block;margin-top:1px}
+.ci-ctrl{display:flex;align-items:center;gap:.2rem;flex-shrink:0}
+.ci-ctrl button{width:24px;height:24px;border-radius:6px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem}
+.ci-ctrl span{width:16px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:.8rem}
+.ci-del{width:24px;height:24px;border-radius:6px;background:var(--s2);border:none;color:#c0392b;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;margin-left:.15rem}
+#cdr-foot{padding:1.1rem 1.2rem;border-top:1px solid rgba(255,255,255,.07)}
+.tot-row{display:flex;justify-content:space-between;font-size:.82rem;color:#7a9a9c;margin-bottom:.3rem}
+.tot-main{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:.98rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.3rem;margin-bottom:.25rem}
+.tot-half{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--c);font-size:.82rem;margin-bottom:.9rem}
+
+/* ─────────────────────────────────────────────
+   MODAL PAGO
+───────────────────────────────────────────── */
+#mov{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(16px);z-index:3000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;padding:1rem}
+#mov.open{opacity:1;pointer-events:all}
+#mbox{
+  background:linear-gradient(145deg,#0a1618,#0d1e20);
+  border:1px solid rgba(0,240,255,.22);border-radius:18px;
+  box-shadow:0 0 50px rgba(0,240,255,.14),0 24px 60px rgba(0,0,0,.65);
+  max-width:490px;width:100%;max-height:90vh;overflow-y:auto;padding:1.6rem;
+  transform:scale(.9) translateY(18px);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+#mov.open #mbox{transform:scale(1) translateY(0)}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
+.mh-l{display:flex;align-items:center;gap:.7rem}
+.mh-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--c),var(--p));display:flex;align-items:center;justify-content:center}
+.mh-icon i{color:#000;font-size:1.1rem}
+.mh h3{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:1.02rem}
+.mh small{font-size:.66rem;color:#5a7878}
+.mh-close{width:28px;height:28px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem}
+.mblock{background:var(--sf);border-radius:10px;padding:.9rem;margin-bottom:1rem;border:1px solid rgba(255,255,255,.05)}
+.mblock label{font-size:.62rem;color:#5a7878;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.6rem}
+.mblock .mrow{display:flex;justify-content:space-between;font-size:.82rem;color:#7a9a9c;padding:.2rem 0}
+.mblock .mrow.main{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;border-top:1px solid rgba(255,255,255,.06);margin-top:.3rem;padding-top:.4rem}
+.mblock .mrow.half{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--c);font-size:.82rem}
+.info-box{background:linear-gradient(90deg,rgba(0,240,255,.06),rgba(123,97,255,.06));border:1px solid rgba(0,240,255,.15);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;gap:.6rem}
+.info-box i{color:var(--c);flex-shrink:0;margin-top:2px}
+.info-box strong{font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:#e0ecec;display:block;margin-bottom:.25rem}
+.info-box p{font-size:.76rem;color:#7a9a9c;line-height:1.55}
+.m-divider{
+  display:flex;align-items:center;gap:.7rem;margin:1.1rem 0 .9rem;
+  color:#3a5555;font-size:.7rem;font-family:'Space Grotesk',sans-serif;letter-spacing:.1em;text-transform:uppercase;
+}
+.m-divider::before, .m-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+.m-alt-text{font-size:.78rem;color:#a0bcbe;text-align:center;margin-bottom:.7rem}
+.m-cancel{width:100%;padding:.65rem;background:none;border:none;color:#5a7878;cursor:pointer;font-size:.82rem;margin-top:.5rem;transition:color .2s}
+.m-cancel:hover{color:#a8c4c6}
+
+/* ─────────────────────────────────────────────
+   TOAST
+───────────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:1.8rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#0d1e20;border:1px solid rgba(0,240,255,.32);
+  border-radius:11px;padding:.65rem 1.3rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.84rem;
+  z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 24px rgba(0,0,0,.55);white-space:nowrap;
+  max-width:90vw;overflow:hidden;text-overflow:ellipsis;
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ─────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────── */
+footer{
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:2.5rem 1.5rem;
+  position:relative;z-index:30;background:var(--bg);
+}
+.footer-inner{max-width:1260px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.2rem}
+.footer-inner .logo span{font-size:1rem}
+.flinks{display:flex;gap:1.5rem;font-size:.82rem;flex-wrap:wrap}
+.flinks a{color:#5a7878;text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--c)}
+.fcopy{font-size:.7rem;color:#3a5555}
+
+/* ─────────────────────────────────────────────
+   MOBILE TWEAKS
+───────────────────────────────────────────── */
+@media(max-width:760px){
+  #hdr{padding:.7rem 1rem}
+  .btn-c,.btn-o,.btn-cal{padding:.75rem 1.2rem;font-size:.8rem}
+  #a1 .wrap{padding:1.2rem .9rem;gap:.85rem;border-radius:18px;margin-top:3.5rem}
+  #a1 h1{font-size:clamp(1.8rem,8vw,3rem)}
+  #a1 .btns{flex-direction:column;width:100%}
+  #a1 .btns button{width:100%;justify-content:center}
+  .stats{gap:1rem}
+  .stat p:first-child{font-size:1.25rem}
+  .divider{display:none}
+  .scroll-hint{font-size:.7rem}
+  #a3-top{top:5%;padding:.7rem 1rem}
+  #a3-top h2{font-size:1rem}
+  #a4-cards{padding:0 4%}
+  #cdr{width:100vw}
+  #mbox{padding:1.2rem;border-radius:14px}
+}
+@media(max-width:420px){
+  #hdr{padding:.6rem .8rem}
+  .logo span{font-size:.95rem}
+  .logo sub{font-size:.58rem}
+  #cart-btn{padding:.45rem .6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ── CANVAS THREE.JS ──────────────────────────────── -->
+<canvas id="stage"></canvas>
+
+<!-- ── BARRA PROGRESO ───────────────────────────────── -->
+<div id="pbar"></div>
+
+<!-- ── HEADER ───────────────────────────────────────── -->
+<header id="hdr">
+  <div class="logo">
+    <i class="fa-solid fa-house-signal"></i>
+    <div>
+      <span>La Domotienda</span>
+      <sub>Automatiza tu hogar</sub>
+    </div>
+  </div>
+  <nav>
+    <a href="#post">Preguntas</a>
+    <a href="#" onclick="openCalendly();return false;">Visita</a>
+  </nav>
+  <button id="cart-btn" aria-label="Abrir carrito">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <span id="cbadge" style="display:none">0</span>
+  </button>
+</header>
+
+<!-- ── SCROLL DRIVER ───────────────────────────────── -->
+<div id="scroll-driver"></div>
+
+<!-- ════════════════════════════════════════════════════
+     OVERLAYS FIJOS
+════════════════════════════════════════════════════ -->
+
+<!-- ACTO I: HERO -->
+<div id="a1" class="ov">
+  <div class="wrap">
+    <span class="lbl">Domótica · Colombia · 2025</span>
+    <h1>Tecnología que<br><span class="neon">simplifica</span> tu vida</h1>
+    <p>Domótica de última generación para tu hogar colombiano.<br>
+       <strong style="color:var(--c)">Paga el 50 % al instalar, el resto contra entrega.</strong></p>
+    <div class="btns">
+      <button class="btn-c" onclick="scrollTo3D()">
+        <i class="fa-solid fa-cube"></i> Comenzar tour 3D
+      </button>
+      <button class="btn-o" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">
+        <i class="fa-solid fa-circle-info"></i> Más información
+      </button>
+      <button class="btn-cal" onclick="openCalendly()">
+        <i class="fa-solid fa-calendar-check"></i> Agendar visita de evaluación
+      </button>
+    </div>
+    <div class="stats">
+      <div class="stat"><p>50</p><p>Pago inicial</p></div>
+      <div class="divider"></div>
+      <div class="stat"><p>100</p><p>Garantía</p></div>
+      <div class="divider"></div>
+      <div class="stat"><p>30</p><p>Ahorro energético</p></div>
+    </div>
+    <p class="scroll-hint"><i class="fa-solid fa-chevron-down"></i> Desplázate para recorrer la casa</p>
+  </div>
+</div>
+
+<!-- ACTO II: CÓMO FUNCIONA -->
+<div id="a2" class="ov">
+  <div id="a2-left">
+    <span class="lbl">Cómo funciona</span>
+    <h2>Así de <span class="neon">simple</span></h2>
+    <p class="sub">La cámara recorre tu futuro hogar mientras cada dispositivo se activa en tiempo real.</p>
+  </div>
+  <div id="a2-steps">
+    <div class="step">
+      <div class="step-head"><div class="snum">1</div><h3>Eliges tu equipo</h3></div>
+      <p>Explora el catálogo y selecciona los dispositivos que transformarán tu hogar.</p>
+    </div>
+    <div class="step">
+      <div class="step-head"><div class="snum">2</div><h3>Pagas solo el 50 %</h3></div>
+      <p>Confirma tu pedido con la mitad del valor. El resto lo pagas cuando estés 100 % satisfecho.</p>
+    </div>
+    <div class="step">
+      <div class="step-head"><div class="snum">3</div><h3>Instalamos, pagas el resto</h3></div>
+      <p>Técnicos certificados instalan todo. Garantía de 12 meses. Sin letra pequeña.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ACTO III: CATÁLOGO INTELIGENTE -->
+<div id="a3" class="ov">
+  <div id="a3-top">
+    <span class="lbl">Catálogo inteligente</span>
+    <h2>Elige tu automatización</h2>
+  </div>
+
+  <!-- Card 1: Luces LED -->
+  <div id="p1" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 1 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.3)">
+          <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.1rem"></i>
+        </div>
+        <h3>Kit Luces LED Inteligentes</h3>
+      </div>
+      <p class="desc">16M colores, escenas automáticas y 80 % de ahorro en iluminación. Control total desde el móvil.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#FFD700">$180.000 COP</p><p class="half">50% inicial: $90.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Interruptor WiFi -->
+  <div id="p2" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 2 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(123,97,255,.14);border:1px solid rgba(123,97,255,.32)">
+          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.1rem"></i>
+        </div>
+        <h3>Interruptor Táctil WiFi</h3>
+      </div>
+      <p class="desc">Control de iluminación desde cualquier parte del mundo. Compatible con Alexa y Google Home.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#7B61FF">$140.000 COP</p><p class="half">50% inicial: $70.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Cámara IA -->
+  <div id="p3" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 3 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3)">
+          <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.1rem"></i>
+        </div>
+        <h3>Cámara Seguridad IA</h3>
+      </div>
+      <p class="desc">Seguimiento automático con IA, visión nocturna 4K y alertas instantáneas en tu teléfono.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#FF4444">$480.000 COP</p><p class="half">50% inicial: $240.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(4)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Contenedor Basura -->
+  <div id="p4" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 4 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+        <div class="pcard-icon" style="background:rgba(0,170,136,.12);border:1px solid rgba(0,170,136,.3)">
+          <i class="fa-solid fa-trash-can" style="color:#00AA88;font-size:1.1rem"></i>
+        </div>
+        <h3>Contenedor Basura Inteligente</h3>
+      </div>
+      <p class="desc">Apertura automática, sensor de llenado y estadísticas de uso desde la app. Sin tocar la tapa.</p>
+      <div class="price-row">
+        <div><p class="price" style="color:#00AA88">$350.000 COP</p><p class="half">50% inicial: $175.000</p></div>
+        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTO IV: TESTIMONIOS -->
+<div id="a4" class="ov">
+  <div id="a4-top">
+    <span class="lbl">Testimonios</span>
+    <h2>Tu hogar <span class="neon">iluminado</span>, tu seguridad confirmada</h2>
+  </div>
+  <div id="a4-cards">
+    <div class="tcard">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
+        <div class="tav">JM</div>
+        <div><p class="tname">Jorge Martínez</p><p class="tcity">Bogotá, Cundinamarca</p></div>
+      </div>
+      <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+      <p class="tbody">"El modelo 50/50 me dio total tranquilidad. La diferencia en mi factura fue inmediata."</p>
+    </div>
+    <div class="tcard">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
+        <div class="tav">LC</div>
+        <div><p class="tname">Lucía Cárdenas</p><p class="tcity">Medellín, Antioquia</p></div>
+      </div>
+      <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+      <p class="tbody">"El técnico llegó puntual, explicó todo el proceso. Configuración desde el celular, increíble."</p>
+    </div>
+    <div class="tcard">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
+        <div class="tav">AR</div>
+        <div><p class="tname">Andrés Restrepo</p><p class="tcity">Cali, Valle del Cauca</p></div>
+      </div>
+      <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star" style="color:var(--p)"></i></div>
+      <p class="tbody">"La instalación fue perfecta y el sistema domótico centralizado es de primer nivel."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ACTO V: VIDEO -->
+<div id="a5" class="ov">
+  <span class="lbl">Experiencia en vivo</span>
+  <h2>El hogar inteligente <span class="neon">en acción</span></h2>
+  <div class="vid-wrap">
+    <div class="vid-ph" onclick="showToast('¡Pronto! Reemplaza este bloque con tu iframe o video.')">
+      <div class="play-ring"><i class="fa-solid fa-play" style="color:var(--c);font-size:1.3rem;margin-left:3px"></i></div>
+      <p class="vtitle">Video: Sistema completo de domótica en acción</p>
+      <p class="vsub">Reemplaza este bloque con tu &lt;iframe&gt; o &lt;video&gt;</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     POST-SCROLL
+════════════════════════════════════════════════════ -->
+<div id="post">
+  <div class="section">
+    <span class="sec-lbl">Preguntas frecuentes</span>
+    <h2 class="sec-h">Resolvemos tus dudas</h2>
+    <div id="faq-container"></div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="logo">
+        <i class="fa-solid fa-house-signal"></i>
+        <div><span>La Domotienda</span></div>
+      </div>
+      <nav class="flinks">
+        <a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Contacto</a>
+      </nav>
+      <p class="fcopy">© 2025 La Domotienda · Todos los derechos reservados</p>
+    </div>
+  </footer>
+</div>
+
+<!-- CART DRAWER -->
+<div id="cov"></div>
+<div id="cdr">
+  <div id="cdr-head">
+    <h3><i class="fa-solid fa-bag-shopping"></i> Tu Carrito</h3>
+    <button id="cdr-close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div id="cdr-items"></div>
+  <div id="cdr-empty">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <p>Tu carrito está vacío</p>
+  </div>
+  <div id="cdr-foot" style="display:none">
+    <div class="tot-row"><span>Subtotal</span><span id="cs"></span></div>
+    <div class="tot-row"><span>IVA (19%)</span><span id="ci2"></span></div>
+    <div class="tot-main"><span>Total</span><span id="ct"></span></div>
+    <div class="tot-half"><span>Pago inicial (50%)</span><span id="ch"></span></div>
+    <button class="btn-c" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="checkout-btn">
+      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Pagar el 50% inicial
+    </button>
+  </div>
+</div>
+
+<!-- MODAL PAGO -->
+<div id="mov">
+  <div id="mbox">
+    <div class="mh">
+      <div class="mh-l">
+        <div class="mh-icon"><i class="fa-brands fa-whatsapp"></i></div>
+        <div><h3>Confirmar Pedido</h3><small>Modo Demostración</small></div>
+      </div>
+      <button class="mh-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="mblock">
+      <label>Resumen del pedido</label>
+      <div id="m-items"></div>
+      <div class="mrow" style="font-size:.78rem;color:#5a7878;padding:.15rem 0"><span>Subtotal</span><span id="ms"></span></div>
+      <div class="mrow" style="font-size:.78rem;color:#5a7878;padding:.15rem 0"><span>IVA 19%</span><span id="mi"></span></div>
+      <div class="mrow main"><span>Total</span><span id="mt"></span></div>
+      <div class="mrow half" style="color:var(--c);padding:.15rem 0;font-weight:600"><span><i class="fa-solid fa-lock" style="font-size:.7rem;margin-right:.3rem"></i>Pago inicial 50%</span><span id="mhalf"></span></div>
+    </div>
+    <div class="info-box">
+      <i class="fa-solid fa-circle-info"></i>
+      <div><strong>Modo Demostración Activo</strong><p>Al confirmar serás redirigido a WhatsApp para coordinar tu instalación con un asesor.</p></div>
+    </div>
+    <button class="btn-c" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="confirm-wa">
+      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Confirmar y enviar pedido a WhatsApp
+    </button>
+
+    <div class="m-divider">o</div>
+    <p class="m-alt-text">¿Prefieres una visita sin compromiso?</p>
+    <button class="btn-cal" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="modal-calendly">
+      <i class="fa-solid fa-calendar-check" style="font-size:1rem"></i> Agendar visita de evaluación
+    </button>
+
+    <button class="m-cancel" id="modal-cancel">Cancelar y seguir comprando</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-msg"></span></div>
+
+<!-- ════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─────────────────────────────────────────────────────
+   CONFIG
+───────────────────────────────────────────────────── */
+const WHATSAPP_NUMBER = '573052332703';
+const CALENDLY_URL    = 'https://calendly.com/tu-usuario/visita-domotica';
+
+/* ─────────────────────────────────────────────────────
+   DATOS
+───────────────────────────────────────────────────── */
+const PRODUCTS = [
+  { id:1, name:'Contenedor Basura Inteligente', price:350000, icon:'fa-trash-can',  col:'#00AA88' },
+  { id:2, name:'Interruptor Táctil WiFi',       price:140000, icon:'fa-toggle-on',  col:'#7B61FF' },
+  { id:3, name:'Kit Luces LED Inteligentes',    price:180000, icon:'fa-lightbulb',  col:'#FFD700' },
+  { id:4, name:'Cámara Seguridad IA',           price:480000, icon:'fa-video',      col:'#FF4444' },
+];
+
+/* FAQ: 3 preguntas (sin garantía) */
+const FAQS = [
+  { q:'¿Cómo funciona exactamente el pago del 50%?',
+    a:'Al confirmar tu pedido por WhatsApp, pagas el 50% del total como anticipo. El 50% restante solo lo pagas cuando el técnico finaliza la instalación y estás completamente satisfecho. Sin letra pequeña.' },
+  { q:'¿Cuánto tiempo demora la instalación?',
+    a:'Un dispositivo individual toma 30–60 minutos. Un kit completo del hogar puede tomar 2–4 horas. Recibirás una estimación exacta antes de agendar.' },
+  { q:'¿Funcionan sin conexión a internet?',
+    a:'Las funciones básicas (encendido manual) funcionan offline. Para control remoto, automatizaciones y alertas necesitas WiFi de mínimo 10 Mbps.' },
+];
+
+const fmtCOP = n => '$' + n.toLocaleString('es-CO') + ' COP';
+
+/* ─────────────────────────────────────────────────────
+   CALENDLY
+───────────────────────────────────────────────────── */
+function openCalendly(){
+  window.open(CALENDLY_URL,'_blank','noopener');
+}
+
+/* ─────────────────────────────────────────────────────
+   CARRITO
+───────────────────────────────────────────────────── */
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem('domo3d_cart') || '[]'); } catch(e){}
+const saveCart = () => { try { localStorage.setItem('domo3d_cart', JSON.stringify(cart)); } catch(e){} };
+
+function cartTotals(){
+  const sub = cart.reduce((s,i) => s + i.price*i.qty, 0);
+  const iva = Math.round(sub*.19);
+  const tot = sub + iva;
+  return { sub, iva, tot, half: Math.round(tot*.5) };
+}
+
+function updateBadge(){
+  const b = document.getElementById('cbadge');
+  const n = cart.reduce((s,i) => s+i.qty, 0);
+  if(n > 0){ b.textContent=n; b.style.display='flex'; }
+  else b.style.display='none';
+}
+
+function addToCart(id){
+  const p = PRODUCTS.find(x => x.id===id);
+  const ex = cart.find(x => x.id===id);
+  ex ? ex.qty++ : cart.push({id:p.id,name:p.name,price:p.price,qty:1});
+  saveCart(); updateBadge(); renderCart();
+  const b = document.getElementById('cbadge');
+  b.classList.add('bump'); setTimeout(()=>b.classList.remove('bump'),300);
+  showToast(`<i class="fa-solid fa-circle-check" style="color:var(--c);margin-right:.4rem"></i>${p.name} agregado al carrito`);
+}
+
+function removeFromCart(id){ cart=cart.filter(x=>x.id!==id); saveCart(); updateBadge(); renderCart(); }
+function changeQty(id,d){ const i=cart.find(x=>x.id===id); if(i){i.qty=Math.max(1,i.qty+d); saveCart(); updateBadge(); renderCart();} }
+
+function renderCart(){
+  const el = document.getElementById('cdr-items');
+  const em = document.getElementById('cdr-empty');
+  const ft = document.getElementById('cdr-foot');
+  el.innerHTML='';
+  if(!cart.length){ el.style.display='none'; em.style.display='flex'; ft.style.display='none'; return; }
+  el.style.display='block'; em.style.display='none'; ft.style.display='block';
+  cart.forEach(item => {
+    const p = PRODUCTS.find(x=>x.id===item.id);
+    const d = document.createElement('div'); d.className='ci';
+    d.innerHTML=`
+      <div class="ci-ic"><i class="fa-solid ${p.icon}" style="font-size:.8rem;color:${p.col}"></i></div>
+      <div class="ci-info">
+        <p>${item.name}</p>
+        <small style="color:${p.col}">${fmtCOP(item.price)}</small>
+      </div>
+      <div class="ci-ctrl">
+        <button onclick="changeQty(${item.id},-1)"><i class="fa-solid fa-minus"></i></button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${item.id},1)"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <button class="ci-del" onclick="removeFromCart(${item.id})"><i class="fa-solid fa-trash"></i></button>`;
+    el.appendChild(d);
+  });
+  const {sub,iva,tot,half}=cartTotals();
+  document.getElementById('cs').textContent=fmtCOP(sub);
+  document.getElementById('ci2').textContent=fmtCOP(iva);
+  document.getElementById('ct').textContent=fmtCOP(tot);
+  document.getElementById('ch').textContent=fmtCOP(half);
+}
+
+/* ─────────────────────────────────────────────────────
+   DRAWER + MODAL
+───────────────────────────────────────────────────── */
+const openCart  = () => { document.getElementById('cov').classList.add('open'); document.getElementById('cdr').classList.add('open'); document.body.style.overflow='hidden'; };
+const closeCart = () => { document.getElementById('cov').classList.remove('open'); document.getElementById('cdr').classList.remove('open'); document.body.style.overflow=''; };
+const closeModal= () => { document.getElementById('mov').classList.remove('open'); document.body.style.overflow=''; };
+
+function openModal(){
+  const {sub,iva,tot,half}=cartTotals();
+  document.getElementById('m-items').innerHTML=cart.map(i=>`
+    <div style="display:flex;justify-content:space-between;padding:.18rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;color:#7a9a9c">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:.6rem">${i.name} ×${i.qty}</span>
+      <span style="color:#b0c8ca;flex-shrink:0;font-weight:500">${fmtCOP(i.price*i.qty)}</span>
+    </div>`).join('');
+  document.getElementById('ms').textContent=fmtCOP(sub);
+  document.getElementById('mi').textContent=fmtCOP(iva);
+  document.getElementById('mt').textContent=fmtCOP(tot);
+  document.getElementById('mhalf').textContent=fmtCOP(half);
+  document.getElementById('mov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+document.getElementById('cart-btn').addEventListener('click', openCart);
+document.getElementById('cdr-close').addEventListener('click', closeCart);
+document.getElementById('cov').addEventListener('click', closeCart);
+document.getElementById('checkout-btn').addEventListener('click', ()=>{ if(!cart.length)return; closeCart(); setTimeout(openModal,200); });
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+document.getElementById('modal-calendly').addEventListener('click', ()=>{ openCalendly(); });
+document.getElementById('mov').addEventListener('click', e=>{ if(e.target.id==='mov') closeModal(); });
+document.getElementById('confirm-wa').addEventListener('click', ()=>{
+  const {tot,half}=cartTotals();
+  const list=cart.map(i=>`${i.qty}x ${i.name} (${fmtCOP(i.price*i.qty)})`).join(', ');
+  const msg=encodeURIComponent(`Hola La Domotienda, quiero comprar: ${list}. Total: ${fmtCOP(tot)}. Aplico al 50% inicial: ${fmtCOP(half)}.`);
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank','noopener');
+  closeModal();
+});
+
+/* ─────────────────────────────────────────────────────
+   FAQ
+───────────────────────────────────────────────────── */
+function renderFAQ(){
+  const c=document.getElementById('faq-container');
+  FAQS.forEach(f=>{
+    const d=document.createElement('div'); d.className='faq-item';
+    d.innerHTML=`<div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>${f.q}</span><i class="fa-solid fa-plus faq-ic"></i></div><div class="faq-a">${f.a}</div>`;
+    c.appendChild(d);
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   TOAST
+───────────────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').innerHTML=msg;
+  t.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+function scrollTo3D(){
+  window.scrollTo({top: window.innerHeight*.1, behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════════════════════════
+   THREE.JS
+═══════════════════════════════════════════════════════ */
+
+let renderer, scene, camera;
+let clock;
+
+const tracked = {
+  bulbLight:null, bulbMat:null, bulbThread:null,
+  swMat:null, swLight:null, swRingMat:null, swDotMat:null,
+  camMat:null, camLedMat:null,
+  trashMat:null, trashLight:null, trashRingMat:null,
+  winMats:[],
+  houseWallMats:[],
+  roofMat:null,
+  netLineMat:null, netPtMat:null,
+  screenMat:null, screenLight:null,
+  cityMats:[],
+  personMeshes:[],
+  interiorLight:null,
+};
+
+const camTarget  = {x:0,y:22,z:6,  lx:0,ly:0,lz:0};
+const camCurrent = {x:0,y:22,z:6,  lx:0,ly:0,lz:0};
+
+const KF = [
+  { t:0.00, p:[ 0,  22,  6], l:[0,0, 0] },
+  { t:0.08, p:[ 7,  17, 14], l:[0,1, 0] },
+  { t:0.15, p:[ 2,  14, 16], l:[0,2, 0] },
+  { t:0.20, p:[ 1,   9, 17], l:[0,2.5,0] },
+  { t:0.27, p:[ 0,   5, 11], l:[0,3,  0] },
+  { t:0.34, p:[-1, 3.8,  7], l:[0,3.5,0] },
+  { t:0.40, p:[ 0, 4.5,  2], l:[ 0, 5,   -0.5] },
+  { t:0.51, p:[ 3, 3.2,  0.5], l:[5.2, 3,  0  ] },
+  { t:0.61, p:[-2.5, 4.2, -0.5], l:[-5.5, 3.8, -1] },
+  { t:0.70, p:[ 1.5, 2.5,  4], l:[3.5, 0.8, 3.5] },
+  { t:0.77, p:[-11, 12, 20], l:[0,2,0] },
+  { t:0.88, p:[  0,  9, 23], l:[0,2,0] },
+  { t:0.93, p:[  0,  7, 21], l:[0,5,12] },
+  { t:1.00, p:[  0,  5, 19], l:[0,4.5,12] },
+];
+
+function smoothstep(x){ return x*x*(3-2*x) }
+
+function interpCam(t){
+  let i=0;
+  while(i < KF.length-2 && KF[i+1].t <= t) i++;
+  const a=KF[i], b=KF[i+1];
+  const span = b.t - a.t;
+  const s = smoothstep(span>0 ? Math.max(0,Math.min(1,(t-a.t)/span)) : 0);
+  return {
+    x: a.p[0]+(b.p[0]-a.p[0])*s, y: a.p[1]+(b.p[1]-a.p[1])*s, z: a.p[2]+(b.p[2]-a.p[2])*s,
+    lx:a.l[0]+(b.l[0]-a.l[0])*s, ly:a.l[1]+(b.l[1]-a.l[1])*s, lz:a.l[2]+(b.l[2]-a.l[2])*s,
+  };
+}
+
+function initThree(){
+  const canvas = document.getElementById('stage');
+  renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x040c0d);
+  scene.fog = new THREE.FogExp2(0x040c0d, 0.016);
+
+  camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 200);
+  camera.position.set(0,22,6);
+
+  clock = new THREE.Clock();
+
+  window.addEventListener('resize',()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  buildLights();
+  buildGround();
+  buildHouse();
+  buildDevices();
+  buildNetwork();
+  buildCity();
+  buildVideoScreen();
+  buildPeople();
+  startRenderLoop();
+}
+
+function buildLights(){
+  scene.add(new THREE.AmbientLight(0x061416, 1.0));
+
+  const sun = new THREE.DirectionalLight(0x1a3336, 0.5);
+  sun.position.set(12,20,12); sun.castShadow=true;
+  sun.shadow.mapSize.set(1024,1024);
+  scene.add(sun);
+
+  const fill = new THREE.PointLight(0x00F0FF, 1.8, 35);
+  fill.position.set(0,10,10);
+  scene.add(fill); window._fillLight=fill;
+
+  const accent = new THREE.PointLight(0x7B61FF, 1.2, 22);
+  accent.position.set(-6,8,-4);
+  scene.add(accent);
+
+  const interior = new THREE.PointLight(0x00C4CC, 0.0, 14);
+  interior.position.set(0,4.5,0);
+  scene.add(interior); tracked.interiorLight=interior;
+}
+
+function buildGround(){
+  const mat = new THREE.MeshPhongMaterial({ color:0x030c0c, shininess:3 });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(120,120), mat);
+  mesh.rotation.x=-Math.PI/2; mesh.position.y=-0.1; mesh.receiveShadow=true;
+  scene.add(mesh);
+
+  const verts=[]; const lmat=new THREE.LineBasicMaterial({color:0x001616,transparent:true,opacity:.35});
+  for(let i=-60;i<=60;i+=2){ verts.push(i,0,-60,i,0,60); verts.push(-60,0,i,60,0,i); }
+  const lgeo=new THREE.BufferGeometry();
+  lgeo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+  const grid=new THREE.LineSegments(lgeo,lmat); grid.position.y=-0.05;
+  scene.add(grid);
+}
+
+function makeWallMat(){
+  const m=new THREE.MeshPhongMaterial({
+    color:0x091a1c, emissive:0x010a0b, emissiveIntensity:.15,
+    specular:0x003344, shininess:22, side:THREE.DoubleSide
+  });
+  tracked.houseWallMats.push(m);
+  return m;
+}
+
+function addEdges(mesh, color=0x00F0FF, opacity=0.18){
+  const m=new THREE.LineBasicMaterial({color,transparent:true,opacity});
+  const e=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry),m);
+  mesh.add(e);
+}
+
+function buildHouse(){
+  const wm = ()=>makeWallMat();
+  const box = (w,h,d,x,y,z,ry=0,mat=null)=>{
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat||wm());
+    m.position.set(x,y,z); if(ry) m.rotation.y=ry;
+    m.castShadow=true; m.receiveShadow=true;
+    scene.add(m); return m;
+  };
+
+  box(10,0.1,8, 0,0.05,0);
+  const ceil=box(10,0.1,8, 0,5.05,0);
+  addEdges(ceil,0x00F0FF,.08);
+  box(10,5,0.1, 0,2.5,-4);
+  box(0.1,5,8, -5,2.5,0);
+  box(0.1,5,8, 5,2.5,0);
+  box(3,5,0.1, -3.5,2.5,4);
+  box(3,5,0.1,  3.5,2.5,4);
+  box(4,1.85,0.1, 0,4.07,4);
+
+  const roofMat=new THREE.MeshPhongMaterial({
+    color:0x062020, emissive:0x010c0c, emissiveIntensity:.2, shininess:30
+  });
+  tracked.roofMat=roofMat;
+  const roof=new THREE.Mesh(new THREE.ConeGeometry(8.5,3.8,4,1),roofMat);
+  roof.position.set(0,7,0); roof.rotation.y=Math.PI/4;
+  roof.castShadow=true; scene.add(roof);
+  addEdges(roof,0x00F0FF,.1);
+
+  const doorMat=new THREE.MeshPhongMaterial({color:0x020d0e,emissive:0x000406});
+  const door=new THREE.Mesh(new THREE.BoxGeometry(2,3.2,0.07),doorMat);
+  door.position.set(0,1.6,4.06); scene.add(door);
+  addEdges(door,0x00F0FF,.25);
+
+  [[(-5.06), 3.2,(-1.5),0],[(- 5.06),3.2,1.5,0],
+   [5.06,3.2,-1.5,0],[5.06,3.2,1.5,0],
+   [-2.5,3.2,-4.06,Math.PI/2],[2.5,3.2,-4.06,Math.PI/2]
+  ].forEach(([px,py,pz,ry])=>{
+    const wm2=new THREE.MeshPhongMaterial({
+      color:0x001520, emissive:0x000d16, transparent:true, opacity:.82, shininess:55
+    });
+    tracked.winMats.push(wm2);
+    const win=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.1,0.06),wm2);
+    win.position.set(px,py,pz); if(ry) win.rotation.y=ry;
+    scene.add(win); addEdges(win,0x00F0FF,.18);
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   DISPOSITIVOS DETALLADOS
+───────────────────────────────────────────────────── */
+function buildDevices(){
+  /* ── 1. BOMBILLA INTELIGENTE (esfera + rosca + cordón) ── */
+  const bulbGroup = new THREE.Group();
+
+  // Bulbo esférico (vidrio amarillo/dorado)
+  const bm = new THREE.MeshStandardMaterial({
+    color:0xFFD700, emissive:0xFFAA00, emissiveIntensity:.12,
+    roughness:.2, metalness:.1, transparent:true, opacity:.92
+  });
+  tracked.bulbMat = bm;
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 22, 22), bm);
+  bulb.position.set(0,0,0);
+  bulbGroup.add(bulb);
+
+  // Base roscada (gris oscuro, anillada)
+  const threadMat = new THREE.MeshStandardMaterial({
+    color:0x3a3a3a, emissive:0x111111, roughness:.4, metalness:.85
+  });
+  tracked.bulbThread = threadMat;
+  const thread = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.22,0.22,16), threadMat);
+  thread.position.set(0,0.46,0);
+  bulbGroup.add(thread);
+
+  // Anillos de la rosca
+  for(let i=0;i<3;i++){
+    const ring=new THREE.Mesh(
+      new THREE.TorusGeometry(0.2,0.018,6,16),
+      new THREE.MeshStandardMaterial({color:0x222222, metalness:.9, roughness:.3})
+    );
+    ring.rotation.x = Math.PI/2;
+    ring.position.set(0, 0.4 + i*0.06, 0);
+    bulbGroup.add(ring);
+  }
+
+  // Conexión al techo
+  const cord=new THREE.Mesh(
+    new THREE.CylinderGeometry(0.025,0.025,0.42,8),
+    new THREE.MeshPhongMaterial({color:0x1a1a1a})
+  );
+  cord.position.set(0,0.78,0);
+  bulbGroup.add(cord);
+  const ceilMount=new THREE.Mesh(
+    new THREE.CylinderGeometry(0.18,0.18,0.07,12),
+    new THREE.MeshPhongMaterial({color:0x0a1a1c, emissive:0x021014})
+  );
+  ceilMount.position.set(0,1.02,0);
+  bulbGroup.add(ceilMount);
+
+  bulbGroup.position.set(0, 4.0, 0);
+  scene.add(bulbGroup);
+
+  const bl=new THREE.PointLight(0xFFCC44, 0, 9);
+  bl.position.set(0, 4.0, 0); scene.add(bl); tracked.bulbLight=bl;
+
+  /* ── 2. INTERRUPTOR TÁCTIL (caja + anillo táctil + LED) ── */
+  const swGroup = new THREE.Group();
+
+  const sm=new THREE.MeshStandardMaterial({
+    color:0x1a1a2e, emissive:0x0a0822, emissiveIntensity:.18,
+    roughness:.4, metalness:.3
+  });
+  tracked.swMat=sm;
+  const swBase=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.7,0.12), sm);
+  swGroup.add(swBase);
+  addEdges(swBase, 0x7B61FF, .35);
+
+  // Biseles en las esquinas (cilindros pequeños)
+  const bevelMat = new THREE.MeshStandardMaterial({color:0x2a2a4e, metalness:.6, roughness:.3});
+  [[-0.55,-0.3],[0.55,-0.3],[-0.55,0.3],[0.55,0.3]].forEach(([px,py])=>{
+    const bvl = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.13,10), bevelMat);
+    bvl.rotation.x = Math.PI/2;
+    bvl.position.set(px, py, 0);
+    swGroup.add(bvl);
+  });
+
+  // Anillo táctil central (torus)
+  const ringMat = new THREE.MeshStandardMaterial({
+    color:0x7B61FF, emissive:0x5500CC, emissiveIntensity:.5,
+    roughness:.3, metalness:.5
+  });
+  tracked.swRingMat = ringMat;
+  const tactRing = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.025, 8, 32), ringMat);
+  tactRing.position.set(0,0,0.07);
+  swGroup.add(tactRing);
+
+  // Punto de luz cyan central
+  const dotMat = new THREE.MeshStandardMaterial({
+    color:0x00F0FF, emissive:0x00F0FF, emissiveIntensity:.9
+  });
+  tracked.swDotMat = dotMat;
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), dotMat);
+  dot.position.set(0,0,0.08);
+  swGroup.add(dot);
+
+  swGroup.position.set(4.95,3,0.5);
+  swGroup.rotation.y = -Math.PI/2;
+  scene.add(swGroup);
+
+  const swl=new THREE.PointLight(0x7B61FF,0,6);
+  swl.position.set(5,3,0.5); scene.add(swl); tracked.swLight=swl;
+
+  /* ── 3. CÁMARA DE SEGURIDAD (cuerpo + lente + LED rojo + base) ── */
+  const camGroup = new THREE.Group();
+
+  // Cuerpo semiesférico (esfera achatada gris oscuro)
+  const cm=new THREE.MeshStandardMaterial({
+    color:0x1a1a1a, emissive:0x080404, emissiveIntensity:.15,
+    roughness:.35, metalness:.7
+  });
+  tracked.camMat=cm;
+  const camBody = new THREE.Mesh(new THREE.SphereGeometry(0.4, 18, 14, 0, Math.PI*2, 0, Math.PI*0.65), cm);
+  camBody.scale.set(1, 0.85, 1);
+  camBody.rotation.x = Math.PI;
+  camGroup.add(camBody);
+
+  // Aro frontal del cuerpo
+  const camRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.35, 0.04, 8, 24),
+    new THREE.MeshStandardMaterial({color:0x0a0a0a, metalness:.9, roughness:.2})
+  );
+  camRing.position.set(0, 0, 0.05);
+  camGroup.add(camRing);
+
+  // Lente cilíndrico frontal (vidrio negro pulido)
+  const lensMat=new THREE.MeshStandardMaterial({
+    color:0x111111, emissive:0x001020, emissiveIntensity:.35,
+    metalness:.85, roughness:.12
+  });
+  const lens=new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.16, 0.18, 18), lensMat);
+  lens.rotation.x = Math.PI/2;
+  lens.position.set(0, 0, 0.18);
+  camGroup.add(lens);
+
+  // Reflejo del lente (círculo pequeño)
+  const lensGlare = new THREE.Mesh(
+    new THREE.CircleGeometry(0.07, 16),
+    new THREE.MeshBasicMaterial({color:0x4488cc, transparent:true, opacity:.6})
+  );
+  lensGlare.position.set(-0.05, 0.04, 0.28);
+  camGroup.add(lensGlare);
+
+  // LED rojo (esfera minúscula con emissive)
+  const ledM=new THREE.MeshStandardMaterial({
+    color:0xFF0000, emissive:0xFF0000, emissiveIntensity:.9
+  });
+  tracked.camLedMat=ledM;
+  const led=new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), ledM);
+  led.position.set(0.22, 0.15, 0.18);
+  camGroup.add(led);
+
+  // Base de montaje (cilindro + caja a la pared)
+  const mountMat = new THREE.MeshStandardMaterial({color:0x0a0a0a, metalness:.8, roughness:.3});
+  const mountArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.35,10), mountMat);
+  mountArm.rotation.z = Math.PI/2;
+  mountArm.position.set(-0.32, 0, 0);
+  camGroup.add(mountArm);
+  const mountPlate = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.32, 0.32), mountMat);
+  mountPlate.position.set(-0.5, 0, 0);
+  camGroup.add(mountPlate);
+
+  // Posicionamiento general en la pared izquierda
+  camGroup.position.set(-4.95, 4.0, -1);
+  camGroup.rotation.y = Math.PI/2; // mirando hacia el centro
+  scene.add(camGroup);
+
+  /* ── 4. CONTENEDOR DE BASURA (cilindro + tapa + anillo LED + sensor) ── */
+  const trashGroup = new THREE.Group();
+
+  // Cuerpo principal (cilindro 0.55 x 1.3, gris metálico oscuro)
+  const tm=new THREE.MeshStandardMaterial({
+    color:0x2a2a2a, emissive:0x0a0a0a, emissiveIntensity:.1,
+    roughness:.35, metalness:.75
+  });
+  tracked.trashMat=tm;
+  const tBody=new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.6, 1.3, 18, 1, true), tm);
+  tBody.position.set(0, 0.65, 0);
+  trashGroup.add(tBody);
+
+  // Refuerzos horizontales
+  for(let i=0;i<3;i++){
+    const reinf = new THREE.Mesh(
+      new THREE.TorusGeometry(0.555, 0.012, 6, 24),
+      new THREE.MeshStandardMaterial({color:0x1a1a1a, metalness:.9, roughness:.3})
+    );
+    reinf.rotation.x = Math.PI/2;
+    reinf.position.set(0, 0.3 + i*0.4, 0);
+    trashGroup.add(reinf);
+  }
+
+  // Base inferior cerrada
+  const tBottom = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.6, 0.6, 0.05, 18),
+    new THREE.MeshStandardMaterial({color:0x111111, metalness:.7, roughness:.4})
+  );
+  tBottom.position.set(0,0.025,0);
+  trashGroup.add(tBottom);
+
+  // Tapa superior ligeramente más ancha + bisel
+  const lidMat = new THREE.MeshStandardMaterial({
+    color:0x3a3a3a, emissive:0x0a0a0a, emissiveIntensity:.1,
+    roughness:.3, metalness:.8
+  });
+  const lid=new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.58, 0.1, 18), lidMat);
+  lid.position.set(0, 1.36, 0);
+  trashGroup.add(lid);
+
+  // Bisel toroide superior
+  const lidBevel = new THREE.Mesh(
+    new THREE.TorusGeometry(0.6, 0.03, 8, 24),
+    new THREE.MeshStandardMaterial({color:0x1a1a1a, metalness:.9, roughness:.25})
+  );
+  lidBevel.rotation.x = Math.PI/2;
+  lidBevel.position.set(0, 1.42, 0);
+  trashGroup.add(lidBevel);
+
+  // Anillo LED en parte superior (torus delgado emissive)
+  const ringEmitMat = new THREE.MeshStandardMaterial({
+    color:0x00AA88, emissive:0x00AA88, emissiveIntensity:.8,
+    roughness:.4, metalness:.2
+  });
+  tracked.trashRingMat = ringEmitMat;
+  const ledRing = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.022, 10, 36), ringEmitMat);
+  ledRing.rotation.x = Math.PI/2;
+  ledRing.position.set(0, 1.32, 0);
+  trashGroup.add(ledRing);
+
+  // Sensor frontal (esfera pequeña)
+  const sens=new THREE.Mesh(
+    new THREE.SphereGeometry(0.07, 12, 12),
+    new THREE.MeshStandardMaterial({color:0x00F0FF, emissive:0x00F0FF, emissiveIntensity:.7})
+  );
+  sens.position.set(0, 1.05, 0.55);
+  trashGroup.add(sens);
+
+  // Marco del sensor
+  const sensFrame = new THREE.Mesh(
+    new THREE.TorusGeometry(0.09, 0.012, 6, 16),
+    new THREE.MeshStandardMaterial({color:0x111111, metalness:.8, roughness:.4})
+  );
+  sensFrame.position.set(0, 1.05, 0.555);
+  trashGroup.add(sensFrame);
+
+  trashGroup.position.set(3.5, 0, 3);
+  scene.add(trashGroup);
+
+  const tl=new THREE.PointLight(0x00AA88,0,6);
+  tl.position.set(3.5,1.6,3); scene.add(tl); tracked.trashLight=tl;
+}
+
+function buildNetwork(){
+  const N=90; const nodes=[];
+  for(let i=0;i<N;i++){
+    const th=Math.random()*Math.PI*2;
+    const ph=Math.acos(2*Math.random()-1);
+    const r=14+Math.random()*22;
+    nodes.push(new THREE.Vector3(
+      r*Math.sin(ph)*Math.cos(th),
+      r*Math.sin(ph)*Math.sin(ph)*0.55+4,
+      r*Math.cos(ph)
+    ));
+  }
+  const pgeo=new THREE.BufferGeometry();
+  pgeo.setAttribute('position',new THREE.Float32BufferAttribute(nodes.flatMap(n=>[n.x,n.y,n.z]),3));
+  const pmat=new THREE.PointsMaterial({color:0x00F0FF,size:.2,transparent:true,opacity:.5});
+  tracked.netPtMat=pmat;
+  const pts=new THREE.Points(pgeo,pmat);
+  scene.add(pts); window._netPts=pts;
+
+  const lv=[];
+  for(let i=0;i<nodes.length;i++)
+    for(let j=i+1;j<nodes.length;j++)
+      if(nodes[i].distanceTo(nodes[j])<9){ lv.push(nodes[i].x,nodes[i].y,nodes[i].z,nodes[j].x,nodes[j].y,nodes[j].z); }
+  const lgeo=new THREE.BufferGeometry();
+  lgeo.setAttribute('position',new THREE.Float32BufferAttribute(lv,3));
+  const lmat=new THREE.LineBasicMaterial({color:0x00F0FF,transparent:true,opacity:.07});
+  tracked.netLineMat=lmat;
+  scene.add(new THREE.LineSegments(lgeo,lmat));
+}
+
+function buildCity(){
+  for(let i=0;i<24;i++){
+    const w=.7+Math.random()*1.3, h=1+Math.random()*5, d=.7+Math.random()*1.3;
+    const em=Math.random()>.5 ? 0x001a22 : 0x0e0022;
+    const mat=new THREE.MeshPhongMaterial({color:0x020a0a,emissive:em,emissiveIntensity:.3+Math.random()*.45});
+    tracked.cityMats.push(mat);
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+    const ang=Math.random()*Math.PI*2, dist=24+Math.random()*30;
+    m.position.set(Math.cos(ang)*dist, h/2, Math.sin(ang)*dist);
+    scene.add(m);
+  }
+}
+
+function buildVideoScreen(){
+  const frameMat=new THREE.MeshPhongMaterial({color:0x081820,emissive:0x001428,shininess:55});
+  const frame=new THREE.Mesh(new THREE.BoxGeometry(13,7.8,0.18),frameMat);
+  frame.position.set(0,4.5,12.2); scene.add(frame); addEdges(frame,0x00F0FF,.28);
+
+  const scrMat=new THREE.MeshPhongMaterial({color:0x000a12,emissive:0x000e1a,shininess:75,transparent:true,opacity:.9});
+  tracked.screenMat=scrMat;
+  const scr=new THREE.Mesh(new THREE.PlaneGeometry(12.2,7),scrMat);
+  scr.position.set(0,4.5,12.3); scene.add(scr);
+
+  const sl=new THREE.PointLight(0x00F0FF,0,18);
+  sl.position.set(0,4.5,12); scene.add(sl); tracked.screenLight=sl;
+
+  const playMat=new THREE.MeshPhongMaterial({color:0x00F0FF,emissive:0x00F0FF,emissiveIntensity:.55});
+  const play=new THREE.Mesh(new THREE.CylinderGeometry(1,1,0.08,32),playMat);
+  play.rotation.x=Math.PI/2; play.position.set(0,4.5,12.35); scene.add(play);
+}
+
+function buildPeople(){
+  const positions=[[-2,0,1],[1,0,-2.5],[3,0,-2.8]];
+  const bodyColors=[0x08141e,0x0e0820,0x051410];
+  positions.forEach(([px,py,pz],i)=>{
+    const bmat=new THREE.MeshPhongMaterial({color:bodyColors[i],emissive:0x010608,shininess:15});
+    const body=new THREE.Mesh(new THREE.BoxGeometry(.5,.8,.28),bmat);
+    body.position.set(px,py+.4,pz); body.visible=false;
+    const hmat=new THREE.MeshPhongMaterial({color:0xFFDDCC,emissive:0x100600});
+    const head=new THREE.Mesh(new THREE.SphereGeometry(.2,8,8),hmat);
+    head.position.set(0,.57,0); body.add(head);
+    scene.add(body);
+    tracked.personMeshes.push({mesh:body, baseY:py+.4, phase:i*1.5});
+  });
+}
+
+let scrollProg = 0;
+
+function startRenderLoop(){
+  function tick(){
+    requestAnimationFrame(tick);
+    const t = clock.getElapsedTime();
+
+    const kf = interpCam(scrollProg);
+    camTarget.x=kf.x; camTarget.y=kf.y; camTarget.z=kf.z;
+    camTarget.lx=kf.lx; camTarget.ly=kf.ly; camTarget.lz=kf.lz;
+
+    const ease=0.055;
+    for(const k of ['x','y','z','lx','ly','lz'])
+      camCurrent[k]+=(camTarget[k]-camCurrent[k])*ease;
+
+    camera.position.set(camCurrent.x,camCurrent.y,camCurrent.z);
+    camera.lookAt(camCurrent.lx,camCurrent.ly,camCurrent.lz);
+
+    if(window._fillLight)
+      window._fillLight.position.lerp(new THREE.Vector3(camCurrent.x,camCurrent.y-2,camCurrent.z),.06);
+
+    const pulse = Math.sin(t*.75)*.055+.09;
+    if(tracked.netLineMat) tracked.netLineMat.opacity=pulse;
+    if(tracked.netPtMat)   tracked.netPtMat.opacity=.4+Math.sin(t*.5)*.1;
+    if(window._netPts)     window._netPts.rotation.y+=.00035;
+
+    updateDevices(scrollProg, t);
+
+    tracked.personMeshes.forEach(p=>{
+      const sh=Math.max(0,Math.min(1,(scrollProg-.72)/.08));
+      p.mesh.visible=sh>.01;
+      p.mesh.position.y=p.baseY+Math.sin(t*1.3+p.phase)*.055;
+    });
+
+    renderer.render(scene,camera);
+  }
+  tick();
+}
+
+function bell(t,s,e){ if(t<s||t>e)return 0; return Math.sin(((t-s)/(e-s))*Math.PI); }
+function ramp(t,s,e){ return Math.max(0,Math.min(1,(t-s)/(e-s))); }
+
+function updateDevices(t, time){
+  const global = ramp(t,.32,.5);
+  const pulse  = 1+Math.sin(time*2.8)*.14;
+
+  // Bombilla
+  const ba = Math.max(bell(t,.36,.52), global*.3);
+  if(tracked.bulbMat){
+    tracked.bulbMat.emissiveIntensity = .12 + ba*2.4*pulse;
+    tracked.bulbMat.emissive.setHex(lerp32(0xFFAA00, 0xFFEE88, Math.min(1,ba*1.6)));
+  }
+  if(tracked.bulbLight) tracked.bulbLight.intensity = ba*3.2;
+
+  // Interruptor
+  const sa = Math.max(bell(t,.48,.63), global*.25);
+  if(tracked.swMat){
+    tracked.swMat.emissiveIntensity = .15 + sa*1.5*pulse;
+  }
+  if(tracked.swRingMat){
+    tracked.swRingMat.emissiveIntensity = .4 + sa*1.6*pulse;
+  }
+  if(tracked.swDotMat){
+    tracked.swDotMat.emissiveIntensity = .6 + sa*1.2*pulse;
+  }
+  if(tracked.swLight) tracked.swLight.intensity = sa*1.8;
+
+  // Cámara
+  const ca = Math.max(bell(t,.58,.73), global*.2);
+  if(tracked.camMat){
+    tracked.camMat.emissiveIntensity = .15 + ca*1.4*pulse;
+  }
+  if(tracked.camLedMat) tracked.camLedMat.emissiveIntensity = .5+ca*1.6*pulse;
+
+  // Contenedor
+  const ta = Math.max(bell(t,.66,.78), global*.2);
+  if(tracked.trashMat){
+    tracked.trashMat.emissiveIntensity = .1 + ta*1.4*pulse;
+  }
+  if(tracked.trashRingMat){
+    tracked.trashRingMat.emissiveIntensity = .6 + ta*1.6*pulse;
+  }
+  if(tracked.trashLight) tracked.trashLight.intensity = ta*1.8;
+
+  // Paredes
+  const wallGlow = global*.28;
+  tracked.houseWallMats.forEach(m=>{ m.emissiveIntensity = .1+wallGlow; });
+  if(tracked.roofMat) tracked.roofMat.emissiveIntensity = .15+wallGlow*.8;
+
+  // Ventanas
+  const winBright = ramp(t,.3,.65);
+  tracked.winMats.forEach(m=>{
+    m.emissiveIntensity = .05+winBright*.9;
+    m.emissive.setHex(lerp32(0x000d16,0x003344,winBright));
+  });
+
+  if(tracked.interiorLight) tracked.interiorLight.intensity = ramp(t,.3,.55)*1.6;
+
+  const va = ramp(t,.87,.96);
+  if(tracked.screenMat) tracked.screenMat.emissiveIntensity = .05+va*.8;
+  if(tracked.screenLight) tracked.screenLight.intensity = va*2.5;
+}
+
+function lerp32(a,b,t){
+  const ar=(a>>16)&0xFF, ag=(a>>8)&0xFF, ab=a&0xFF;
+  const br=(b>>16)&0xFF, bg=(b>>8)&0xFF, bb=b&0xFF;
+  const r=Math.round(ar+(br-ar)*t);
+  const g=Math.round(ag+(bg-ag)*t);
+  const bl2=Math.round(ab+(bb-ab)*t);
+  return (r<<16)|(g<<8)|bl2;
+}
+
+/* ─────────────────────────────────────────────────────
+   GSAP SCROLL TRIGGER
+───────────────────────────────────────────────────── */
+function initScroll(){
+  gsap.registerPlugin(ScrollTrigger);
+
+  ScrollTrigger.create({
+    trigger:'#scroll-driver',
+    start:'top top',
+    end:'bottom bottom',
+    scrub:1.4,
+    onUpdate(self){
+      const p = self.progress;
+      scrollProg = p;
+      document.getElementById('pbar').style.width = (p*100)+'%';
+      updateOverlays(p);
+    }
+  });
+
+  ScrollTrigger.create({
+    trigger:'#post',
+    start:'top 96%',
+    end:'top 30%',
+    scrub:true,
+    onUpdate(self){
+      const op = Math.max(0, 1-self.progress*1.3);
+      document.getElementById('stage').style.opacity=op;
+      if(self.progress>.6) hideAllOverlays();
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   CONTROL DE OVERLAYS — fundidos amplios y suaves
+───────────────────────────────────────────────────── */
+function setOv(id, t, start, end, fade=0.07){
+  const el=document.getElementById(id); if(!el) return;
+  let op=0;
+  if(t<start) op=0;
+  else if(t<start+fade) op=(t-start)/fade;
+  else if(t<end-fade) op=1;
+  else if(t<end) op=(end-t)/fade;
+  else op=0;
+  el.style.opacity=op;
+  el.style.pointerEvents=op>.06 ? 'auto' : 'none';
+}
+
+function setPCard(id, t, start, end){
+  const el=document.getElementById(id); if(!el) return;
+  const fade=0.025;
+  let op=0;
+  if(t>=start && t<start+fade) op=(t-start)/fade;
+  else if(t>=start+fade && t<end-fade) op=1;
+  else if(t>=end-fade && t<end) op=(end-t)/fade;
+  el.style.opacity=op;
+  el.style.pointerEvents=op>.06 ? 'auto' : 'none';
+}
+
+function updateOverlays(t){
+  setOv('a1', t, 0,    0.175);
+  setOv('a2', t, 0.15, 0.375);
+  setOv('a3', t, 0.34, 0.78);
+  setOv('a4', t, 0.74, 0.925);
+  setOv('a5', t, 0.90, 0.995);
+  setPCard('p1', t, 0.37, 0.51);
+  setPCard('p2', t, 0.49, 0.63);
+  setPCard('p3', t, 0.59, 0.73);
+  setPCard('p4', t, 0.68, 0.79);
+}
+
+function hideAllOverlays(){
+  ['a1','a2','a3','a4','a5'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.style.opacity=0; el.style.pointerEvents='none'; }
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   INICIO
+───────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+  renderFAQ();
+  renderCart();
+  updateBadge();
+  try { initThree(); initScroll(); }
+  catch(e){
+    console.warn('3D no disponible:', e && e.message);
+    document.getElementById('stage').style.display='none';
+  }
+  const a1=document.getElementById('a1');
+  if(a1){ a1.style.opacity=1; a1.style.pointerEvents='auto'; }
+});
+</script>
+</body>
+</html>
