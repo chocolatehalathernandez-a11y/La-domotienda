@@ -1,0 +1,27 @@
+Modo experto. Eres un desarrollador frontend senior con 10 años en Three.js, GSAP y UI de alto nivel. Toma el código HTML pegado. Refactoriza aplicando TODOS los cambios sin omitir ninguno:
+
+1. WHATSAPP: Todo enlace de contacto debe llevar a wa.me/573052332703. El carrito al confirmar compra redirige a WhatsApp con mensaje predefinido que incluya los productos elegidos.
+
+2. HERO: Quitar números de "Pago inicial", "Garantía" y "Ahorro energético". Eliminar botón "Comenzar tour 3D" (el scroll es intuitivo). Cambiar textos a: "Apoyo personalizado 24/7 post venta" y "Vida inteligente".
+
+3. CALENDLY: Toda mención de "visita", "agendar" o "evaluación" abre el widget inline de Calendly. Explicar brevemente que es para videollamada y aclarar dudas de instalación. Embeber este código en las secciones correspondientes:
+<div class="calendly-inline-widget" data-url="https://calendly.com/famhalat01/30min?background_color=000000&text_color=ffffff&primary_color=00f8ff" style="min-width:320px;height:700px;"></div>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+4. FAQ: Agregar las preguntas del archivo Pasted-1. Eliminar pregunta de garantía. Incluir opción de visita virtual para aclarar dudas. El botón "Más información" del Hero debe hacer scroll hasta la sección FAQ.
+
+5. PRODUCTOS: No mostrar precios (se verán en WhatsApp). Ajustar descripciones: Contenedor (sensor de apertura automática, elegir tamaño pequeño/mediano/grande). Cámara (alertas instantáneas al teléfono, seguimiento inteligente, sin mencionar IA ni 4K). Interruptor táctil WiFi. Agregar interruptor por voz compatible con Alexa, Google Home y otros. Luces LED (ahorro, control por app y voz con Alexa, Google Home y otros, sin mencionar cantidad de colores).
+
+6. FIGURAS 3D: Refinar para que sean reconocibles. Bombilla: bulbo esférico (0.45, #FFD700, emissive, roughness 0.2) + rosca (cilindro gris) + conexión al techo. Interruptor: caja rectangular plana (1.2×0.7×0.12) + anillo táctil central (TorusGeometry) con punto de luz cyan. Cámara: cuerpo semiesférico + lente cilíndrico + LED rojo (esfera minúscula, emissive #FF0000) + base de montaje. Contenedor: cilindro principal (0.55×1.3, gris metálico) + tapa ancha con bisel + anillo LED superior (torus, emissive #00AA88) + sensor frontal.
+
+7. CÓMO FUNCIONA: Incluir procedimiento con Calendly y asistencia 24/7 post venta.
+
+8. OVERLAYS: Fondo vidrio esmerilado sólido: background rgba(6,13,14,0.85); backdrop-filter blur(24px). Textos con text-shadow: 0 2px 8px rgba(0,0,0,0.8). Fade entre actos de 0.06-0.08.
+
+9. TOAST: El mensaje "¡Pronto! Reemplaza este bloque..." solo debe aparecer al hacer clic en el placeholder de video de la sección "Experiencia en vivo", no en otras partes.
+
+10. LEGALES: Los enlaces de Términos y Privacidad del footer deben abrir una ventana modal con textos legales básicos.
+
+11. BARRA DE PROGRESO: 3px de grosor con glow sutil.
+
+Devuelve el archivo HTML completo listo para probar.
