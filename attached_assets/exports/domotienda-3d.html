@@ -13,15 +13,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <style>
-/* ─────────────────────────────────────────────
-   RESET & TOKENS
-───────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --c:#00F0FF; --p:#7B61FF;
   --bg:#060d0e; --sf:#0d1a1c; --s2:#111e20;
-  --glass:rgba(6, 13, 14, 0.85);
-  --glass-strong:rgba(6, 13, 14, 0.92);
+  --glass:rgba(6, 13, 14, 0.86);
+  --glass-strong:rgba(6, 13, 14, 0.93);
   --txt-shadow:0 2px 8px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.7);
 }
 html{scroll-behavior:auto;-webkit-text-size-adjust:100%}
@@ -36,42 +33,23 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:var(--c);border-radius:2px}
 
-/* ─────────────────────────────────────────────
-   CANVAS FIJO (z:0)
-───────────────────────────────────────────── */
-#stage{
-  position:fixed;inset:0;
-  z-index:0;pointer-events:none;
-  box-shadow:inset 0 0 120px rgba(0,0,0,.7);
-}
-
-/* ─────────────────────────────────────────────
-   SCROLLTRIGGER SPACER
-───────────────────────────────────────────── */
+#stage{position:fixed;inset:0;z-index:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,.7)}
 #scroll-driver{height:600vh;position:relative;z-index:1;pointer-events:none}
 
-/* ─────────────────────────────────────────────
-   BARRA DE PROGRESO 3px + GLOW
-───────────────────────────────────────────── */
 #pbar{
   position:fixed;top:0;left:0;height:3px;width:0;
   background:linear-gradient(90deg,var(--p),var(--c));
   z-index:9999;transition:width .05s linear;
-  box-shadow:
-    0 0 8px rgba(0,240,255,.7),
-    0 0 16px rgba(123,97,255,.45),
-    0 1px 4px rgba(0,240,255,.6);
+  box-shadow:0 0 8px rgba(0,240,255,.7),0 0 16px rgba(123,97,255,.45),0 1px 4px rgba(0,240,255,.6);
   border-radius:0 2px 2px 0;
 }
 
-/* ─────────────────────────────────────────────
-   HEADER
-───────────────────────────────────────────── */
+/* HEADER */
 #hdr{
   position:fixed;top:0;left:0;right:0;z-index:800;
   display:flex;align-items:center;justify-content:space-between;
   padding:.85rem 2rem;
-  background:rgba(6,13,14,.78);
+  background:rgba(6,13,14,.8);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(0,240,255,.1);
 }
@@ -79,10 +57,11 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 .logo i{color:var(--c);font-size:1.15rem}
 .logo span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:-.01em}
 .logo sub{font-size:.65rem;color:#3a5555;display:block;margin-top:-2px;line-height:1}
-#hdr nav{display:flex;align-items:center;gap:1.5rem}
-#hdr nav a{color:#7a9a9c;text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s}
+#hdr nav{display:flex;align-items:center;gap:1.4rem}
+#hdr nav a{color:#7a9a9c;text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
 #hdr nav a:hover{color:var(--c)}
-@media(max-width:760px){#hdr nav{display:none}}
+@media(max-width:760px){#hdr nav{gap:.85rem}#hdr nav a{font-size:.74rem}}
+@media(max-width:420px){#hdr nav a:nth-child(1){display:none}}
 #cart-btn{
   position:relative;padding:.55rem .7rem;border-radius:10px;
   background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);
@@ -94,15 +73,12 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   background:var(--c);color:#000;font-size:.58rem;font-weight:700;
   min-width:16px;height:16px;border-radius:8px;
   display:flex;align-items:center;justify-content:center;
-  position:absolute;top:-4px;right:-4px;
-  font-family:'Space Grotesk',sans-serif;
+  position:absolute;top:-4px;right:-4px;font-family:'Space Grotesk',sans-serif;
 }
 #cbadge.bump{animation:bump .26s}
 @keyframes bump{50%{transform:scale(1.5)}}
 
-/* ─────────────────────────────────────────────
-   OVERLAYS
-───────────────────────────────────────────── */
+/* OVERLAYS */
 .ov{
   position:fixed;inset:0;z-index:10;
   opacity:0;pointer-events:none;
@@ -111,10 +87,10 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   padding:0 1.2rem;
 }
 
-/* ── ACT 1: HERO ── */
+/* HERO */
 #a1 .wrap{
   text-align:center;max-width:880px;width:100%;
-  padding:1.4rem 1.4rem;
+  padding:1.5rem 1.5rem;
   display:flex;flex-direction:column;align-items:center;gap:1.1rem;
   background:var(--glass);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
@@ -123,25 +99,12 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   box-shadow:0 8px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
   margin-top:4rem;
 }
-#a1 .lbl{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.68rem;font-weight:600;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--c);
-  text-shadow:var(--txt-shadow);
-}
-#a1 h1{
-  font-size:clamp(2rem,6.5vw,5.4rem);
-  font-weight:700;color:#fff;
-  line-height:1.06;letter-spacing:-.025em;
-  text-shadow:var(--txt-shadow);
-}
+#a1 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
+#a1 h1{font-size:clamp(2rem,6.5vw,5.4rem);font-weight:700;color:#fff;line-height:1.06;letter-spacing:-.025em;text-shadow:var(--txt-shadow)}
 .neon{color:var(--c);text-shadow:0 0 18px rgba(0,240,255,.55),0 0 40px rgba(0,240,255,.22),0 2px 8px rgba(0,0,0,.85)}
-#a1 p{
-  font-size:clamp(.92rem,2vw,1.15rem);
-  color:#b8d4d6;max-width:580px;line-height:1.7;
-  text-shadow:var(--txt-shadow);
-}
+#a1 p{font-size:clamp(.92rem,2vw,1.15rem);color:#b8d4d6;max-width:580px;line-height:1.7;text-shadow:var(--txt-shadow)}
 #a1 .btns{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+
 .btn-c{
   background:linear-gradient(135deg,var(--c),#00b5c0);
   color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;
@@ -173,61 +136,77 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 .btn-cal:hover{background:rgba(123,97,255,.12);border-color:rgba(123,97,255,.85);color:#fff;box-shadow:0 0 22px rgba(123,97,255,.4)}
 .btn-cal i{color:var(--p)}
 .btn-cal:hover i{color:#fff}
-.stats{display:flex;flex-wrap:wrap;gap:1.4rem;align-items:center;justify-content:center;margin-top:.4rem}
-.stat p:first-child{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;text-shadow:var(--txt-shadow)}
-.stat p:last-child{font-size:.66rem;color:#7a9a9c;margin-top:1px;text-shadow:var(--txt-shadow)}
-.divider{width:1px;height:36px;background:rgba(255,255,255,.1)}
-.scroll-hint{
-  font-size:.75rem;color:#5a7878;
-  display:flex;align-items:center;gap:.5rem;
-  animation:bob 1.9s ease-in-out infinite;
+.btn-wa{
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;
+  border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  box-shadow:0 0 22px rgba(37,211,102,.3);
+  transition:transform .25s,box-shadow .25s;
+}
+.btn-wa:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 38px rgba(37,211,102,.5)}
+
+.chips{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;margin-top:.3rem}
+.chip{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.5rem .85rem;border-radius:24px;
+  background:rgba(0,240,255,.07);
+  border:1px solid rgba(0,240,255,.22);
+  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:500;color:#cae8ea;
   text-shadow:var(--txt-shadow);
 }
+.chip i{color:var(--c);font-size:.72rem}
+.chip.purple{background:rgba(123,97,255,.08);border-color:rgba(123,97,255,.28)}
+.chip.purple i{color:var(--p)}
+.chip.green{background:rgba(0,170,136,.09);border-color:rgba(0,170,136,.3)}
+.chip.green i{color:#00C996}
+
+.scroll-hint{font-size:.75rem;color:#5a7878;display:flex;align-items:center;gap:.5rem;animation:bob 1.9s ease-in-out infinite;text-shadow:var(--txt-shadow)}
 .scroll-hint i{color:var(--c)}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
-/* ── ACT 2: CÓMO FUNCIONA ── */
-#a2{align-items:stretch;padding:6rem 4% 2rem;gap:2rem;display:flex !important}
+/* ACT 2: CÓMO FUNCIONA */
+#a2{align-items:stretch;padding:6rem 4% 2rem;gap:1.5rem;display:flex !important}
 #a2-left{
-  flex:0 0 min(300px,42%);display:flex;flex-direction:column;
+  flex:0 0 min(290px,40%);display:flex;flex-direction:column;
   justify-content:center;gap:.6rem;
   background:var(--glass);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid rgba(0,240,255,.18);
-  border-radius:18px;
-  padding:1.4rem;
+  border-radius:18px;padding:1.4rem;
   box-shadow:0 8px 40px rgba(0,0,0,.5);
 }
 #a2 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
 #a2 h2{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:700;color:#fff;line-height:1.1;margin:.4rem 0 .6rem;text-shadow:var(--txt-shadow)}
 #a2 .sub{font-size:.85rem;color:#a8c4c6;line-height:1.65;text-shadow:var(--txt-shadow)}
-#a2-steps{flex:1;display:flex;flex-direction:column;gap:.7rem;justify-content:center;padding-left:0}
+#a2-steps{flex:1;display:flex;flex-direction:column;gap:.55rem;justify-content:center}
 .step{
   background:var(--glass);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid rgba(0,240,255,.2);
-  border-radius:14px;padding:1.1rem 1.3rem;
+  border-radius:14px;padding:.85rem 1.1rem;
   transition:border-color .3s,box-shadow .3s,transform .3s;
   box-shadow:0 4px 24px rgba(0,0,0,.4);
 }
 .step:hover{border-color:rgba(0,240,255,.45);box-shadow:0 0 28px rgba(0,240,255,.15);transform:translateX(5px)}
-.step-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.step-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.35rem}
 .snum{
-  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(135deg,var(--c),var(--p));
   display:flex;align-items:center;justify-content:center;
-  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#000;font-size:.9rem;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#000;font-size:.82rem;
   box-shadow:0 0 14px rgba(0,240,255,.4);
 }
-.step h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#e0ecec;text-shadow:var(--txt-shadow)}
-.step p{font-size:.8rem;color:#a0bcbe;line-height:1.62;text-shadow:var(--txt-shadow)}
+.step h3{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:600;color:#e0ecec;text-shadow:var(--txt-shadow)}
+.step p{font-size:.74rem;color:#a0bcbe;line-height:1.55;text-shadow:var(--txt-shadow)}
 @media(max-width:760px){
   #a2{flex-direction:column !important;padding:5rem 4% 2rem;overflow-y:auto;justify-content:flex-start}
   #a2-left{flex:none}
-  #a2-steps{padding-left:0;margin-top:.4rem}
+  #a2-steps{margin-top:.4rem}
 }
 
-/* ── ACT 3: PRODUCTOS ── */
+/* ACT 3: CATÁLOGO */
 #a3{pointer-events:none}
 #a3-top{
   position:absolute;top:7%;left:50%;transform:translateX(-50%);
@@ -235,71 +214,71 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   background:var(--glass);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border:1px solid rgba(0,240,255,.18);
-  border-radius:14px;
-  padding:.85rem 1.4rem;
+  border-radius:14px;padding:.85rem 1.4rem;
   box-shadow:0 6px 30px rgba(0,0,0,.5);
 }
 #a3-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
 #a3-top h2{font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:600;color:#fff;margin:.25rem 0 0;letter-spacing:-.01em;text-shadow:var(--txt-shadow)}
 
-/* Borde animado para pcard */
-@keyframes borderShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+@keyframes borderShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
 .pcard{
   position:absolute;right:3.5%;top:50%;transform:translateY(-50%);
-  width:min(320px,92vw);
+  width:min(330px,92vw);
   opacity:0;pointer-events:none;
   transition:opacity .15s;
 }
-@media(max-width:760px){.pcard{right:50%;transform:translate(50%,calc(-50% + 80px));top:auto;bottom:6%;width:92vw}}
+@media(max-width:760px){.pcard{right:50%;transform:translate(50%,calc(-50% + 70px));top:auto;bottom:5%;width:92vw}}
 .pcard-inner{
   position:relative;
   background:var(--glass-strong);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid rgba(0,240,255,.25);
-  border-radius:16px;padding:1.4rem;
+  border-radius:16px;padding:1.3rem;
   box-shadow:0 10px 40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
 }
 .pcard-inner::before{
-  content:'';position:absolute;inset:-1px;border-radius:17px;
-  padding:1px;
+  content:'';position:absolute;inset:-1px;border-radius:17px;padding:1px;
   background:linear-gradient(120deg, rgba(0,240,255,.6), rgba(123,97,255,.5), rgba(0,240,255,.6), rgba(123,97,255,.4));
   background-size:300% 300%;
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  -webkit-mask-composite:xor;mask-composite:exclude;
   animation:borderShift 5.5s ease infinite;
   pointer-events:none;opacity:.85;
 }
 .pcard-icon{
-  width:44px;height:44px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
 .pcard h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#fff;text-shadow:var(--txt-shadow)}
-.pcard .desc{font-size:.78rem;color:#a8c4c6;line-height:1.62;margin:.5rem 0 1rem;text-shadow:var(--txt-shadow)}
-.pcard .price-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
-.pcard .price{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;text-shadow:var(--txt-shadow)}
-.pcard .half{font-size:.66rem;color:#7a9a9c;margin-top:2px;text-shadow:var(--txt-shadow)}
-.padd{
-  padding:.55rem 1rem;border-radius:10px;font-size:.78rem;
-  pointer-events:auto;
+.pcard .desc{font-size:.78rem;color:#a8c4c6;line-height:1.6;margin:.5rem 0 .8rem;text-shadow:var(--txt-shadow)}
+.pcard .feats{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.85rem}
+.feat{
+  font-size:.62rem;font-family:'Space Grotesk',sans-serif;font-weight:500;
+  padding:.22rem .55rem;border-radius:14px;
+  background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);color:#9fd4d8;
 }
+
+.size-row{display:flex;gap:.35rem;margin-bottom:.85rem}
+.size-btn{
+  flex:1;padding:.42rem;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  color:#9fb6b8;font-family:'Space Grotesk',sans-serif;font-size:.7rem;font-weight:500;
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.size-btn:hover{background:rgba(0,240,255,.07);border-color:rgba(0,240,255,.25)}
+.size-btn.active{background:rgba(0,240,255,.15);border-color:var(--c);color:#fff;box-shadow:0 0 12px rgba(0,240,255,.3)}
+
+.pcard .add-row{display:flex;justify-content:flex-end}
+.padd{padding:.55rem 1rem;border-radius:10px;font-size:.78rem;pointer-events:auto}
 .pnum{font-size:.62rem;color:#5a7878;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;text-shadow:var(--txt-shadow)}
 
-/* ── ACT 4: TESTIMONIOS ── */
+/* ACT 4: TESTIMONIOS */
 #a4{align-items:center;padding-bottom:5%;flex-direction:column;justify-content:center;padding-top:7%;gap:1.2rem}
 #a4-top{width:100%;max-width:680px;text-align:center;
-  background:var(--glass);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(0,240,255,.18);
-  border-radius:14px;
-  padding:.85rem 1.4rem;
-  box-shadow:0 6px 30px rgba(0,0,0,.5);
+  background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(0,240,255,.18);border-radius:14px;
+  padding:.85rem 1.4rem;box-shadow:0 6px 30px rgba(0,0,0,.5);
 }
 #a4-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
 #a4-top h2{font-size:clamp(1.1rem,2.3vw,1.8rem);font-weight:700;color:#fff;margin:.35rem 0;text-shadow:var(--txt-shadow)}
@@ -310,12 +289,10 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 }
 @media(max-width:860px){#a4-cards{grid-template-columns:1fr}}
 .tcard{
-  background:var(--glass-strong);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  background:var(--glass-strong);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border:1px solid rgba(123,97,255,.22);border-radius:14px;padding:1.2rem;
   box-shadow:0 6px 28px rgba(0,0,0,.55);
 }
-.tcard:hover{border-color:rgba(123,97,255,.5)}
 .tav{
   width:40px;height:40px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(135deg,var(--p),var(--c));
@@ -328,25 +305,19 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 .stars{display:flex;gap:2px;margin:.55rem 0}
 .stars i{font-size:.65rem;color:var(--c)}
 
-/* ── ACT 5: VIDEO ── */
+/* ACT 5: VIDEO */
 #a5{flex-direction:column;gap:1rem}
 #a5 .lbl{font-family:'Space Grotesk',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
 #a5 h2{font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;color:#fff;margin:.4rem 0 1.2rem;text-align:center;text-shadow:var(--txt-shadow)}
-.vid-wrap{
-  width:min(640px,92vw);
-  pointer-events:auto;
-}
+.vid-wrap{width:min(640px,92vw);pointer-events:none}
 .vid-ph{
   aspect-ratio:16/9;
-  background:var(--glass-strong);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:var(--glass-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border:1px solid rgba(0,240,255,.28);border-radius:14px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;cursor:pointer;
-  transition:border-color .3s,box-shadow .3s;
+  position:relative;overflow:hidden;
   box-shadow:0 8px 40px rgba(0,0,0,.55);
 }
-.vid-ph:hover{border-color:rgba(0,240,255,.55);box-shadow:0 0 40px rgba(0,240,255,.18)}
 .vid-ph::before{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse 55% 55% at 50% 50%,rgba(0,240,255,.06),transparent 70%);
@@ -357,35 +328,45 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   background:rgba(0,240,255,.12);
   border:2px solid rgba(0,240,255,.45);
   display:flex;align-items:center;justify-content:center;
-  transition:all .3s;margin-bottom:1.1rem;
+  margin-bottom:1.1rem;
 }
-.vid-ph:hover .play-ring{background:rgba(0,240,255,.22);transform:scale(1.1);box-shadow:0 0 28px rgba(0,240,255,.35)}
-.vid-ph .vtitle{font-family:'Space Grotesk',sans-serif;font-size:.95rem;color:#dceaec;position:relative;z-index:1;text-shadow:var(--txt-shadow)}
-.vid-ph .vsub{font-size:.7rem;color:#5a7878;margin-top:.35rem;z-index:1;position:relative;text-shadow:var(--txt-shadow)}
+.vid-ph .vtitle{font-family:'Space Grotesk',sans-serif;font-size:.95rem;color:#dceaec;position:relative;z-index:1;text-shadow:var(--txt-shadow);text-align:center;padding:0 1rem}
+.vid-ph .vsub{font-size:.7rem;color:#5a7878;margin-top:.35rem;z-index:1;position:relative;text-shadow:var(--txt-shadow);text-align:center;padding:0 1rem}
 
-/* ─────────────────────────────────────────────
-   SECCIONES POST-SCROLL
-───────────────────────────────────────────── */
+/* POST-SCROLL */
 #post{position:relative;z-index:30;background:var(--bg)}
 .section{padding:5rem 1.5rem;max-width:900px;margin:0 auto}
 .sec-lbl{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--c);display:block;margin-bottom:.6rem}
 .sec-h{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:.6rem}
+.sec-sub{font-size:.95rem;color:#9fb6b8;margin-bottom:2rem;line-height:1.65}
+
 .faq-item{border-bottom:1px solid rgba(255,255,255,.07)}
 .faq-q{
-  cursor:pointer;padding:1.1rem 0;
+  cursor:pointer;padding:1.05rem 0;
   display:flex;justify-content:space-between;align-items:center;
-  font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:.97rem;
-  color:#b0c8ca;transition:color .2s;user-select:none;
+  font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:.94rem;
+  color:#b0c8ca;transition:color .2s;user-select:none;gap:.6rem;
 }
 .faq-q:hover{color:var(--c)}
-.faq-ic{transition:transform .3s;color:var(--c);flex-shrink:0;margin-left:.6rem}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .38s ease,padding .3s;color:#7a9a9c;line-height:1.72;font-size:.9rem}
-.faq-item.open .faq-a{max-height:240px;padding-bottom:1.1rem}
+.faq-q span{flex:1}
+.faq-ic{transition:transform .3s;color:var(--c);flex-shrink:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .42s ease,padding .3s;color:#7a9a9c;line-height:1.72;font-size:.88rem}
+.faq-a-inner{padding:0 0 1.1rem 0}
+.faq-item.open .faq-a{max-height:600px}
+.faq-item.open .faq-a .faq-a-inner{padding-bottom:1.1rem}
 .faq-item.open .faq-ic{transform:rotate(45deg)}
 
-/* ─────────────────────────────────────────────
-   CART DRAWER
-───────────────────────────────────────────── */
+.faq-foot{
+  margin-top:2.5rem;padding:1.6rem;border-radius:16px;
+  background:linear-gradient(135deg,rgba(0,240,255,.06),rgba(123,97,255,.05));
+  border:1px solid rgba(0,240,255,.15);
+  display:flex;flex-direction:column;align-items:center;gap:1rem;text-align:center;
+}
+.faq-foot h3{font-family:'Space Grotesk',sans-serif;font-size:1.08rem;font-weight:600;color:#fff}
+.faq-foot p{color:#a0bcbe;font-size:.86rem;max-width:480px;line-height:1.6}
+.faq-foot .btns2{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+
+/* CART DRAWER */
 #cov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:2000;opacity:0;pointer-events:none;transition:opacity .3s}
 #cov.open{opacity:1;pointer-events:all}
 #cdr{
@@ -399,67 +380,121 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 #cdr-head{padding:1.1rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between}
 #cdr-head h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;color:#e0ecec;display:flex;align-items:center;gap:.5rem}
 #cdr-head h3 i{color:var(--c)}
-#cdr-close{width:30px;height:30px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem}
+.modal-close{width:30px;height:30px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem}
 #cdr-items{flex:1;overflow-y:auto;padding:.9rem}
 #cdr-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
 #cdr-empty i{font-size:2.2rem;color:#1a2e2e;margin-bottom:.9rem}
-#cdr-empty p{font-family:'Space Grotesk',sans-serif;color:#5a7878;font-size:.95rem}
+#cdr-empty p{font-family:'Space Grotesk',sans-serif;color:#5a7878;font-size:.95rem;margin-bottom:.4rem}
+#cdr-empty small{color:#3a5555;font-size:.8rem;line-height:1.5;max-width:240px}
 .ci{border-bottom:1px solid rgba(255,255,255,.06);padding:.7rem 0;display:flex;align-items:center;gap:.7rem}
 .ci-ic{width:36px;height:36px;border-radius:7px;background:rgba(0,240,255,.06);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ci-info{flex:1;min-width:0}
-.ci-info p{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:500;color:#b0c8ca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ci-info small{font-size:.7rem;font-weight:600;display:block;margin-top:1px}
+.ci-info p{font-family:'Space Grotesk',sans-serif;font-size:.74rem;font-weight:500;color:#b0c8ca;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.ci-info small{font-size:.66rem;color:#5a7878;display:block;margin-top:2px}
 .ci-ctrl{display:flex;align-items:center;gap:.2rem;flex-shrink:0}
 .ci-ctrl button{width:24px;height:24px;border-radius:6px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem}
 .ci-ctrl span{width:16px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:.8rem}
 .ci-del{width:24px;height:24px;border-radius:6px;background:var(--s2);border:none;color:#c0392b;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;margin-left:.15rem}
 #cdr-foot{padding:1.1rem 1.2rem;border-top:1px solid rgba(255,255,255,.07)}
-.tot-row{display:flex;justify-content:space-between;font-size:.82rem;color:#7a9a9c;margin-bottom:.3rem}
-.tot-main{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:.98rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.3rem;margin-bottom:.25rem}
-.tot-half{display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--c);font-size:.82rem;margin-bottom:.9rem}
+#cdr-foot .qty-info{font-size:.74rem;color:#7a9a9c;text-align:center;margin-bottom:.85rem;padding:.55rem;background:rgba(0,240,255,.05);border-radius:8px;border:1px solid rgba(0,240,255,.12)}
+#cdr-foot .qty-info i{color:var(--c);margin-right:.3rem}
 
-/* ─────────────────────────────────────────────
-   MODAL PAGO
-───────────────────────────────────────────── */
+/* CALENDLY MODAL */
+#calov{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);z-index:3500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:1rem}
+#calov.open{opacity:1;pointer-events:all}
+#calbox{
+  background:linear-gradient(145deg,#0a1618,#0d1e20);
+  border:1px solid rgba(0,240,255,.25);border-radius:18px;
+  box-shadow:0 0 60px rgba(0,240,255,.18),0 24px 60px rgba(0,0,0,.7);
+  max-width:900px;width:100%;max-height:96vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:scale(.92) translateY(20px);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+#calov.open #calbox{transform:scale(1) translateY(0)}
+.cal-head{padding:1.2rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem}
+.cal-head-l{flex:1;display:flex;align-items:flex-start;gap:.85rem}
+.cal-icon{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--c),var(--p));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cal-icon i{color:#000;font-size:1.15rem}
+.cal-head h3{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:1.05rem;margin-bottom:.3rem}
+.cal-head p{font-size:.78rem;color:#9fb6b8;line-height:1.5}
+.cal-info{
+  background:rgba(0,240,255,.05);border:1px solid rgba(0,240,255,.14);
+  margin:0 1.4rem;border-radius:10px;padding:.75rem .95rem;
+  display:flex;gap:.55rem;align-items:flex-start;
+  font-size:.78rem;color:#a8c4c6;line-height:1.55;
+  margin-top:.85rem;
+}
+.cal-info i{color:var(--c);margin-top:2px;flex-shrink:0}
+.cal-info strong{color:#cae8ea;font-family:'Space Grotesk',sans-serif;font-weight:600;display:block;margin-bottom:.15rem}
+#cal-embed-wrap{padding:.95rem 1.4rem 1.4rem;flex:1;overflow:auto;min-height:0}
+.calendly-inline-widget{min-width:280px;width:100%;height:680px;border-radius:12px;overflow:hidden;background:#000}
+@media(max-width:760px){
+  #calbox{max-height:100vh;height:100vh;border-radius:0}
+  .calendly-inline-widget{height:calc(100vh - 240px);min-height:500px}
+  .cal-head{padding:1rem}
+  #cal-embed-wrap{padding:.7rem 1rem 1rem}
+}
+
+/* MODAL PAGO (confirmar carrito) */
 #mov{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(16px);z-index:3000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;padding:1rem}
 #mov.open{opacity:1;pointer-events:all}
 #mbox{
   background:linear-gradient(145deg,#0a1618,#0d1e20);
   border:1px solid rgba(0,240,255,.22);border-radius:18px;
   box-shadow:0 0 50px rgba(0,240,255,.14),0 24px 60px rgba(0,0,0,.65);
-  max-width:490px;width:100%;max-height:90vh;overflow-y:auto;padding:1.6rem;
+  max-width:490px;width:100%;max-height:92vh;overflow-y:auto;padding:1.6rem;
   transform:scale(.9) translateY(18px);
   transition:transform .3s cubic-bezier(.34,1.56,.64,1);
 }
 #mov.open #mbox{transform:scale(1) translateY(0)}
 .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
 .mh-l{display:flex;align-items:center;gap:.7rem}
-.mh-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--c),var(--p));display:flex;align-items:center;justify-content:center}
-.mh-icon i{color:#000;font-size:1.1rem}
+.mh-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center}
+.mh-icon i{color:#fff;font-size:1.1rem}
 .mh h3{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;font-size:1.02rem}
 .mh small{font-size:.66rem;color:#5a7878}
-.mh-close{width:28px;height:28px;border-radius:7px;background:var(--s2);border:none;color:#6a8888;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem}
-.mblock{background:var(--sf);border-radius:10px;padding:.9rem;margin-bottom:1rem;border:1px solid rgba(255,255,255,.05)}
+
+.mblock{background:var(--sf);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid rgba(255,255,255,.05)}
 .mblock label{font-size:.62rem;color:#5a7878;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.6rem}
-.mblock .mrow{display:flex;justify-content:space-between;font-size:.82rem;color:#7a9a9c;padding:.2rem 0}
-.mblock .mrow.main{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e0ecec;border-top:1px solid rgba(255,255,255,.06);margin-top:.3rem;padding-top:.4rem}
-.mblock .mrow.half{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--c);font-size:.82rem}
+.m-item{display:flex;justify-content:space-between;padding:.32rem 0;font-size:.8rem;color:#b0c8ca;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.m-item:last-child{border-bottom:none}
+.m-item .qq{color:var(--c);font-family:'Space Grotesk',sans-serif;font-weight:600;flex-shrink:0}
 .info-box{background:linear-gradient(90deg,rgba(0,240,255,.06),rgba(123,97,255,.06));border:1px solid rgba(0,240,255,.15);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;gap:.6rem}
 .info-box i{color:var(--c);flex-shrink:0;margin-top:2px}
 .info-box strong{font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:#e0ecec;display:block;margin-bottom:.25rem}
 .info-box p{font-size:.76rem;color:#7a9a9c;line-height:1.55}
-.m-divider{
-  display:flex;align-items:center;gap:.7rem;margin:1.1rem 0 .9rem;
-  color:#3a5555;font-size:.7rem;font-family:'Space Grotesk',sans-serif;letter-spacing:.1em;text-transform:uppercase;
-}
-.m-divider::before, .m-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+.m-divider{display:flex;align-items:center;gap:.7rem;margin:1.1rem 0 .9rem;color:#3a5555;font-size:.7rem;font-family:'Space Grotesk',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.m-divider::before,.m-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
 .m-alt-text{font-size:.78rem;color:#a0bcbe;text-align:center;margin-bottom:.7rem}
 .m-cancel{width:100%;padding:.65rem;background:none;border:none;color:#5a7878;cursor:pointer;font-size:.82rem;margin-top:.5rem;transition:color .2s}
 .m-cancel:hover{color:#a8c4c6}
 
-/* ─────────────────────────────────────────────
-   TOAST
-───────────────────────────────────────────── */
+/* LEGAL MODAL */
+#legov{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);z-index:3200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;padding:1rem}
+#legov.open{opacity:1;pointer-events:all}
+#legbox{
+  background:linear-gradient(145deg,#0a1618,#0d1e20);
+  border:1px solid rgba(0,240,255,.22);border-radius:16px;
+  box-shadow:0 24px 60px rgba(0,0,0,.7);
+  max-width:680px;width:100%;max-height:90vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:scale(.92) translateY(18px);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+#legov.open #legbox{transform:scale(1) translateY(0)}
+.leg-head{padding:1.1rem 1.3rem;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between}
+.leg-head h3{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:1.02rem;display:flex;align-items:center;gap:.5rem}
+.leg-head h3 i{color:var(--c)}
+.leg-body{padding:1.3rem;overflow-y:auto;color:#a8c4c6;font-size:.86rem;line-height:1.7}
+.leg-body h4{font-family:'Space Grotesk',sans-serif;font-weight:600;color:#cae8ea;margin:1.1rem 0 .4rem;font-size:.95rem}
+.leg-body h4:first-child{margin-top:0}
+.leg-body p{margin-bottom:.7rem}
+.leg-body ul{padding-left:1.2rem;margin-bottom:.7rem}
+.leg-body li{margin-bottom:.3rem}
+.leg-body strong{color:#cae8ea}
+
+/* TOAST */
 #toast{
   position:fixed;bottom:1.8rem;left:50%;
   transform:translateX(-50%) translateY(80px);
@@ -472,35 +507,26 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 }
 #toast.show{transform:translateX(-50%) translateY(0)}
 
-/* ─────────────────────────────────────────────
-   FOOTER
-───────────────────────────────────────────── */
+/* FOOTER */
 footer{
   border-top:1px solid rgba(255,255,255,.05);
-  padding:2.5rem 1.5rem;
-  position:relative;z-index:30;background:var(--bg);
+  padding:2.5rem 1.5rem;position:relative;z-index:30;background:var(--bg);
 }
 .footer-inner{max-width:1260px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.2rem}
 .footer-inner .logo span{font-size:1rem}
 .flinks{display:flex;gap:1.5rem;font-size:.82rem;flex-wrap:wrap}
-.flinks a{color:#5a7878;text-decoration:none;transition:color .2s}
-.flinks a:hover{color:var(--c)}
+.flinks a,.flinks button{color:#5a7878;text-decoration:none;transition:color .2s;background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;padding:0}
+.flinks a:hover,.flinks button:hover{color:var(--c)}
 .fcopy{font-size:.7rem;color:#3a5555}
 
-/* ─────────────────────────────────────────────
-   MOBILE TWEAKS
-───────────────────────────────────────────── */
+/* MOBILE */
 @media(max-width:760px){
   #hdr{padding:.7rem 1rem}
-  .btn-c,.btn-o,.btn-cal{padding:.75rem 1.2rem;font-size:.8rem}
+  .btn-c,.btn-o,.btn-cal,.btn-wa{padding:.75rem 1.2rem;font-size:.8rem}
   #a1 .wrap{padding:1.2rem .9rem;gap:.85rem;border-radius:18px;margin-top:3.5rem}
   #a1 h1{font-size:clamp(1.8rem,8vw,3rem)}
   #a1 .btns{flex-direction:column;width:100%}
   #a1 .btns button{width:100%;justify-content:center}
-  .stats{gap:1rem}
-  .stat p:first-child{font-size:1.25rem}
-  .divider{display:none}
-  .scroll-hint{font-size:.7rem}
   #a3-top{top:5%;padding:.7rem 1rem}
   #a3-top h2{font-size:1rem}
   #a4-cards{padding:0 4%}
@@ -517,13 +543,9 @@ footer{
 </head>
 <body>
 
-<!-- ── CANVAS THREE.JS ──────────────────────────────── -->
 <canvas id="stage"></canvas>
-
-<!-- ── BARRA PROGRESO ───────────────────────────────── -->
 <div id="pbar"></div>
 
-<!-- ── HEADER ───────────────────────────────────────── -->
 <header id="hdr">
   <div class="logo">
     <i class="fa-solid fa-house-signal"></i>
@@ -533,8 +555,9 @@ footer{
     </div>
   </div>
   <nav>
-    <a href="#post">Preguntas</a>
-    <a href="#" onclick="openCalendly();return false;">Visita</a>
+    <a onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Preguntas</a>
+    <a onclick="openCalendly()">Visita virtual</a>
+    <a onclick="openWhatsApp()">WhatsApp</a>
   </nav>
   <button id="cart-btn" aria-label="Abrir carrito">
     <i class="fa-solid fa-bag-shopping"></i>
@@ -542,14 +565,9 @@ footer{
   </button>
 </header>
 
-<!-- ── SCROLL DRIVER ───────────────────────────────── -->
 <div id="scroll-driver"></div>
 
-<!-- ════════════════════════════════════════════════════
-     OVERLAYS FIJOS
-════════════════════════════════════════════════════ -->
-
-<!-- ACTO I: HERO -->
+<!-- HERO -->
 <div id="a1" class="ov">
   <div class="wrap">
     <span class="lbl">Domótica · Colombia · 2025</span>
@@ -557,131 +575,183 @@ footer{
     <p>Domótica de última generación para tu hogar colombiano.<br>
        <strong style="color:var(--c)">Paga el 50 % al instalar, el resto contra entrega.</strong></p>
     <div class="btns">
-      <button class="btn-c" onclick="scrollTo3D()">
-        <i class="fa-solid fa-cube"></i> Comenzar tour 3D
-      </button>
-      <button class="btn-o" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">
-        <i class="fa-solid fa-circle-info"></i> Más información
-      </button>
       <button class="btn-cal" onclick="openCalendly()">
-        <i class="fa-solid fa-calendar-check"></i> Agendar visita de evaluación
+        <i class="fa-solid fa-calendar-check"></i> Agendar visita virtual
+      </button>
+      <button class="btn-wa" onclick="openWhatsApp()">
+        <i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp
       </button>
     </div>
-    <div class="stats">
-      <div class="stat"><p>50</p><p>Pago inicial</p></div>
-      <div class="divider"></div>
-      <div class="stat"><p>100</p><p>Garantía</p></div>
-      <div class="divider"></div>
-      <div class="stat"><p>30</p><p>Ahorro energético</p></div>
+    <div class="chips">
+      <span class="chip"><i class="fa-solid fa-handshake"></i> Pago 50 / 50</span>
+      <span class="chip purple"><i class="fa-solid fa-headset"></i> Apoyo personalizado 24/7 post venta</span>
+      <span class="chip green"><i class="fa-solid fa-leaf"></i> Ahorro energético · Vida inteligente</span>
     </div>
     <p class="scroll-hint"><i class="fa-solid fa-chevron-down"></i> Desplázate para recorrer la casa</p>
   </div>
 </div>
 
-<!-- ACTO II: CÓMO FUNCIONA -->
+<!-- CÓMO FUNCIONA -->
 <div id="a2" class="ov">
   <div id="a2-left">
     <span class="lbl">Cómo funciona</span>
     <h2>Así de <span class="neon">simple</span></h2>
-    <p class="sub">La cámara recorre tu futuro hogar mientras cada dispositivo se activa en tiempo real.</p>
+    <p class="sub">De la primera videollamada al acompañamiento permanente. Te guiamos en cada paso.</p>
   </div>
   <div id="a2-steps">
     <div class="step">
-      <div class="step-head"><div class="snum">1</div><h3>Eliges tu equipo</h3></div>
-      <p>Explora el catálogo y selecciona los dispositivos que transformarán tu hogar.</p>
+      <div class="step-head"><div class="snum">1</div><h3>Visita virtual sin costo</h3></div>
+      <p>Agenda una videollamada de 30 min. Recorremos tu hogar contigo, vemos las instalaciones a realizar y resolvemos dudas.</p>
     </div>
     <div class="step">
-      <div class="step-head"><div class="snum">2</div><h3>Pagas solo el 50 %</h3></div>
-      <p>Confirma tu pedido con la mitad del valor. El resto lo pagas cuando estés 100 % satisfecho.</p>
+      <div class="step-head"><div class="snum">2</div><h3>Eliges tu equipo</h3></div>
+      <p>Te asesoramos sobre los dispositivos ideales y los protocolos compatibles (WiFi, Zigbee, Alexa, Google Home).</p>
     </div>
     <div class="step">
-      <div class="step-head"><div class="snum">3</div><h3>Instalamos, pagas el resto</h3></div>
-      <p>Técnicos certificados instalan todo. Garantía de 12 meses. Sin letra pequeña.</p>
+      <div class="step-head"><div class="snum">3</div><h3>Pagas solo el 50 %</h3></div>
+      <p>Confirmas con la mitad del valor por WhatsApp. El resto solo cuando la instalación quede perfecta.</p>
+    </div>
+    <div class="step">
+      <div class="step-head"><div class="snum">4</div><h3>Instalamos en tu hogar</h3></div>
+      <p>Técnicos certificados llegan puntuales, instalan, configuran tu app y te enseñan a usarlo todo.</p>
+    </div>
+    <div class="step">
+      <div class="step-head"><div class="snum">5</div><h3>Acompañamiento 24/7 post venta</h3></div>
+      <p>Soporte personalizado por WhatsApp y videollamada cuando lo necesites. Tu hogar inteligente, siempre listo.</p>
     </div>
   </div>
 </div>
 
-<!-- ACTO III: CATÁLOGO INTELIGENTE -->
+<!-- CATÁLOGO -->
 <div id="a3" class="ov">
   <div id="a3-top">
     <span class="lbl">Catálogo inteligente</span>
     <h2>Elige tu automatización</h2>
   </div>
 
-  <!-- Card 1: Luces LED -->
+  <!-- 1. Sensor basura inteligente con tamaños -->
   <div id="p1" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 1 / 4</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
-        <div class="pcard-icon" style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.3)">
-          <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.1rem"></i>
+      <p class="pnum">Dispositivo 1 / 5</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(0,170,136,.14);border:1px solid rgba(0,170,136,.32)">
+          <i class="fa-solid fa-trash-can" style="color:#00C996;font-size:1.05rem"></i>
         </div>
-        <h3>Kit Luces LED Inteligentes</h3>
+        <h3>Sensor basura inteligente</h3>
       </div>
-      <p class="desc">16M colores, escenas automáticas y 80 % de ahorro en iluminación. Control total desde el móvil.</p>
-      <div class="price-row">
-        <div><p class="price" style="color:#FFD700">$180.000 COP</p><p class="half">50% inicial: $90.000</p></div>
-        <button class="btn-c padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      <p class="desc">Sensor de proximidad que abre la tapa automáticamente. Sin tocar nada, totalmente higiénico.</p>
+      <div class="feats">
+        <span class="feat">Apertura sin contacto</span>
+        <span class="feat">Sensor IR</span>
+        <span class="feat">Batería larga duración</span>
+      </div>
+      <p style="font-size:.66rem;color:#5a7878;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em">Selecciona tamaño</p>
+      <div class="size-row" data-prod="1">
+        <button class="size-btn" data-size="Pequeño">Pequeño</button>
+        <button class="size-btn active" data-size="Mediano">Mediano</button>
+        <button class="size-btn" data-size="Grande">Grande</button>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
       </div>
     </div>
   </div>
 
-  <!-- Card 2: Interruptor WiFi -->
+  <!-- 2. Interruptor táctil -->
   <div id="p2" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 2 / 4</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
+      <p class="pnum">Dispositivo 2 / 5</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(123,97,255,.14);border:1px solid rgba(123,97,255,.32)">
-          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.1rem"></i>
+          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.05rem"></i>
         </div>
-        <h3>Interruptor Táctil WiFi</h3>
+        <h3>Interruptor táctil inteligente</h3>
       </div>
-      <p class="desc">Control de iluminación desde cualquier parte del mundo. Compatible con Alexa y Google Home.</p>
-      <div class="price-row">
-        <div><p class="price" style="color:#7B61FF">$140.000 COP</p><p class="half">50% inicial: $70.000</p></div>
-        <button class="btn-c padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      <p class="desc">Reemplaza tus interruptores tradicionales. Control desde el celular o por toque, desde cualquier parte.</p>
+      <div class="feats">
+        <span class="feat">Táctil</span>
+        <span class="feat">WiFi</span>
+        <span class="feat">App móvil</span>
+        <span class="feat">Programable</span>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
       </div>
     </div>
   </div>
 
-  <!-- Card 3: Cámara IA -->
+  <!-- 3. Interruptor por voz -->
   <div id="p3" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 3 / 4</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
-        <div class="pcard-icon" style="background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.3)">
-          <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.1rem"></i>
+      <p class="pnum">Dispositivo 3 / 5</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(0,240,255,.14);border:1px solid rgba(0,240,255,.32)">
+          <i class="fa-solid fa-microphone-lines" style="color:#00F0FF;font-size:1.05rem"></i>
         </div>
-        <h3>Cámara Seguridad IA</h3>
+        <h3>Interruptor por voz</h3>
       </div>
-      <p class="desc">Seguimiento automático con IA, visión nocturna 4K y alertas instantáneas en tu teléfono.</p>
-      <div class="price-row">
-        <div><p class="price" style="color:#FF4444">$480.000 COP</p><p class="half">50% inicial: $240.000</p></div>
-        <button class="btn-c padd" onclick="addToCart(4)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      <p class="desc">Controla la luz hablando. Compatible con los principales asistentes de voz del mercado.</p>
+      <div class="feats">
+        <span class="feat">Alexa</span>
+        <span class="feat">Google Home</span>
+        <span class="feat">Apple HomeKit</span>
+        <span class="feat">SmartThings</span>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
       </div>
     </div>
   </div>
 
-  <!-- Card 4: Contenedor Basura -->
+  <!-- 4. Luces LED inteligentes -->
   <div id="p4" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 4 / 4</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem">
-        <div class="pcard-icon" style="background:rgba(0,170,136,.12);border:1px solid rgba(0,170,136,.3)">
-          <i class="fa-solid fa-trash-can" style="color:#00AA88;font-size:1.1rem"></i>
+      <p class="pnum">Dispositivo 4 / 5</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.32)">
+          <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.05rem"></i>
         </div>
-        <h3>Contenedor Basura Inteligente</h3>
+        <h3>Luces LED inteligentes</h3>
       </div>
-      <p class="desc">Apertura automática, sensor de llenado y estadísticas de uso desde la app. Sin tocar la tapa.</p>
-      <div class="price-row">
-        <div><p class="price" style="color:#00AA88">$350.000 COP</p><p class="half">50% inicial: $175.000</p></div>
-        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar</button>
+      <p class="desc">Ahorro energético notable y control total desde tu dispositivo o por voz. Programa escenarios y rutinas.</p>
+      <div class="feats">
+        <span class="feat">Ahorro energético</span>
+        <span class="feat">App móvil</span>
+        <span class="feat">Alexa</span>
+        <span class="feat">Google Home</span>
+        <span class="feat">SmartThings</span>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(4)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Cámara seguridad -->
+  <div id="p5" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 5 / 5</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(255,68,68,.14);border:1px solid rgba(255,68,68,.32)">
+          <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.05rem"></i>
+        </div>
+        <h3>Cámara de seguridad</h3>
+      </div>
+      <p class="desc">Alertas instantáneas en tu teléfono cuando detecta movimiento. Seguimiento inteligente del objeto.</p>
+      <div class="feats">
+        <span class="feat">Alertas en tiempo real</span>
+        <span class="feat">Seguimiento inteligente</span>
+        <span class="feat">Visión nocturna</span>
+        <span class="feat">App móvil</span>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(5)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ACTO IV: TESTIMONIOS -->
+<!-- TESTIMONIOS -->
 <div id="a4" class="ov">
   <div id="a4-top">
     <span class="lbl">Testimonios</span>
@@ -702,7 +772,7 @@ footer{
         <div><p class="tname">Lucía Cárdenas</p><p class="tcity">Medellín, Antioquia</p></div>
       </div>
       <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-      <p class="tbody">"El técnico llegó puntual, explicó todo el proceso. Configuración desde el celular, increíble."</p>
+      <p class="tbody">"La videollamada previa fue clave: nos explicaron todo y llegaron con el equipo exacto."</p>
     </div>
     <div class="tcard">
       <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
@@ -710,33 +780,42 @@ footer{
         <div><p class="tname">Andrés Restrepo</p><p class="tcity">Cali, Valle del Cauca</p></div>
       </div>
       <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star" style="color:var(--p)"></i></div>
-      <p class="tbody">"La instalación fue perfecta y el sistema domótico centralizado es de primer nivel."</p>
+      <p class="tbody">"El soporte 24/7 después de la instalación es lo mejor: cualquier duda se resuelve por WhatsApp."</p>
     </div>
   </div>
 </div>
 
-<!-- ACTO V: VIDEO -->
+<!-- VIDEO -->
 <div id="a5" class="ov">
   <span class="lbl">Experiencia en vivo</span>
   <h2>El hogar inteligente <span class="neon">en acción</span></h2>
   <div class="vid-wrap">
-    <div class="vid-ph" onclick="showToast('¡Pronto! Reemplaza este bloque con tu iframe o video.')">
+    <div class="vid-ph">
       <div class="play-ring"><i class="fa-solid fa-play" style="color:var(--c);font-size:1.3rem;margin-left:3px"></i></div>
       <p class="vtitle">Video: Sistema completo de domótica en acción</p>
-      <p class="vsub">Reemplaza este bloque con tu &lt;iframe&gt; o &lt;video&gt;</p>
+      <p class="vsub">Próximamente — aquí verás cómo funciona la automatización en un hogar real</p>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════
-     POST-SCROLL
-════════════════════════════════════════════════════ -->
+<!-- POST -->
 <div id="post">
   <div class="section">
-    <span class="sec-lbl">Preguntas frecuentes</span>
-    <h2 class="sec-h">Resolvemos tus dudas</h2>
+    <span class="sec-lbl">Resolvemos tus dudas</span>
+    <h2 class="sec-h">Preguntas frecuentes</h2>
+    <p class="sec-sub">¿Necesitas verlo en persona? Agenda una <a onclick="openCalendly()" style="color:var(--c);cursor:pointer;text-decoration:underline">visita virtual gratuita por videollamada</a> y resolvemos dudas o te mostramos las instalaciones que requiere tu hogar.</p>
     <div id="faq-container"></div>
+
+    <div class="faq-foot">
+      <h3>¿Aún tienes preguntas?</h3>
+      <p>Te atendemos directamente. Pide una videollamada o escríbenos por WhatsApp y te ayudamos con la información que necesites.</p>
+      <div class="btns2">
+        <button class="btn-cal" onclick="openCalendly()"><i class="fa-solid fa-calendar-check"></i> Agendar visita virtual</button>
+        <button class="btn-wa" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Más información por WhatsApp</button>
+      </div>
+    </div>
   </div>
+
   <footer>
     <div class="footer-inner">
       <div class="logo">
@@ -744,7 +823,9 @@ footer{
         <div><span>La Domotienda</span></div>
       </div>
       <nav class="flinks">
-        <a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Contacto</a>
+        <button onclick="openLegal('terms')">Términos</button>
+        <button onclick="openLegal('privacy')">Privacidad</button>
+        <button onclick="openWhatsApp()">Contacto</button>
       </nav>
       <p class="fcopy">© 2025 La Domotienda · Todos los derechos reservados</p>
     </div>
@@ -756,137 +837,318 @@ footer{
 <div id="cdr">
   <div id="cdr-head">
     <h3><i class="fa-solid fa-bag-shopping"></i> Tu Carrito</h3>
-    <button id="cdr-close"><i class="fa-solid fa-xmark"></i></button>
+    <button class="modal-close" id="cdr-close"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div id="cdr-items"></div>
   <div id="cdr-empty">
     <i class="fa-solid fa-bag-shopping"></i>
     <p>Tu carrito está vacío</p>
+    <small>Agrega los dispositivos que te interesan y te enviamos la cotización personalizada por WhatsApp.</small>
   </div>
   <div id="cdr-foot" style="display:none">
-    <div class="tot-row"><span>Subtotal</span><span id="cs"></span></div>
-    <div class="tot-row"><span>IVA (19%)</span><span id="ci2"></span></div>
-    <div class="tot-main"><span>Total</span><span id="ct"></span></div>
-    <div class="tot-half"><span>Pago inicial (50%)</span><span id="ch"></span></div>
-    <button class="btn-c" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="checkout-btn">
-      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Pagar el 50% inicial
+    <div class="qty-info"><i class="fa-solid fa-circle-info"></i> Los precios se cotizan según tu hogar y se confirman por WhatsApp.</div>
+    <button class="btn-wa" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="checkout-btn">
+      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Solicitar cotización por WhatsApp
     </button>
   </div>
 </div>
 
-<!-- MODAL PAGO -->
+<!-- MODAL CARRITO → CONFIRMAR -->
 <div id="mov">
   <div id="mbox">
     <div class="mh">
       <div class="mh-l">
         <div class="mh-icon"><i class="fa-brands fa-whatsapp"></i></div>
-        <div><h3>Confirmar Pedido</h3><small>Modo Demostración</small></div>
+        <div><h3>Confirmar solicitud</h3><small>Cotización por WhatsApp</small></div>
       </div>
-      <button class="mh-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mblock">
-      <label>Resumen del pedido</label>
+      <label>Productos seleccionados</label>
       <div id="m-items"></div>
-      <div class="mrow" style="font-size:.78rem;color:#5a7878;padding:.15rem 0"><span>Subtotal</span><span id="ms"></span></div>
-      <div class="mrow" style="font-size:.78rem;color:#5a7878;padding:.15rem 0"><span>IVA 19%</span><span id="mi"></span></div>
-      <div class="mrow main"><span>Total</span><span id="mt"></span></div>
-      <div class="mrow half" style="color:var(--c);padding:.15rem 0;font-weight:600"><span><i class="fa-solid fa-lock" style="font-size:.7rem;margin-right:.3rem"></i>Pago inicial 50%</span><span id="mhalf"></span></div>
     </div>
     <div class="info-box">
       <i class="fa-solid fa-circle-info"></i>
-      <div><strong>Modo Demostración Activo</strong><p>Al confirmar serás redirigido a WhatsApp para coordinar tu instalación con un asesor.</p></div>
+      <div><strong>Cotización personalizada</strong><p>Al confirmar, abrirás WhatsApp con un mensaje listo. Un asesor te enviará el precio actualizado y agendará la instalación con el modelo 50/50.</p></div>
     </div>
-    <button class="btn-c" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="confirm-wa">
-      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Confirmar y enviar pedido a WhatsApp
+    <button class="btn-wa" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="confirm-wa">
+      <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Enviar pedido a WhatsApp
     </button>
 
     <div class="m-divider">o</div>
-    <p class="m-alt-text">¿Prefieres una visita sin compromiso?</p>
+    <p class="m-alt-text">¿Prefieres una visita virtual sin compromiso?</p>
     <button class="btn-cal" style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="modal-calendly">
-      <i class="fa-solid fa-calendar-check" style="font-size:1rem"></i> Agendar visita de evaluación
+      <i class="fa-solid fa-calendar-check" style="font-size:1rem"></i> Agendar videollamada
     </button>
 
     <button class="m-cancel" id="modal-cancel">Cancelar y seguir comprando</button>
   </div>
 </div>
 
+<!-- CALENDLY MODAL -->
+<div id="calov">
+  <div id="calbox">
+    <div class="cal-head">
+      <div class="cal-head-l">
+        <div class="cal-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <div>
+          <h3>Agenda tu visita virtual</h3>
+          <p>Videollamada de 30 minutos para revisar las instalaciones de tu hogar y resolver dudas. Sin costo, sin compromiso.</p>
+        </div>
+      </div>
+      <button class="modal-close" id="cal-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cal-info">
+      <i class="fa-solid fa-video"></i>
+      <div>
+        <strong>¿Cómo funciona?</strong>
+        Conectamos contigo por videollamada para ver juntos los espacios de tu hogar, recomendarte los dispositivos ideales y aclarar todas las dudas antes de cualquier instalación.
+      </div>
+    </div>
+    <div id="cal-embed-wrap">
+      <div id="cal-widget"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGAL MODAL -->
+<div id="legov">
+  <div id="legbox">
+    <div class="leg-head">
+      <h3><i class="fa-solid fa-scale-balanced"></i> <span id="leg-title">Términos y condiciones</span></h3>
+      <button class="modal-close" id="leg-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="leg-body" id="leg-body"></div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"><span id="toast-msg"></span></div>
 
-<!-- ════════════════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════════════════ -->
 <script>
 'use strict';
 
-/* ─────────────────────────────────────────────────────
-   CONFIG
-───────────────────────────────────────────────────── */
 const WHATSAPP_NUMBER = '573052332703';
-const CALENDLY_URL    = 'https://calendly.com/tu-usuario/visita-domotica';
+const CALENDLY_URL = 'https://calendly.com/famhalat01/30min?background_color=000000&text_color=ffffff&primary_color=00f8ff';
 
-/* ─────────────────────────────────────────────────────
-   DATOS
-───────────────────────────────────────────────────── */
+/* PRODUCTOS (sin precios visibles) */
 const PRODUCTS = [
-  { id:1, name:'Contenedor Basura Inteligente', price:350000, icon:'fa-trash-can',  col:'#00AA88' },
-  { id:2, name:'Interruptor Táctil WiFi',       price:140000, icon:'fa-toggle-on',  col:'#7B61FF' },
-  { id:3, name:'Kit Luces LED Inteligentes',    price:180000, icon:'fa-lightbulb',  col:'#FFD700' },
-  { id:4, name:'Cámara Seguridad IA',           price:480000, icon:'fa-video',      col:'#FF4444' },
+  { id:1, name:'Sensor basura inteligente', icon:'fa-trash-can',        col:'#00C996', sized:true },
+  { id:2, name:'Interruptor táctil inteligente', icon:'fa-toggle-on',   col:'#7B61FF' },
+  { id:3, name:'Interruptor por voz',       icon:'fa-microphone-lines', col:'#00F0FF' },
+  { id:4, name:'Luces LED inteligentes',    icon:'fa-lightbulb',        col:'#FFD700' },
+  { id:5, name:'Cámara de seguridad',       icon:'fa-video',            col:'#FF4444' },
 ];
 
-/* FAQ: 3 preguntas (sin garantía) */
+/* FAQ — visita virtual + originales relevantes + 20 nuevas */
 const FAQS = [
-  { q:'¿Cómo funciona exactamente el pago del 50%?',
-    a:'Al confirmar tu pedido por WhatsApp, pagas el 50% del total como anticipo. El 50% restante solo lo pagas cuando el técnico finaliza la instalación y estás completamente satisfecho. Sin letra pequeña.' },
+  { q:'¿En qué consiste la visita virtual y cómo la agendo?',
+    a:'Es una videollamada de 30 minutos a través de Calendly en la que un asesor revisa contigo los espacios de tu hogar, te muestra las instalaciones que se realizarían y aclara todas tus dudas antes de cualquier compra. Sin costo, sin compromiso. La agendas con un clic en cualquier botón "Agendar visita virtual" de la página.' },
+  { q:'¿Cómo funciona el pago 50/50?',
+    a:'Al confirmar tu pedido por WhatsApp, pagas el 50 % del total como anticipo. El 50 % restante solo lo pagas cuando el técnico finaliza la instalación y estás completamente satisfecho. Sin letra pequeña.' },
   { q:'¿Cuánto tiempo demora la instalación?',
     a:'Un dispositivo individual toma 30–60 minutos. Un kit completo del hogar puede tomar 2–4 horas. Recibirás una estimación exacta antes de agendar.' },
-  { q:'¿Funcionan sin conexión a internet?',
-    a:'Las funciones básicas (encendido manual) funcionan offline. Para control remoto, automatizaciones y alertas necesitas WiFi de mínimo 10 Mbps.' },
+  { q:'¿Qué es la domótica y cómo funciona?',
+    a:'La domótica es la tecnología que permite automatizar y controlar diferentes sistemas y dispositivos del hogar (luces, cerraduras, termostatos, cámaras, etc.) de manera inteligente y remota. Funciona mediante sensores, controladores (un hub o el celular) y una red (WiFi, Bluetooth, Zigbee, etc.) que envían señales para ejecutar acciones.' },
+  { q:'¿Qué necesito para empezar con un sistema domótico?',
+    a:'En general necesitas: un hub o central (Amazon Echo, Google Home, Apple HomeKit, etc.), dispositivos compatibles (bombillas, enchufes, sensores), una red WiFi estable y un celular o tablet para controlar todo desde una app.' },
+  { q:'¿Qué significa que un dispositivo sea "compatible" con Alexa, Google Home o Apple HomeKit?',
+    a:'Significa que el dispositivo puede conectarse y ser controlado por el asistente de voz (Alexa, Google Assistant) o por la app Home de Apple. Por ejemplo: "Alexa, enciende la luz del salón".' },
+  { q:'¿Cuál es la diferencia entre WiFi, Zigbee y Z-Wave?',
+    a:'<strong>WiFi:</strong> usa tu red doméstica, fácil de instalar pero puede saturar con muchos dispositivos.<br><strong>Zigbee y Z-Wave:</strong> protocolos diseñados para domótica, consumen menos energía y son más estables.<br><strong>Bluetooth:</strong> ideal para cerca (cerraduras), pero con alcance limitado.' },
+  { q:'¿Puedo mezclar marcas o protocolos en un mismo sistema?',
+    a:'Sí, pero necesitas un hub central (Samsung SmartThings, Hubitat, Aqara) que actúe como puente entre los dispositivos de diferentes protocolos. Así puedes tener bombillas Zigbee y un termostato WiFi controlados desde la misma app.' },
+  { q:'¿Qué es un "hub" y por qué lo necesito?',
+    a:'Un hub es un dispositivo que actúa como intermediario entre tus equipos domóticos y tu celular. Permite controlar todo desde una sola app, incluso si los dispositivos usan protocolos distintos. Algunos equipos básicos no necesitan hub, pero los sistemas más complejos sí.' },
+  { q:'¿Cómo sé si un dispositivo funciona con batería o necesita enchufarse?',
+    a:'<strong>Batería:</strong> sensores de movimiento, cerraduras (duran meses o años).<br><strong>Enchufado:</strong> cámaras, hubs y enchufes inteligentes que siempre están conectados.<br>Revisa siempre la descripción del producto.' },
+  { q:'¿Qué tipos de sensores existen?',
+    a:'<strong>Movimiento:</strong> enciende luces al detectar movimiento.<br><strong>Puerta/ventana:</strong> avisa si algo se abre.<br><strong>Temperatura/humedad:</strong> regula la climatización.<br><strong>Humo/gas:</strong> activa alarmas en emergencias.' },
+  { q:'¿Puedo automatizar mis dispositivos antiguos (luces no inteligentes)?',
+    a:'Sí, con enchufes inteligentes o relés inteligentes. Por ejemplo, un enchufe inteligente te permite encender/apagar cualquier dispositivo enchufado (como una lámpara) desde el celular.' },
+  { q:'¿Qué es un "escenario" o "rutina"?',
+    a:'Es una serie de acciones que se ejecutan automáticamente con una sola orden o al cumplirse condiciones. Ejemplos:<br><strong>Salir de casa:</strong> apaga luces, activa la alarma y baja persianas.<br><strong>Buenos días:</strong> enciende luces, sube persianas y pone música a las 7 AM.' },
+  { q:'¿Qué pasa si se va la luz o el internet?',
+    a:'Los dispositivos con batería (sensores) siguen funcionando. Los WiFi no operan hasta que vuelva el internet. Algunos hubs (como Home Assistant) pueden seguir funcionando localmente sin conexión.' },
+  { q:'¿Cómo protejo mi sistema domótico de hackers?',
+    a:'• Usa contraseñas fuertes y únicas para tu WiFi y apps.<br>• Actualiza el firmware de tus dispositivos regularmente.<br>• No uses redes WiFi públicas para controlar tu hogar.<br>• Elige dispositivos con cifrado (WPA3 o AES-256).' },
+  { q:'¿Qué es el "cloud" (la nube) y por qué algunos dispositivos lo necesitan?',
+    a:'Es un servidor remoto donde se guardan datos y se ejecutan acciones. Se usa para guardar grabaciones de cámaras, recibir actualizaciones y funcionar aunque no estés en casa. Su desventaja: si el servicio falla, el dispositivo puede dejar de operar.' },
+  { q:'¿Puedo controlar mi sistema domótico cuando estoy fuera de casa?',
+    a:'Sí. Necesitas que los dispositivos estén conectados a internet, una app compatible (Tuya, Smart Life, Home Assistant) y que el proveedor del servicio no bloquee el acceso remoto.' },
+  { q:'¿Cuánto cuesta mantener un sistema domótico al mes?',
+    a:'<strong>Costo inicial:</strong> entre $50 y $500+ según la cantidad de dispositivos.<br><strong>Costo mensual:</strong> usualmente $0, salvo que uses servicios premium (almacenamiento en la nube para cámaras, por ejemplo).' },
+  { q:'¿Qué dispositivos NO debo comprar para empezar?',
+    a:'Evita dispositivos no compatibles con los hubs o asistentes que ya tienes, productos de marcas desconocidas sin soporte técnico y sistemas que requieran cables complejos si no tienes experiencia.' },
+  { q:'¿Cómo elijo entre comprar dispositivos sueltos o un kit completo?',
+    a:'<strong>Kit completo:</strong> ideal si quieres empezar rápido y con garantía de compatibilidad (ej.: Philips Hue o TP-Link Tapo).<br><strong>Sueltos:</strong> mejor si ya tienes un sistema y solo necesitas un dispositivo específico.' },
+  { q:'¿Qué es el retorno de inversión (ROI) en domótica?',
+    a:'Es el tiempo que tardas en recuperar el dinero invertido gracias al ahorro en energía (luces que se apagan solas, termostatos), seguridad (evitar robos o fugas) y mantenimiento (detectar fallos en electrodomésticos).' },
+  { q:'¿Puedo integrar mi sistema domótico con otros servicios (Netflix, Spotify)?',
+    a:'Algunos dispositivos permiten integraciones limitadas. Por ejemplo: usar un asistente de voz para controlar dispositivos y decir "Alexa, pon música en Spotify", o automatizar que las luces se atenúen al ver una película.' },
+  { q:'¿Qué hago si un dispositivo no funciona?',
+    a:'1. Revisa que esté conectado a la red (WiFi, Zigbee, etc.).<br>2. Verifica que la batería esté cargada (si es inalámbrico).<br>3. Reinicia el dispositivo y el hub.<br>4. Actualiza el firmware.<br>5. Si el problema sigue, escríbenos por WhatsApp y nuestro soporte 24/7 te ayuda.' },
 ];
 
-const fmtCOP = n => '$' + n.toLocaleString('es-CO') + ' COP';
+/* LEGAL TEXTS */
+const LEGAL = {
+  terms: {
+    title:'Términos y condiciones',
+    body:`
+      <h4>1. Aceptación de los términos</h4>
+      <p>Al acceder y utilizar el sitio web de <strong>La Domotienda</strong> y al solicitar nuestros productos o servicios, aceptas íntegramente estos Términos y Condiciones. Si no estás de acuerdo, te pedimos no utilizar el sitio.</p>
 
-/* ─────────────────────────────────────────────────────
-   CALENDLY
-───────────────────────────────────────────────────── */
+      <h4>2. Productos y servicios</h4>
+      <p>Comercializamos e instalamos dispositivos de domótica en Colombia. Las imágenes y descripciones del catálogo son de referencia; los precios definitivos se cotizan personalizadamente por WhatsApp en función del hogar de cada cliente.</p>
+
+      <h4>3. Modalidad de pago 50/50</h4>
+      <p>El cliente paga el <strong>50 %</strong> del valor cotizado al confirmar el pedido y el <strong>50 %</strong> restante al finalizar la instalación a satisfacción. Cualquier cambio en el alcance del servicio se informará por escrito antes de su ejecución.</p>
+
+      <h4>4. Visita virtual</h4>
+      <p>La visita virtual por videollamada (a través de Calendly) es <strong>gratuita y sin compromiso</strong>. Tiene fines informativos y consultivos; no obliga al cliente a realizar ninguna compra.</p>
+
+      <h4>5. Garantía y soporte</h4>
+      <p>Los dispositivos cuentan con la garantía del fabricante. La instalación está garantizada por <strong>12 meses</strong>. Brindamos acompañamiento personalizado <strong>24/7 post venta</strong> por WhatsApp y videollamada.</p>
+
+      <h4>6. Devoluciones</h4>
+      <p>Aplicamos la legislación colombiana vigente sobre derecho de retracto y devoluciones para productos no instalados. Los productos ya instalados solo se cubren bajo las condiciones de garantía.</p>
+
+      <h4>7. Limitación de responsabilidad</h4>
+      <p>La Domotienda no se responsabiliza por daños derivados del uso indebido de los dispositivos, modificaciones realizadas por terceros o fallas en la red eléctrica o de internet del cliente.</p>
+
+      <h4>8. Modificaciones</h4>
+      <p>Podemos modificar estos términos en cualquier momento. La versión vigente será siempre la publicada en este sitio.</p>
+
+      <h4>9. Contacto</h4>
+      <p>Para cualquier consulta sobre estos términos, escríbenos por WhatsApp al <strong>+57 305 233 2703</strong>.</p>
+    `
+  },
+  privacy: {
+    title:'Política de privacidad',
+    body:`
+      <h4>1. Responsable del tratamiento</h4>
+      <p><strong>La Domotienda</strong> es responsable del tratamiento de los datos personales que recogemos a través de este sitio y de nuestros canales de atención (WhatsApp, videollamadas).</p>
+
+      <h4>2. Datos que recogemos</h4>
+      <ul>
+        <li>Datos de contacto: nombre, teléfono, correo electrónico.</li>
+        <li>Información del hogar para la cotización (dirección general, fotos opcionales del espacio).</li>
+        <li>Datos de la videollamada agendada por Calendly (fecha, hora, correo).</li>
+      </ul>
+
+      <h4>3. Finalidad</h4>
+      <ul>
+        <li>Brindar asesoría personalizada y agendar la visita virtual.</li>
+        <li>Cotizar y coordinar la instalación de los dispositivos solicitados.</li>
+        <li>Ofrecer soporte post venta y mejorar nuestros servicios.</li>
+      </ul>
+
+      <h4>4. Conservación</h4>
+      <p>Conservamos tus datos por el tiempo necesario para cumplir con la finalidad para la que fueron recogidos y atender cualquier obligación legal posterior.</p>
+
+      <h4>5. Compartición</h4>
+      <p>No vendemos ni cedemos tus datos a terceros con fines comerciales. Solo compartimos información con proveedores estrictamente necesarios para la prestación del servicio (Calendly para agendamiento, WhatsApp para comunicación).</p>
+
+      <h4>6. Tus derechos</h4>
+      <p>Conforme a la Ley 1581 de 2012 (Habeas Data) puedes ejercer en cualquier momento tus derechos de <strong>acceso, rectificación, actualización, supresión</strong> y revocación de la autorización, escribiéndonos por WhatsApp al <strong>+57 305 233 2703</strong>.</p>
+
+      <h4>7. Seguridad</h4>
+      <p>Aplicamos medidas técnicas y organizativas razonables para proteger tu información de accesos no autorizados, pérdida o alteración.</p>
+
+      <h4>8. Cookies y tecnologías similares</h4>
+      <p>Este sitio utiliza tecnologías mínimas (almacenamiento local del carrito) para mejorar tu experiencia. No utilizamos cookies de seguimiento publicitario.</p>
+
+      <h4>9. Cambios en esta política</h4>
+      <p>Podemos actualizar esta política. Publicaremos siempre la versión vigente en este sitio.</p>
+    `
+  }
+};
+
+/* CONTACTO RÁPIDO */
+function openWhatsApp(customMsg){
+  const msg = customMsg || '¡Hola La Domotienda! Quisiera información sobre los servicios de domótica para mi hogar.';
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
+}
+
+/* CALENDLY MODAL */
+let calendlyLoaded = false;
+function loadCalendlyScript(){
+  if(calendlyLoaded) return;
+  calendlyLoaded = true;
+  const s = document.createElement('script');
+  s.src = 'https://assets.calendly.com/assets/external/widget.js';
+  s.async = true;
+  document.body.appendChild(s);
+}
 function openCalendly(){
-  window.open(CALENDLY_URL,'_blank','noopener');
+  const wrap = document.getElementById('cal-widget');
+  if(!wrap.querySelector('.calendly-inline-widget')){
+    const div = document.createElement('div');
+    div.className = 'calendly-inline-widget';
+    div.setAttribute('data-url', CALENDLY_URL);
+    div.style.minWidth='280px';
+    div.style.height='680px';
+    wrap.appendChild(div);
+    loadCalendlyScript();
+  }
+  document.getElementById('calov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeCalendly(){
+  document.getElementById('calov').classList.remove('open');
+  document.body.style.overflow='';
 }
 
-/* ─────────────────────────────────────────────────────
-   CARRITO
-───────────────────────────────────────────────────── */
+/* LEGAL MODAL */
+function openLegal(kind){
+  const data = LEGAL[kind];
+  document.getElementById('leg-title').textContent = data.title;
+  document.getElementById('leg-body').innerHTML = data.body;
+  document.getElementById('legov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLegal(){
+  document.getElementById('legov').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* CARRITO (sin precios) */
 let cart = [];
-try { cart = JSON.parse(localStorage.getItem('domo3d_cart') || '[]'); } catch(e){}
-const saveCart = () => { try { localStorage.setItem('domo3d_cart', JSON.stringify(cart)); } catch(e){} };
-
-function cartTotals(){
-  const sub = cart.reduce((s,i) => s + i.price*i.qty, 0);
-  const iva = Math.round(sub*.19);
-  const tot = sub + iva;
-  return { sub, iva, tot, half: Math.round(tot*.5) };
-}
+try { cart = JSON.parse(localStorage.getItem('domo3d_cart_v2') || '[]'); } catch(e){}
+const saveCart = () => { try { localStorage.setItem('domo3d_cart_v2', JSON.stringify(cart)); } catch(e){} };
 
 function updateBadge(){
   const b = document.getElementById('cbadge');
   const n = cart.reduce((s,i) => s+i.qty, 0);
-  if(n > 0){ b.textContent=n; b.style.display='flex'; }
+  if(n>0){ b.textContent=n; b.style.display='flex'; }
   else b.style.display='none';
 }
 
+function selectedSize(prodId){
+  const row = document.querySelector(`.size-row[data-prod="${prodId}"]`);
+  if(!row) return null;
+  const btn = row.querySelector('.size-btn.active');
+  return btn ? btn.dataset.size : null;
+}
+
+function cartKey(id, size){ return size ? `${id}_${size}` : `${id}`; }
+
 function addToCart(id){
   const p = PRODUCTS.find(x => x.id===id);
-  const ex = cart.find(x => x.id===id);
-  ex ? ex.qty++ : cart.push({id:p.id,name:p.name,price:p.price,qty:1});
+  const size = p.sized ? selectedSize(id) : null;
+  const key = cartKey(id, size);
+  const ex = cart.find(x => x.key===key);
+  if(ex) ex.qty++;
+  else cart.push({key,id:p.id,name:p.name,size,qty:1});
   saveCart(); updateBadge(); renderCart();
   const b = document.getElementById('cbadge');
   b.classList.add('bump'); setTimeout(()=>b.classList.remove('bump'),300);
-  showToast(`<i class="fa-solid fa-circle-check" style="color:var(--c);margin-right:.4rem"></i>${p.name} agregado al carrito`);
+  const sizeStr = size ? ` (${size})` : '';
+  showToast(`<i class="fa-solid fa-circle-check" style="color:var(--c);margin-right:.4rem"></i>${p.name}${sizeStr} agregado`);
 }
 
-function removeFromCart(id){ cart=cart.filter(x=>x.id!==id); saveCart(); updateBadge(); renderCart(); }
-function changeQty(id,d){ const i=cart.find(x=>x.id===id); if(i){i.qty=Math.max(1,i.qty+d); saveCart(); updateBadge(); renderCart();} }
+function removeFromCart(key){ cart=cart.filter(x=>x.key!==key); saveCart(); updateBadge(); renderCart(); }
+function changeQty(key,d){ const i=cart.find(x=>x.key===key); if(i){i.qty=Math.max(1,i.qty+d); saveCart(); updateBadge(); renderCart();} }
 
 function renderCart(){
   const el = document.getElementById('cdr-items');
@@ -902,41 +1164,36 @@ function renderCart(){
       <div class="ci-ic"><i class="fa-solid ${p.icon}" style="font-size:.8rem;color:${p.col}"></i></div>
       <div class="ci-info">
         <p>${item.name}</p>
-        <small style="color:${p.col}">${fmtCOP(item.price)}</small>
+        ${item.size ? `<small>Tamaño: ${item.size}</small>` : '<small>Cotización por WhatsApp</small>'}
       </div>
       <div class="ci-ctrl">
-        <button onclick="changeQty(${item.id},-1)"><i class="fa-solid fa-minus"></i></button>
+        <button onclick="changeQty('${item.key}',-1)"><i class="fa-solid fa-minus"></i></button>
         <span>${item.qty}</span>
-        <button onclick="changeQty(${item.id},1)"><i class="fa-solid fa-plus"></i></button>
+        <button onclick="changeQty('${item.key}',1)"><i class="fa-solid fa-plus"></i></button>
       </div>
-      <button class="ci-del" onclick="removeFromCart(${item.id})"><i class="fa-solid fa-trash"></i></button>`;
+      <button class="ci-del" onclick="removeFromCart('${item.key}')"><i class="fa-solid fa-trash"></i></button>`;
     el.appendChild(d);
   });
-  const {sub,iva,tot,half}=cartTotals();
-  document.getElementById('cs').textContent=fmtCOP(sub);
-  document.getElementById('ci2').textContent=fmtCOP(iva);
-  document.getElementById('ct').textContent=fmtCOP(tot);
-  document.getElementById('ch').textContent=fmtCOP(half);
 }
 
-/* ─────────────────────────────────────────────────────
-   DRAWER + MODAL
-───────────────────────────────────────────────────── */
+function buildCartMessage(){
+  const lines = cart.map(i => {
+    const sz = i.size ? ` — Tamaño ${i.size}` : '';
+    return `• ${i.qty}x ${i.name}${sz}`;
+  }).join('\n');
+  return `¡Hola La Domotienda! 👋\nMe interesa cotizar e instalar los siguientes dispositivos:\n\n${lines}\n\n¿Podrían enviarme el precio actualizado y agendar la instalación con el modelo 50/50? ¡Gracias!`;
+}
+
+/* DRAWER + MODAL CARRITO */
 const openCart  = () => { document.getElementById('cov').classList.add('open'); document.getElementById('cdr').classList.add('open'); document.body.style.overflow='hidden'; };
 const closeCart = () => { document.getElementById('cov').classList.remove('open'); document.getElementById('cdr').classList.remove('open'); document.body.style.overflow=''; };
 const closeModal= () => { document.getElementById('mov').classList.remove('open'); document.body.style.overflow=''; };
 
 function openModal(){
-  const {sub,iva,tot,half}=cartTotals();
-  document.getElementById('m-items').innerHTML=cart.map(i=>`
-    <div style="display:flex;justify-content:space-between;padding:.18rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;color:#7a9a9c">
-      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:.6rem">${i.name} ×${i.qty}</span>
-      <span style="color:#b0c8ca;flex-shrink:0;font-weight:500">${fmtCOP(i.price*i.qty)}</span>
-    </div>`).join('');
-  document.getElementById('ms').textContent=fmtCOP(sub);
-  document.getElementById('mi').textContent=fmtCOP(iva);
-  document.getElementById('mt').textContent=fmtCOP(tot);
-  document.getElementById('mhalf').textContent=fmtCOP(half);
+  document.getElementById('m-items').innerHTML = cart.map(i=>{
+    const sz = i.size ? ` <span style="color:#7a9a9c;font-size:.72rem">(${i.size})</span>` : '';
+    return `<div class="m-item"><span>${i.name}${sz}</span><span class="qq">×${i.qty}</span></div>`;
+  }).join('');
   document.getElementById('mov').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -947,31 +1204,39 @@ document.getElementById('cov').addEventListener('click', closeCart);
 document.getElementById('checkout-btn').addEventListener('click', ()=>{ if(!cart.length)return; closeCart(); setTimeout(openModal,200); });
 document.getElementById('modal-close').addEventListener('click', closeModal);
 document.getElementById('modal-cancel').addEventListener('click', closeModal);
-document.getElementById('modal-calendly').addEventListener('click', ()=>{ openCalendly(); });
+document.getElementById('modal-calendly').addEventListener('click', ()=>{ closeModal(); setTimeout(openCalendly,150); });
 document.getElementById('mov').addEventListener('click', e=>{ if(e.target.id==='mov') closeModal(); });
 document.getElementById('confirm-wa').addEventListener('click', ()=>{
-  const {tot,half}=cartTotals();
-  const list=cart.map(i=>`${i.qty}x ${i.name} (${fmtCOP(i.price*i.qty)})`).join(', ');
-  const msg=encodeURIComponent(`Hola La Domotienda, quiero comprar: ${list}. Total: ${fmtCOP(tot)}. Aplico al 50% inicial: ${fmtCOP(half)}.`);
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank','noopener');
+  openWhatsApp(buildCartMessage());
   closeModal();
 });
+document.getElementById('cal-close').addEventListener('click', closeCalendly);
+document.getElementById('calov').addEventListener('click', e=>{ if(e.target.id==='calov') closeCalendly(); });
+document.getElementById('leg-close').addEventListener('click', closeLegal);
+document.getElementById('legov').addEventListener('click', e=>{ if(e.target.id==='legov') closeLegal(); });
 
-/* ─────────────────────────────────────────────────────
-   FAQ
-───────────────────────────────────────────────────── */
+/* SIZE BUTTONS */
+document.querySelectorAll('.size-row').forEach(row=>{
+  row.querySelectorAll('.size-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      row.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+/* FAQ */
 function renderFAQ(){
   const c=document.getElementById('faq-container');
   FAQS.forEach(f=>{
     const d=document.createElement('div'); d.className='faq-item';
-    d.innerHTML=`<div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>${f.q}</span><i class="fa-solid fa-plus faq-ic"></i></div><div class="faq-a">${f.a}</div>`;
+    d.innerHTML=`<div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>${f.q}</span><i class="fa-solid fa-plus faq-ic"></i></div><div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
     c.appendChild(d);
   });
 }
 
-/* ─────────────────────────────────────────────────────
-   TOAST
-───────────────────────────────────────────────────── */
+/* TOAST */
 let toastTimer;
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -980,30 +1245,22 @@ function showToast(msg){
   toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-function scrollTo3D(){
-  window.scrollTo({top: window.innerHeight*.1, behavior:'smooth'});
-}
-
-/* ═══════════════════════════════════════════════════════
-   THREE.JS
-═══════════════════════════════════════════════════════ */
-
-let renderer, scene, camera;
-let clock;
+/* ═══════════════════════════════════════════════════
+   THREE.JS — escena refinada
+═══════════════════════════════════════════════════ */
+let renderer, scene, camera, clock;
 
 const tracked = {
   bulbLight:null, bulbMat:null, bulbThread:null,
   swMat:null, swLight:null, swRingMat:null, swDotMat:null,
   camMat:null, camLedMat:null,
   trashMat:null, trashLight:null, trashRingMat:null,
-  winMats:[],
-  houseWallMats:[],
-  roofMat:null,
+  winMats:[], houseWallMats:[], roofMat:null,
   netLineMat:null, netPtMat:null,
   screenMat:null, screenLight:null,
-  cityMats:[],
-  personMeshes:[],
-  interiorLight:null,
+  cityMats:[], personMeshes:[], interiorLight:null,
+  particles:null, particleMat:null,
+  floorAccents:[], plantMat:null,
 };
 
 const camTarget  = {x:0,y:22,z:6,  lx:0,ly:0,lz:0};
@@ -1042,15 +1299,17 @@ function interpCam(t){
 
 function initThree(){
   const canvas = document.getElementById('stage');
-  renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+  renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x040c0d);
-  scene.fog = new THREE.FogExp2(0x040c0d, 0.016);
+  scene.fog = new THREE.FogExp2(0x040c0d, 0.018);
 
   camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 200);
   camera.position.set(0,22,6);
@@ -1067,7 +1326,9 @@ function initThree(){
   buildGround();
   buildHouse();
   buildDevices();
+  buildPlant();
   buildNetwork();
+  buildParticles();
   buildCity();
   buildVideoScreen();
   buildPeople();
@@ -1075,9 +1336,9 @@ function initThree(){
 }
 
 function buildLights(){
-  scene.add(new THREE.AmbientLight(0x061416, 1.0));
+  scene.add(new THREE.AmbientLight(0x081a1d, 1.0));
 
-  const sun = new THREE.DirectionalLight(0x1a3336, 0.5);
+  const sun = new THREE.DirectionalLight(0x1a3336, 0.55);
   sun.position.set(12,20,12); sun.castShadow=true;
   sun.shadow.mapSize.set(1024,1024);
   scene.add(sun);
@@ -1086,7 +1347,7 @@ function buildLights(){
   fill.position.set(0,10,10);
   scene.add(fill); window._fillLight=fill;
 
-  const accent = new THREE.PointLight(0x7B61FF, 1.2, 22);
+  const accent = new THREE.PointLight(0x7B61FF, 1.3, 25);
   accent.position.set(-6,8,-4);
   scene.add(accent);
 
@@ -1096,23 +1357,33 @@ function buildLights(){
 }
 
 function buildGround(){
-  const mat = new THREE.MeshPhongMaterial({ color:0x030c0c, shininess:3 });
+  const mat = new THREE.MeshPhongMaterial({ color:0x030c0c, shininess:8, specular:0x002030 });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(120,120), mat);
   mesh.rotation.x=-Math.PI/2; mesh.position.y=-0.1; mesh.receiveShadow=true;
   scene.add(mesh);
 
-  const verts=[]; const lmat=new THREE.LineBasicMaterial({color:0x001616,transparent:true,opacity:.35});
+  /* Grid sutil */
+  const verts=[]; const lmat=new THREE.LineBasicMaterial({color:0x002028,transparent:true,opacity:.4});
   for(let i=-60;i<=60;i+=2){ verts.push(i,0,-60,i,0,60); verts.push(-60,0,i,60,0,i); }
   const lgeo=new THREE.BufferGeometry();
   lgeo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
   const grid=new THREE.LineSegments(lgeo,lmat); grid.position.y=-0.05;
   scene.add(grid);
+
+  /* Acentos circulares emisivos en el piso (anillos de luz) */
+  const accentMat = new THREE.MeshBasicMaterial({color:0x00F0FF,transparent:true,opacity:.5});
+  const positions=[[6,0,8],[-7,0,9],[8,0,-4],[-8,0,-6]];
+  positions.forEach(([px,py,pz])=>{
+    const ring = new THREE.Mesh(new THREE.RingGeometry(.35,.45,32), accentMat.clone());
+    ring.rotation.x=-Math.PI/2; ring.position.set(px,0.005,pz);
+    scene.add(ring); tracked.floorAccents.push(ring.material);
+  });
 }
 
 function makeWallMat(){
   const m=new THREE.MeshPhongMaterial({
     color:0x091a1c, emissive:0x010a0b, emissiveIntensity:.15,
-    specular:0x003344, shininess:22, side:THREE.DoubleSide
+    specular:0x003344, shininess:30, side:THREE.DoubleSide
   });
   tracked.houseWallMats.push(m);
   return m;
@@ -1133,7 +1404,21 @@ function buildHouse(){
     scene.add(m); return m;
   };
 
-  box(10,0.1,8, 0,0.05,0);
+  /* Piso interior + listones */
+  const floorInteriorMat = new THREE.MeshPhongMaterial({color:0x0a1416,shininess:18,specular:0x002028});
+  const floorInt = new THREE.Mesh(new THREE.BoxGeometry(10,0.1,8), floorInteriorMat);
+  floorInt.position.set(0,0.05,0); scene.add(floorInt);
+
+  /* Listones de madera del piso */
+  for(let i=-3;i<=3;i++){
+    const plank = new THREE.Mesh(
+      new THREE.BoxGeometry(10,0.011,0.04),
+      new THREE.MeshBasicMaterial({color:0x002a35,transparent:true,opacity:.5})
+    );
+    plank.position.set(0, 0.105, i*1.1);
+    scene.add(plank);
+  }
+
   const ceil=box(10,0.1,8, 0,5.05,0);
   addEdges(ceil,0x00F0FF,.08);
   box(10,5,0.1, 0,2.5,-4);
@@ -1144,7 +1429,7 @@ function buildHouse(){
   box(4,1.85,0.1, 0,4.07,4);
 
   const roofMat=new THREE.MeshPhongMaterial({
-    color:0x062020, emissive:0x010c0c, emissiveIntensity:.2, shininess:30
+    color:0x062020, emissive:0x010c0c, emissiveIntensity:.2, shininess:35
   });
   tracked.roofMat=roofMat;
   const roof=new THREE.Mesh(new THREE.ConeGeometry(8.5,3.8,4,1),roofMat);
@@ -1157,38 +1442,57 @@ function buildHouse(){
   door.position.set(0,1.6,4.06); scene.add(door);
   addEdges(door,0x00F0FF,.25);
 
+  /* Picaporte de la puerta */
+  const knob = new THREE.Mesh(
+    new THREE.SphereGeometry(0.06,10,10),
+    new THREE.MeshStandardMaterial({color:0xCCCCCC,metalness:.95,roughness:.15,emissive:0x001020,emissiveIntensity:.2})
+  );
+  knob.position.set(0.7, 1.5, 4.1);
+  scene.add(knob);
+
+  /* Marco superior puerta luminoso */
+  const lintel = new THREE.Mesh(
+    new THREE.BoxGeometry(2.2, 0.05, 0.02),
+    new THREE.MeshBasicMaterial({color:0x00F0FF,transparent:true,opacity:.35})
+  );
+  lintel.position.set(0, 3.25, 4.13);
+  scene.add(lintel);
+
+  /* Ventanas */
   [[(-5.06), 3.2,(-1.5),0],[(- 5.06),3.2,1.5,0],
    [5.06,3.2,-1.5,0],[5.06,3.2,1.5,0],
    [-2.5,3.2,-4.06,Math.PI/2],[2.5,3.2,-4.06,Math.PI/2]
   ].forEach(([px,py,pz,ry])=>{
     const wm2=new THREE.MeshPhongMaterial({
-      color:0x001520, emissive:0x000d16, transparent:true, opacity:.82, shininess:55
+      color:0x001520, emissive:0x000d16, transparent:true, opacity:.82, shininess:60
     });
     tracked.winMats.push(wm2);
     const win=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.1,0.06),wm2);
     win.position.set(px,py,pz); if(ry) win.rotation.y=ry;
     scene.add(win); addEdges(win,0x00F0FF,.18);
+
+    /* Cruz de la ventana */
+    const crossMat = new THREE.MeshBasicMaterial({color:0x0a2228,transparent:true,opacity:.7});
+    const v = new THREE.Mesh(new THREE.BoxGeometry(0.04,1.05,0.07), crossMat);
+    const h = new THREE.Mesh(new THREE.BoxGeometry(1.55,0.04,0.07), crossMat);
+    v.position.set(px,py,pz); h.position.set(px,py,pz);
+    if(ry){ v.rotation.y=ry; h.rotation.y=ry; }
+    scene.add(v); scene.add(h);
   });
 }
 
-/* ─────────────────────────────────────────────────────
-   DISPOSITIVOS DETALLADOS
-───────────────────────────────────────────────────── */
 function buildDevices(){
-  /* ── 1. BOMBILLA INTELIGENTE (esfera + rosca + cordón) ── */
+  /* ── 1. BOMBILLA INTELIGENTE — esfera + rosca + cordón + halo ── */
   const bulbGroup = new THREE.Group();
 
-  // Bulbo esférico (vidrio amarillo/dorado)
   const bm = new THREE.MeshStandardMaterial({
     color:0xFFD700, emissive:0xFFAA00, emissiveIntensity:.12,
-    roughness:.2, metalness:.1, transparent:true, opacity:.92
+    roughness:.18, metalness:.1, transparent:true, opacity:.92
   });
   tracked.bulbMat = bm;
-  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 22, 22), bm);
-  bulb.position.set(0,0,0);
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 24), bm);
   bulbGroup.add(bulb);
 
-  // Base roscada (gris oscuro, anillada)
   const threadMat = new THREE.MeshStandardMaterial({
     color:0x3a3a3a, emissive:0x111111, roughness:.4, metalness:.85
   });
@@ -1197,7 +1501,6 @@ function buildDevices(){
   thread.position.set(0,0.46,0);
   bulbGroup.add(thread);
 
-  // Anillos de la rosca
   for(let i=0;i<3;i++){
     const ring=new THREE.Mesh(
       new THREE.TorusGeometry(0.2,0.018,6,16),
@@ -1208,7 +1511,6 @@ function buildDevices(){
     bulbGroup.add(ring);
   }
 
-  // Conexión al techo
   const cord=new THREE.Mesh(
     new THREE.CylinderGeometry(0.025,0.025,0.42,8),
     new THREE.MeshPhongMaterial({color:0x1a1a1a})
@@ -1222,13 +1524,22 @@ function buildDevices(){
   ceilMount.position.set(0,1.02,0);
   bulbGroup.add(ceilMount);
 
+  /* Halo sprite-like */
+  const halo = new THREE.Mesh(
+    new THREE.RingGeometry(0.5, 1.1, 32),
+    new THREE.MeshBasicMaterial({color:0xFFD060,transparent:true,opacity:.0,side:THREE.DoubleSide})
+  );
+  halo.rotation.x = Math.PI/2;
+  halo.position.y = -0.3;
+  bulbGroup.add(halo); tracked.bulbHalo = halo.material;
+
   bulbGroup.position.set(0, 4.0, 0);
   scene.add(bulbGroup);
 
   const bl=new THREE.PointLight(0xFFCC44, 0, 9);
   bl.position.set(0, 4.0, 0); scene.add(bl); tracked.bulbLight=bl;
 
-  /* ── 2. INTERRUPTOR TÁCTIL (caja + anillo táctil + LED) ── */
+  /* ── 2. INTERRUPTOR TÁCTIL ── */
   const swGroup = new THREE.Group();
 
   const sm=new THREE.MeshStandardMaterial({
@@ -1240,7 +1551,6 @@ function buildDevices(){
   swGroup.add(swBase);
   addEdges(swBase, 0x7B61FF, .35);
 
-  // Biseles en las esquinas (cilindros pequeños)
   const bevelMat = new THREE.MeshStandardMaterial({color:0x2a2a4e, metalness:.6, roughness:.3});
   [[-0.55,-0.3],[0.55,-0.3],[-0.55,0.3],[0.55,0.3]].forEach(([px,py])=>{
     const bvl = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.13,10), bevelMat);
@@ -1249,7 +1559,6 @@ function buildDevices(){
     swGroup.add(bvl);
   });
 
-  // Anillo táctil central (torus)
   const ringMat = new THREE.MeshStandardMaterial({
     color:0x7B61FF, emissive:0x5500CC, emissiveIntensity:.5,
     roughness:.3, metalness:.5
@@ -1259,7 +1568,6 @@ function buildDevices(){
   tactRing.position.set(0,0,0.07);
   swGroup.add(tactRing);
 
-  // Punto de luz cyan central
   const dotMat = new THREE.MeshStandardMaterial({
     color:0x00F0FF, emissive:0x00F0FF, emissiveIntensity:.9
   });
@@ -1275,10 +1583,9 @@ function buildDevices(){
   const swl=new THREE.PointLight(0x7B61FF,0,6);
   swl.position.set(5,3,0.5); scene.add(swl); tracked.swLight=swl;
 
-  /* ── 3. CÁMARA DE SEGURIDAD (cuerpo + lente + LED rojo + base) ── */
+  /* ── 3. CÁMARA SEGURIDAD ── */
   const camGroup = new THREE.Group();
 
-  // Cuerpo semiesférico (esfera achatada gris oscuro)
   const cm=new THREE.MeshStandardMaterial({
     color:0x1a1a1a, emissive:0x080404, emissiveIntensity:.15,
     roughness:.35, metalness:.7
@@ -1289,7 +1596,6 @@ function buildDevices(){
   camBody.rotation.x = Math.PI;
   camGroup.add(camBody);
 
-  // Aro frontal del cuerpo
   const camRing = new THREE.Mesh(
     new THREE.TorusGeometry(0.35, 0.04, 8, 24),
     new THREE.MeshStandardMaterial({color:0x0a0a0a, metalness:.9, roughness:.2})
@@ -1297,7 +1603,6 @@ function buildDevices(){
   camRing.position.set(0, 0, 0.05);
   camGroup.add(camRing);
 
-  // Lente cilíndrico frontal (vidrio negro pulido)
   const lensMat=new THREE.MeshStandardMaterial({
     color:0x111111, emissive:0x001020, emissiveIntensity:.35,
     metalness:.85, roughness:.12
@@ -1307,7 +1612,6 @@ function buildDevices(){
   lens.position.set(0, 0, 0.18);
   camGroup.add(lens);
 
-  // Reflejo del lente (círculo pequeño)
   const lensGlare = new THREE.Mesh(
     new THREE.CircleGeometry(0.07, 16),
     new THREE.MeshBasicMaterial({color:0x4488cc, transparent:true, opacity:.6})
@@ -1315,7 +1619,6 @@ function buildDevices(){
   lensGlare.position.set(-0.05, 0.04, 0.28);
   camGroup.add(lensGlare);
 
-  // LED rojo (esfera minúscula con emissive)
   const ledM=new THREE.MeshStandardMaterial({
     color:0xFF0000, emissive:0xFF0000, emissiveIntensity:.9
   });
@@ -1324,7 +1627,6 @@ function buildDevices(){
   led.position.set(0.22, 0.15, 0.18);
   camGroup.add(led);
 
-  // Base de montaje (cilindro + caja a la pared)
   const mountMat = new THREE.MeshStandardMaterial({color:0x0a0a0a, metalness:.8, roughness:.3});
   const mountArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.35,10), mountMat);
   mountArm.rotation.z = Math.PI/2;
@@ -1334,25 +1636,22 @@ function buildDevices(){
   mountPlate.position.set(-0.5, 0, 0);
   camGroup.add(mountPlate);
 
-  // Posicionamiento general en la pared izquierda
   camGroup.position.set(-4.95, 4.0, -1);
-  camGroup.rotation.y = Math.PI/2; // mirando hacia el centro
+  camGroup.rotation.y = Math.PI/2;
   scene.add(camGroup);
 
-  /* ── 4. CONTENEDOR DE BASURA (cilindro + tapa + anillo LED + sensor) ── */
+  /* ── 4. CONTENEDOR DE BASURA ── */
   const trashGroup = new THREE.Group();
 
-  // Cuerpo principal (cilindro 0.55 x 1.3, gris metálico oscuro)
   const tm=new THREE.MeshStandardMaterial({
     color:0x2a2a2a, emissive:0x0a0a0a, emissiveIntensity:.1,
     roughness:.35, metalness:.75
   });
   tracked.trashMat=tm;
-  const tBody=new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.6, 1.3, 18, 1, true), tm);
+  const tBody=new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.6, 1.3, 22, 1, true), tm);
   tBody.position.set(0, 0.65, 0);
   trashGroup.add(tBody);
 
-  // Refuerzos horizontales
   for(let i=0;i<3;i++){
     const reinf = new THREE.Mesh(
       new THREE.TorusGeometry(0.555, 0.012, 6, 24),
@@ -1363,24 +1662,21 @@ function buildDevices(){
     trashGroup.add(reinf);
   }
 
-  // Base inferior cerrada
   const tBottom = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.6, 0.6, 0.05, 18),
+    new THREE.CylinderGeometry(0.6, 0.6, 0.05, 22),
     new THREE.MeshStandardMaterial({color:0x111111, metalness:.7, roughness:.4})
   );
   tBottom.position.set(0,0.025,0);
   trashGroup.add(tBottom);
 
-  // Tapa superior ligeramente más ancha + bisel
   const lidMat = new THREE.MeshStandardMaterial({
     color:0x3a3a3a, emissive:0x0a0a0a, emissiveIntensity:.1,
     roughness:.3, metalness:.8
   });
-  const lid=new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.58, 0.1, 18), lidMat);
+  const lid=new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.58, 0.1, 22), lidMat);
   lid.position.set(0, 1.36, 0);
   trashGroup.add(lid);
 
-  // Bisel toroide superior
   const lidBevel = new THREE.Mesh(
     new THREE.TorusGeometry(0.6, 0.03, 8, 24),
     new THREE.MeshStandardMaterial({color:0x1a1a1a, metalness:.9, roughness:.25})
@@ -1389,9 +1685,8 @@ function buildDevices(){
   lidBevel.position.set(0, 1.42, 0);
   trashGroup.add(lidBevel);
 
-  // Anillo LED en parte superior (torus delgado emissive)
   const ringEmitMat = new THREE.MeshStandardMaterial({
-    color:0x00AA88, emissive:0x00AA88, emissiveIntensity:.8,
+    color:0x00C996, emissive:0x00C996, emissiveIntensity:.8,
     roughness:.4, metalness:.2
   });
   tracked.trashRingMat = ringEmitMat;
@@ -1400,7 +1695,6 @@ function buildDevices(){
   ledRing.position.set(0, 1.32, 0);
   trashGroup.add(ledRing);
 
-  // Sensor frontal (esfera pequeña)
   const sens=new THREE.Mesh(
     new THREE.SphereGeometry(0.07, 12, 12),
     new THREE.MeshStandardMaterial({color:0x00F0FF, emissive:0x00F0FF, emissiveIntensity:.7})
@@ -1408,7 +1702,6 @@ function buildDevices(){
   sens.position.set(0, 1.05, 0.55);
   trashGroup.add(sens);
 
-  // Marco del sensor
   const sensFrame = new THREE.Mesh(
     new THREE.TorusGeometry(0.09, 0.012, 6, 16),
     new THREE.MeshStandardMaterial({color:0x111111, metalness:.8, roughness:.4})
@@ -1419,12 +1712,30 @@ function buildDevices(){
   trashGroup.position.set(3.5, 0, 3);
   scene.add(trashGroup);
 
-  const tl=new THREE.PointLight(0x00AA88,0,6);
+  const tl=new THREE.PointLight(0x00C996,0,6);
   tl.position.set(3.5,1.6,3); scene.add(tl); tracked.trashLight=tl;
 }
 
+function buildPlant(){
+  /* Maceta + hojas estilizadas en una esquina */
+  const potMat = new THREE.MeshStandardMaterial({color:0x1a2024, metalness:.4, roughness:.6, emissive:0x021014});
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.32,0.24,0.5,16), potMat);
+  pot.position.set(-3.6, 0.25, 2.6);
+  scene.add(pot);
+
+  const leafMat = new THREE.MeshStandardMaterial({color:0x0c4a3a, emissive:0x002818, emissiveIntensity:.4, roughness:.7});
+  tracked.plantMat = leafMat;
+  for(let i=0;i<6;i++){
+    const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.18, 1.1, 5), leafMat);
+    const ang = (i/6)*Math.PI*2;
+    leaf.position.set(-3.6 + Math.cos(ang)*0.12, 1.05, 2.6 + Math.sin(ang)*0.12);
+    leaf.rotation.set(Math.cos(ang)*0.4, 0, Math.sin(ang)*0.4);
+    scene.add(leaf);
+  }
+}
+
 function buildNetwork(){
-  const N=90; const nodes=[];
+  const N=110; const nodes=[];
   for(let i=0;i<N;i++){
     const th=Math.random()*Math.PI*2;
     const ph=Math.acos(2*Math.random()-1);
@@ -1437,7 +1748,7 @@ function buildNetwork(){
   }
   const pgeo=new THREE.BufferGeometry();
   pgeo.setAttribute('position',new THREE.Float32BufferAttribute(nodes.flatMap(n=>[n.x,n.y,n.z]),3));
-  const pmat=new THREE.PointsMaterial({color:0x00F0FF,size:.2,transparent:true,opacity:.5});
+  const pmat=new THREE.PointsMaterial({color:0x00F0FF,size:.22,transparent:true,opacity:.55});
   tracked.netPtMat=pmat;
   const pts=new THREE.Points(pgeo,pmat);
   scene.add(pts); window._netPts=pts;
@@ -1445,7 +1756,7 @@ function buildNetwork(){
   const lv=[];
   for(let i=0;i<nodes.length;i++)
     for(let j=i+1;j<nodes.length;j++)
-      if(nodes[i].distanceTo(nodes[j])<9){ lv.push(nodes[i].x,nodes[i].y,nodes[i].z,nodes[j].x,nodes[j].y,nodes[j].z); }
+      if(nodes[i].distanceTo(nodes[j])<8.5){ lv.push(nodes[i].x,nodes[i].y,nodes[i].z,nodes[j].x,nodes[j].y,nodes[j].z); }
   const lgeo=new THREE.BufferGeometry();
   lgeo.setAttribute('position',new THREE.Float32BufferAttribute(lv,3));
   const lmat=new THREE.LineBasicMaterial({color:0x00F0FF,transparent:true,opacity:.07});
@@ -1453,8 +1764,30 @@ function buildNetwork(){
   scene.add(new THREE.LineSegments(lgeo,lmat));
 }
 
+function buildParticles(){
+  const M = 220;
+  const pos = new Float32Array(M*3);
+  const sp  = new Float32Array(M);
+  for(let i=0;i<M;i++){
+    pos[i*3]   = (Math.random()-.5)*40;
+    pos[i*3+1] = Math.random()*14 + 0.5;
+    pos[i*3+2] = (Math.random()-.5)*40;
+    sp[i] = .003 + Math.random()*.008;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const m = new THREE.PointsMaterial({
+    color:0x00F0FF, size:.08, transparent:true, opacity:.55, depthWrite:false
+  });
+  tracked.particleMat = m;
+  const p = new THREE.Points(g,m);
+  p.userData.speeds = sp;
+  scene.add(p);
+  tracked.particles = p;
+}
+
 function buildCity(){
-  for(let i=0;i<24;i++){
+  for(let i=0;i<28;i++){
     const w=.7+Math.random()*1.3, h=1+Math.random()*5, d=.7+Math.random()*1.3;
     const em=Math.random()>.5 ? 0x001a22 : 0x0e0022;
     const mat=new THREE.MeshPhongMaterial({color:0x020a0a,emissive:em,emissiveIntensity:.3+Math.random()*.45});
@@ -1510,7 +1843,7 @@ function startRenderLoop(){
     camTarget.x=kf.x; camTarget.y=kf.y; camTarget.z=kf.z;
     camTarget.lx=kf.lx; camTarget.ly=kf.ly; camTarget.lz=kf.lz;
 
-    const ease=0.055;
+    const ease=0.058;
     for(const k of ['x','y','z','lx','ly','lz'])
       camCurrent[k]+=(camTarget[k]-camCurrent[k])*ease;
 
@@ -1520,10 +1853,35 @@ function startRenderLoop(){
     if(window._fillLight)
       window._fillLight.position.lerp(new THREE.Vector3(camCurrent.x,camCurrent.y-2,camCurrent.z),.06);
 
+    /* Network pulse */
     const pulse = Math.sin(t*.75)*.055+.09;
     if(tracked.netLineMat) tracked.netLineMat.opacity=pulse;
     if(tracked.netPtMat)   tracked.netPtMat.opacity=.4+Math.sin(t*.5)*.1;
     if(window._netPts)     window._netPts.rotation.y+=.00035;
+
+    /* Floor accents pulse */
+    tracked.floorAccents.forEach((m,i)=>{
+      m.opacity = .25 + (Math.sin(t*1.5 + i*1.2)*.5+.5)*.4;
+    });
+
+    /* Particles flotando hacia arriba */
+    if(tracked.particles){
+      const pos = tracked.particles.geometry.attributes.position;
+      const sp  = tracked.particles.userData.speeds;
+      for(let i=0;i<sp.length;i++){
+        pos.array[i*3+1] += sp[i];
+        if(pos.array[i*3+1] > 14){
+          pos.array[i*3+1] = 0.5;
+          pos.array[i*3]   = (Math.random()-.5)*40;
+          pos.array[i*3+2] = (Math.random()-.5)*40;
+        }
+      }
+      pos.needsUpdate = true;
+      tracked.particleMat.opacity = .35 + Math.sin(t*.6)*.15;
+    }
+
+    /* Plant subtle sway */
+    if(tracked.plantMat) tracked.plantMat.emissiveIntensity = .3 + Math.sin(t*1.2)*.12;
 
     updateDevices(scrollProg, t);
 
@@ -1545,57 +1903,42 @@ function updateDevices(t, time){
   const global = ramp(t,.32,.5);
   const pulse  = 1+Math.sin(time*2.8)*.14;
 
-  // Bombilla
   const ba = Math.max(bell(t,.36,.52), global*.3);
   if(tracked.bulbMat){
     tracked.bulbMat.emissiveIntensity = .12 + ba*2.4*pulse;
     tracked.bulbMat.emissive.setHex(lerp32(0xFFAA00, 0xFFEE88, Math.min(1,ba*1.6)));
   }
+  if(tracked.bulbHalo){
+    tracked.bulbHalo.opacity = ba*.6*(1+Math.sin(time*2)*.2);
+  }
   if(tracked.bulbLight) tracked.bulbLight.intensity = ba*3.2;
 
-  // Interruptor
   const sa = Math.max(bell(t,.48,.63), global*.25);
-  if(tracked.swMat){
-    tracked.swMat.emissiveIntensity = .15 + sa*1.5*pulse;
-  }
-  if(tracked.swRingMat){
-    tracked.swRingMat.emissiveIntensity = .4 + sa*1.6*pulse;
-  }
-  if(tracked.swDotMat){
-    tracked.swDotMat.emissiveIntensity = .6 + sa*1.2*pulse;
-  }
+  if(tracked.swMat) tracked.swMat.emissiveIntensity = .15 + sa*1.5*pulse;
+  if(tracked.swRingMat) tracked.swRingMat.emissiveIntensity = .4 + sa*1.6*pulse;
+  if(tracked.swDotMat) tracked.swDotMat.emissiveIntensity = .6 + sa*1.2*pulse;
   if(tracked.swLight) tracked.swLight.intensity = sa*1.8;
 
-  // Cámara
   const ca = Math.max(bell(t,.58,.73), global*.2);
-  if(tracked.camMat){
-    tracked.camMat.emissiveIntensity = .15 + ca*1.4*pulse;
-  }
+  if(tracked.camMat) tracked.camMat.emissiveIntensity = .15 + ca*1.4*pulse;
   if(tracked.camLedMat) tracked.camLedMat.emissiveIntensity = .5+ca*1.6*pulse;
 
-  // Contenedor
   const ta = Math.max(bell(t,.66,.78), global*.2);
-  if(tracked.trashMat){
-    tracked.trashMat.emissiveIntensity = .1 + ta*1.4*pulse;
-  }
-  if(tracked.trashRingMat){
-    tracked.trashRingMat.emissiveIntensity = .6 + ta*1.6*pulse;
-  }
+  if(tracked.trashMat) tracked.trashMat.emissiveIntensity = .1 + ta*1.4*pulse;
+  if(tracked.trashRingMat) tracked.trashRingMat.emissiveIntensity = .6 + ta*1.6*pulse;
   if(tracked.trashLight) tracked.trashLight.intensity = ta*1.8;
 
-  // Paredes
   const wallGlow = global*.28;
   tracked.houseWallMats.forEach(m=>{ m.emissiveIntensity = .1+wallGlow; });
   if(tracked.roofMat) tracked.roofMat.emissiveIntensity = .15+wallGlow*.8;
 
-  // Ventanas
   const winBright = ramp(t,.3,.65);
   tracked.winMats.forEach(m=>{
     m.emissiveIntensity = .05+winBright*.9;
     m.emissive.setHex(lerp32(0x000d16,0x003344,winBright));
   });
 
-  if(tracked.interiorLight) tracked.interiorLight.intensity = ramp(t,.3,.55)*1.6;
+  if(tracked.interiorLight) tracked.interiorLight.intensity = ramp(t,.3,.55)*1.8;
 
   const va = ramp(t,.87,.96);
   if(tracked.screenMat) tracked.screenMat.emissiveIntensity = .05+va*.8;
@@ -1611,9 +1954,7 @@ function lerp32(a,b,t){
   return (r<<16)|(g<<8)|bl2;
 }
 
-/* ─────────────────────────────────────────────────────
-   GSAP SCROLL TRIGGER
-───────────────────────────────────────────────────── */
+/* SCROLLTRIGGER */
 function initScroll(){
   gsap.registerPlugin(ScrollTrigger);
 
@@ -1643,9 +1984,6 @@ function initScroll(){
   });
 }
 
-/* ─────────────────────────────────────────────────────
-   CONTROL DE OVERLAYS — fundidos amplios y suaves
-───────────────────────────────────────────────────── */
 function setOv(id, t, start, end, fade=0.07){
   const el=document.getElementById(id); if(!el) return;
   let op=0;
@@ -1671,14 +2009,16 @@ function setPCard(id, t, start, end){
 
 function updateOverlays(t){
   setOv('a1', t, 0,    0.175);
-  setOv('a2', t, 0.15, 0.375);
-  setOv('a3', t, 0.34, 0.78);
+  setOv('a2', t, 0.15, 0.345);
+  setOv('a3', t, 0.32, 0.78);
   setOv('a4', t, 0.74, 0.925);
   setOv('a5', t, 0.90, 0.995);
-  setPCard('p1', t, 0.37, 0.51);
-  setPCard('p2', t, 0.49, 0.63);
-  setPCard('p3', t, 0.59, 0.73);
-  setPCard('p4', t, 0.68, 0.79);
+  /* 5 productos repartidos en el catálogo */
+  setPCard('p1', t, 0.345, 0.46);
+  setPCard('p2', t, 0.44,  0.56);
+  setPCard('p3', t, 0.54,  0.64);
+  setPCard('p4', t, 0.62,  0.71);
+  setPCard('p5', t, 0.69,  0.785);
 }
 
 function hideAllOverlays(){
@@ -1688,9 +2028,6 @@ function hideAllOverlays(){
   });
 }
 
-/* ─────────────────────────────────────────────────────
-   INICIO
-───────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded',()=>{
   renderFAQ();
   renderCart();
