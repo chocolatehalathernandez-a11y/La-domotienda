@@ -273,6 +273,16 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 .padd{padding:.55rem 1rem;border-radius:10px;font-size:.78rem;pointer-events:auto}
 .pnum{font-size:.62rem;color:#5a7878;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;text-shadow:var(--txt-shadow)}
 
+.sub-prod{
+  background:rgba(0,0,0,.32);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:11px;padding:.7rem .85rem;margin-top:.6rem;
+}
+.sub-prod .sub-head{display:flex;align-items:center;gap:.45rem;margin-bottom:.45rem}
+.sub-prod .sub-head strong{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;color:#dceaec;text-shadow:var(--txt-shadow)}
+.sub-prod .sub-head i{font-size:.78rem}
+.sub-prod .feats{margin-bottom:.55rem}
+
 /* ACT 4: TESTIMONIOS */
 #a4{align-items:center;padding-bottom:5%;flex-direction:column;justify-content:center;padding-top:7%;gap:1.2rem}
 #a4-top{width:100%;max-width:680px;text-align:center;
@@ -340,21 +350,126 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 .sec-h{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:.6rem}
 .sec-sub{font-size:.95rem;color:#9fb6b8;margin-bottom:2rem;line-height:1.65}
 
-.faq-item{border-bottom:1px solid rgba(255,255,255,.07)}
-.faq-q{
-  cursor:pointer;padding:1.05rem 0;
-  display:flex;justify-content:space-between;align-items:center;
-  font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:.94rem;
-  color:#b0c8ca;transition:color .2s;user-select:none;gap:.6rem;
+/* CHATBOT LUNA */
+.chatbox{
+  background:linear-gradient(180deg,rgba(8,18,22,.92),rgba(6,14,18,.96));
+  border:1px solid rgba(0,240,255,.16);
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 24px 60px -32px rgba(0,240,255,.32), inset 0 1px 0 rgba(255,255,255,.04);
+  display:flex;flex-direction:column;
 }
-.faq-q:hover{color:var(--c)}
-.faq-q span{flex:1}
-.faq-ic{transition:transform .3s;color:var(--c);flex-shrink:0}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .42s ease,padding .3s;color:#7a9a9c;line-height:1.72;font-size:.88rem}
-.faq-a-inner{padding:0 0 1.1rem 0}
-.faq-item.open .faq-a{max-height:600px}
-.faq-item.open .faq-a .faq-a-inner{padding-bottom:1.1rem}
-.faq-item.open .faq-ic{transform:rotate(45deg)}
+.chat-header{
+  display:flex;align-items:center;gap:.85rem;
+  padding:1rem 1.15rem;
+  background:linear-gradient(135deg,rgba(123,97,255,.16),rgba(0,240,255,.08));
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.bot-avatar{
+  position:relative;width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#b8a4ff,#7B61FF 55%,#3b2a99);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.05rem;flex-shrink:0;
+  box-shadow:0 4px 16px rgba(123,97,255,.4), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.bot-status{
+  position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;
+  background:#00C996;border:2px solid #0a1618;
+  box-shadow:0 0 8px rgba(0,201,150,.6);
+}
+.bot-meta h4{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.98rem;color:#fff;display:flex;align-items:center;gap:.5rem}
+.bot-tag{
+  font-size:.58rem;font-weight:500;padding:.18rem .45rem;border-radius:6px;
+  background:rgba(0,240,255,.14);color:var(--c);letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid rgba(0,240,255,.25);
+}
+.bot-meta p{font-size:.72rem;color:#8da8ab;margin-top:.15rem;display:flex;align-items:center;gap:.4rem}
+.dot-live{width:6px;height:6px;border-radius:50%;background:#00C996;display:inline-block;animation:pulse-live 2s infinite}
+@keyframes pulse-live{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+
+.chat-messages{
+  padding:1.1rem 1.15rem;
+  min-height:280px;max-height:440px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:.7rem;
+  scroll-behavior:smooth;
+}
+.chat-messages::-webkit-scrollbar{width:6px}
+.chat-messages::-webkit-scrollbar-track{background:transparent}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(0,240,255,.18);border-radius:3px}
+
+.msg{display:flex;gap:.55rem;max-width:88%;align-items:flex-end;animation:msgIn .3s ease both}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.bot{align-self:flex-start}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-av{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#fff;
+}
+.msg.bot .msg-av{background:linear-gradient(135deg,#7B61FF,#3b2a99)}
+.msg.user .msg-av{background:linear-gradient(135deg,#00f0ff,#0078a5)}
+.msg-bubble{
+  padding:.7rem .9rem;border-radius:14px;font-size:.85rem;line-height:1.55;
+  color:#dceaec;
+}
+.msg.bot .msg-bubble{
+  background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.18);
+  border-bottom-left-radius:4px;
+}
+.msg.user .msg-bubble{
+  background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.22);color:#eaf8f9;
+  border-bottom-right-radius:4px;
+}
+.msg-bubble strong{color:#fff;font-weight:600}
+.msg-action{
+  display:inline-flex;align-items:center;gap:.4rem;margin-top:.55rem;
+  padding:.5rem .85rem;border-radius:10px;
+  background:linear-gradient(135deg,var(--c),#3bd3e0);
+  color:#001a1d;font-weight:600;font-size:.78rem;font-family:'Space Grotesk',sans-serif;
+  cursor:pointer;border:none;transition:transform .15s, box-shadow .2s;
+  box-shadow:0 4px 12px rgba(0,240,255,.32);
+}
+.msg-action:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,240,255,.45)}
+.msg-action.wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;box-shadow:0 4px 12px rgba(37,211,102,.32)}
+.msg-action.wa:hover{box-shadow:0 6px 18px rgba(37,211,102,.45)}
+
+.typing{display:flex;gap:.25rem;padding:.7rem .9rem;border-radius:14px;background:rgba(123,97,255,.1);border:1px solid rgba(123,97,255,.18);border-bottom-left-radius:4px;width:fit-content}
+.typing span{width:6px;height:6px;border-radius:50%;background:#7B61FF;animation:typing 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+.chat-quick{
+  display:flex;flex-wrap:wrap;gap:.45rem;padding:.5rem 1.15rem .7rem;
+  border-top:1px solid rgba(255,255,255,.04);
+}
+.qchip{
+  padding:.45rem .8rem;border-radius:999px;font-size:.74rem;
+  background:rgba(0,240,255,.07);color:#b8d6d8;
+  border:1px solid rgba(0,240,255,.18);cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+}
+.qchip:hover{background:rgba(0,240,255,.14);color:#fff;border-color:var(--c);transform:translateY(-1px)}
+
+.chat-input-row{
+  display:flex;gap:.55rem;padding:.85rem 1.15rem 1rem;
+  background:rgba(0,0,0,.25);border-top:1px solid rgba(255,255,255,.05);
+}
+#chat-input{
+  flex:1;padding:.7rem .95rem;border-radius:11px;
+  background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);
+  color:#eaf8f9;font-family:'Inter',sans-serif;font-size:.86rem;outline:none;
+  transition:border .2s, box-shadow .2s;
+}
+#chat-input::placeholder{color:#5a7878}
+#chat-input:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,240,255,.14)}
+#chat-send{
+  width:42px;height:42px;border-radius:11px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--c),#3bd3e0);color:#001a1d;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;
+  transition:transform .15s, box-shadow .2s;
+  box-shadow:0 4px 12px rgba(0,240,255,.32);
+}
+#chat-send:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,240,255,.45)}
+#chat-send:active{transform:translateY(0)}
 
 .faq-foot{
   margin-top:2.5rem;padding:1.6rem;border-radius:16px;
@@ -572,8 +687,6 @@ footer{
   <div class="wrap">
     <span class="lbl">Domótica · Colombia · 2025</span>
     <h1>Tecnología que<br><span class="neon">simplifica</span> tu vida</h1>
-    <p>Domótica de última generación para tu hogar colombiano.<br>
-       <strong style="color:var(--c)">Paga el 50 % al instalar, el resto contra entrega.</strong></p>
     <div class="btns">
       <button class="btn-cal" onclick="openCalendly()">
         <i class="fa-solid fa-calendar-check"></i> Agendar visita virtual
@@ -629,84 +742,10 @@ footer{
     <h2>Elige tu automatización</h2>
   </div>
 
-  <!-- 1. Sensor basura inteligente con tamaños -->
+  <!-- 1. Luces LED inteligentes -->
   <div id="p1" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 1 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(0,170,136,.14);border:1px solid rgba(0,170,136,.32)">
-          <i class="fa-solid fa-trash-can" style="color:#00C996;font-size:1.05rem"></i>
-        </div>
-        <h3>Sensor basura inteligente</h3>
-      </div>
-      <p class="desc">Sensor de proximidad que abre la tapa automáticamente. Sin tocar nada, totalmente higiénico.</p>
-      <div class="feats">
-        <span class="feat">Apertura sin contacto</span>
-        <span class="feat">Sensor IR</span>
-        <span class="feat">Batería larga duración</span>
-      </div>
-      <p style="font-size:.66rem;color:#5a7878;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em">Selecciona tamaño</p>
-      <div class="size-row" data-prod="1">
-        <button class="size-btn" data-size="Pequeño">Pequeño</button>
-        <button class="size-btn active" data-size="Mediano">Mediano</button>
-        <button class="size-btn" data-size="Grande">Grande</button>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. Interruptor táctil -->
-  <div id="p2" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 2 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(123,97,255,.14);border:1px solid rgba(123,97,255,.32)">
-          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.05rem"></i>
-        </div>
-        <h3>Interruptor táctil inteligente</h3>
-      </div>
-      <p class="desc">Reemplaza tus interruptores tradicionales. Control desde el celular o por toque, desde cualquier parte.</p>
-      <div class="feats">
-        <span class="feat">Táctil</span>
-        <span class="feat">WiFi</span>
-        <span class="feat">App móvil</span>
-        <span class="feat">Programable</span>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. Interruptor por voz -->
-  <div id="p3" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 3 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(0,240,255,.14);border:1px solid rgba(0,240,255,.32)">
-          <i class="fa-solid fa-microphone-lines" style="color:#00F0FF;font-size:1.05rem"></i>
-        </div>
-        <h3>Interruptor por voz</h3>
-      </div>
-      <p class="desc">Controla la luz hablando. Compatible con los principales asistentes de voz del mercado.</p>
-      <div class="feats">
-        <span class="feat">Alexa</span>
-        <span class="feat">Google Home</span>
-        <span class="feat">Apple HomeKit</span>
-        <span class="feat">SmartThings</span>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. Luces LED inteligentes -->
-  <div id="p4" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 4 / 5</p>
+      <p class="pnum">Dispositivo 1 / 4</p>
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.32)">
           <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.05rem"></i>
@@ -727,10 +766,56 @@ footer{
     </div>
   </div>
 
-  <!-- 5. Cámara seguridad -->
-  <div id="p5" class="pcard">
+  <!-- 2. Interruptores inteligentes (táctil + por voz) -->
+  <div id="p2" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 5 / 5</p>
+      <p class="pnum">Dispositivo 2 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(123,97,255,.14);border:1px solid rgba(123,97,255,.32)">
+          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.05rem"></i>
+        </div>
+        <h3>Interruptores inteligentes</h3>
+      </div>
+      <p class="desc">Dos opciones para controlar la luz desde donde quieras. Elige la que mejor se adapte a tu hogar.</p>
+
+      <div class="sub-prod">
+        <div class="sub-head">
+          <i class="fa-solid fa-hand-pointer" style="color:#7B61FF"></i>
+          <strong>Interruptor táctil</strong>
+        </div>
+        <div class="feats">
+          <span class="feat">Táctil</span>
+          <span class="feat">WiFi</span>
+          <span class="feat">App móvil</span>
+          <span class="feat">Programable</span>
+        </div>
+        <div class="add-row">
+          <button class="btn-o padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar táctil</button>
+        </div>
+      </div>
+
+      <div class="sub-prod">
+        <div class="sub-head">
+          <i class="fa-solid fa-microphone-lines" style="color:#00F0FF"></i>
+          <strong>Interruptor por voz</strong>
+        </div>
+        <div class="feats">
+          <span class="feat">Alexa</span>
+          <span class="feat">Google Home</span>
+          <span class="feat">HomeKit</span>
+          <span class="feat">SmartThings</span>
+        </div>
+        <div class="add-row">
+          <button class="btn-o padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar por voz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Cámara seguridad -->
+  <div id="p3" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 3 / 4</p>
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(255,68,68,.14);border:1px solid rgba(255,68,68,.32)">
           <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.05rem"></i>
@@ -746,6 +831,34 @@ footer{
       </div>
       <div class="add-row">
         <button class="btn-c padd" onclick="addToCart(5)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Sensor basura inteligente con tamaños -->
+  <div id="p4" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 4 / 4</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(0,170,136,.14);border:1px solid rgba(0,170,136,.32)">
+          <i class="fa-solid fa-trash-can" style="color:#00C996;font-size:1.05rem"></i>
+        </div>
+        <h3>Sensor basura inteligente</h3>
+      </div>
+      <p class="desc">Sensor de proximidad que abre la tapa automáticamente. Sin tocar nada, totalmente higiénico.</p>
+      <div class="feats">
+        <span class="feat">Apertura sin contacto</span>
+        <span class="feat">Sensor IR</span>
+        <span class="feat">Batería larga duración</span>
+      </div>
+      <p style="font-size:.66rem;color:#5a7878;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em">Selecciona tamaño</p>
+      <div class="size-row" data-prod="1">
+        <button class="size-btn" data-size="Pequeño">Pequeño</button>
+        <button class="size-btn active" data-size="Mediano">Mediano</button>
+        <button class="size-btn" data-size="Grande">Grande</button>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
       </div>
     </div>
   </div>
@@ -801,17 +914,40 @@ footer{
 <!-- POST -->
 <div id="post">
   <div class="section">
-    <span class="sec-lbl">Resolvemos tus dudas</span>
-    <h2 class="sec-h">Preguntas frecuentes</h2>
-    <p class="sec-sub">¿Necesitas verlo en persona? Agenda una <a onclick="openCalendly()" style="color:var(--c);cursor:pointer;text-decoration:underline">visita virtual gratuita por videollamada</a> y resolvemos dudas o te mostramos las instalaciones que requiere tu hogar.</p>
-    <div id="faq-container"></div>
+    <span class="sec-lbl">Conversa con Luna</span>
+    <h2 class="sec-h">Tu asistente de domótica</h2>
+    <p class="sec-sub">Luna es tu asistente virtual de La Domotienda. Pregúntale lo que quieras sobre domótica, instalación, pagos o agenda una visita virtual sin compromiso.</p>
+
+    <div class="chatbox">
+      <div class="chat-header">
+        <div class="bot-avatar">
+          <i class="fa-solid fa-moon"></i>
+          <span class="bot-status"></span>
+        </div>
+        <div class="bot-meta">
+          <h4>Luna <span class="bot-tag">Asistente IA</span></h4>
+          <p><span class="dot-live"></span> En línea · Responde al instante</p>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+
+      <div class="chat-quick" id="chat-quick"></div>
+
+      <form class="chat-input-row" id="chat-form" autocomplete="off">
+        <input id="chat-input" type="text" placeholder="Escríbele a Luna…" aria-label="Mensaje para Luna" maxlength="400">
+        <button type="submit" id="chat-send" aria-label="Enviar mensaje">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
 
     <div class="faq-foot">
-      <h3>¿Aún tienes preguntas?</h3>
-      <p>Te atendemos directamente. Pide una videollamada o escríbenos por WhatsApp y te ayudamos con la información que necesites.</p>
+      <h3>¿Prefieres hablar con una persona?</h3>
+      <p>Si Luna no resuelve tu duda, agenda una videollamada gratuita o escríbenos por WhatsApp y un asesor humano te ayuda enseguida.</p>
       <div class="btns2">
         <button class="btn-cal" onclick="openCalendly()"><i class="fa-solid fa-calendar-check"></i> Agendar visita virtual</button>
-        <button class="btn-wa" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Más información por WhatsApp</button>
+        <button class="btn-wa" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</button>
       </div>
     </div>
   </div>
@@ -1226,13 +1362,243 @@ document.querySelectorAll('.size-row').forEach(row=>{
   });
 });
 
-/* FAQ */
-function renderFAQ(){
-  const c=document.getElementById('faq-container');
-  FAQS.forEach(f=>{
-    const d=document.createElement('div'); d.className='faq-item';
-    d.innerHTML=`<div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>${f.q}</span><i class="fa-solid fa-plus faq-ic"></i></div><div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
-    c.appendChild(d);
+/* ═══════════════════════════════════════════════════
+   CHATBOT LUNA — asistente femenina, empática
+═══════════════════════════════════════════════════ */
+const LUNA_GREETING = `¡Hola! Soy <strong>Luna</strong> 🌙, tu asistente virtual de La Domotienda. Me encanta que quieras aprender sobre domótica. ¿En qué puedo ayudarte hoy?`;
+
+const LUNA_QUICK = [
+  '¿Qué es la domótica?',
+  '¿Cómo funciona el pago?',
+  'Quiero agendar una visita',
+  '¿Cuánto tarda la instalación?',
+  '¿Funciona con Alexa?',
+];
+
+/* INTENTS — orden importa: primero las más específicas */
+const INTENTS = [
+  {
+    id:'greeting',
+    keys:['hola','buenas','buenos dias','buenos días','buenas tardes','buenas noches','saludos','hey','que tal','qué tal','holi'],
+    response:`¡Hola! Qué gusto saludarte 💙. Soy Luna, asistente de La Domotienda. Cuéntame, ¿qué te gustaría saber sobre domótica?`,
+  },
+  {
+    id:'thanks',
+    keys:['gracias','muchas gracias','mil gracias','genial gracias','perfecto gracias'],
+    response:`¡Con todo el gusto! 🌟 Si surge cualquier otra duda, aquí estoy. ¿Te gustaría agendar una visita virtual sin compromiso para revisar tu hogar?`,
+    action:{label:'Agendar visita virtual',icon:'fa-calendar-check',fn:'openCalendly'},
+  },
+  {
+    id:'visit',
+    keys:['visita','videollamada','video llamada','agendar','calendly','reunion','reunión','en persona','verlo','ver en persona','asesor','demo','demostracion','demostración','cita'],
+    response:`Entiendo, una visita virtual es la mejor forma de resolver tus dudas 💙. Es una <strong>videollamada gratuita de 30 minutos</strong> con un asesor: revisamos juntos tus espacios, te mostramos los dispositivos ideales y aclaramos todo, sin compromiso de compra.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+  },
+  {
+    id:'payment',
+    keys:['pago','pagar','precio','costo','cuesta','cuánto vale','cuanto vale','valor','plata','dinero','50','anticipo','contra entrega','financiar','financiación','financiacion'],
+    response:`Te entiendo, la transparencia en el precio es clave 🤝. En La Domotienda usamos un modelo <strong>50/50</strong> muy claro:<br>• <strong>50 %</strong> al confirmar el pedido por WhatsApp.<br>• <strong>50 %</strong> solo cuando la instalación queda perfecta y estás 100 % satisfecha/o.<br>Sin sorpresas, sin letra pequeña. El precio exacto lo cotizamos según tu hogar.`,
+  },
+  {
+    id:'what',
+    keys:['que es la domotica','qué es la domótica','que es domotica','qué es domótica','definicion','definición','que significa domotica','para qué sirve','para que sirve la domotica'],
+    response:`Me encanta que preguntes 🌟. La <strong>domótica</strong> es la tecnología que automatiza tu hogar: luces, cerraduras, cámaras, sensores… todo controlado desde tu celular o por voz. Funciona con sensores y una red (WiFi, Zigbee) que ejecutan acciones inteligentes para hacerte la vida más cómoda, segura y eficiente.<br>¿Quieres ver ejemplos en tu hogar?`,
+    action:{label:'Conocer en una videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+  },
+  {
+    id:'install_time',
+    keys:['cuanto tarda','cuánto tarda','tiempo','demora','dura','instalacion','instalación','instalan','instalar'],
+    response:`Buena pregunta 🛠️. El tiempo depende del alcance:<br>• <strong>Un dispositivo individual:</strong> 30–60 min.<br>• <strong>Kit completo del hogar:</strong> entre 2 y 4 horas.<br>Antes de agendar te damos una estimación exacta para que te organices con tranquilidad.`,
+  },
+  {
+    id:'voice',
+    keys:['alexa','google home','google assistant','siri','homekit','apple homekit','voz','asistente','smartthings','controlar con voz','por voz'],
+    response:`¡Sí! 🎙️ Casi todos nuestros dispositivos son compatibles con los principales asistentes de voz: <strong>Alexa, Google Home, Apple HomeKit y SmartThings</strong>. Puedes decir "Alexa, enciende la sala" y listo. Si ya tienes un asistente, te ayudamos a integrar todo.`,
+  },
+  {
+    id:'protocols',
+    keys:['wifi','zigbee','z-wave','zwave','bluetooth','protocolo','protocolos','red'],
+    response:`Pregunta muy técnica, pero te explico claro 📡:<br>• <strong>WiFi:</strong> usa tu red, fácil de instalar.<br>• <strong>Zigbee / Z-Wave:</strong> protocolos pensados para domótica, más estables y bajo consumo.<br>• <strong>Bluetooth:</strong> ideal para corto alcance (cerraduras).<br>Te asesoramos cuál conviene a tu caso.`,
+  },
+  {
+    id:'hub',
+    keys:['hub','central','controlador','centralita'],
+    response:`Buena 👌. Un <strong>hub</strong> es el cerebro que conecta todos tus dispositivos en una sola app, incluso si usan protocolos distintos. Para sistemas básicos no siempre es necesario; para hogares completos te lo recomendamos. Lo evaluamos en la visita virtual.`,
+  },
+  {
+    id:'security',
+    keys:['hacker','hackers','seguridad','privacidad','contrasena','contraseña','riesgo','seguro','vulnerable'],
+    response:`Tu seguridad es prioridad 🔒. Recomendamos:<br>• Contraseñas fuertes y únicas.<br>• Firmware actualizado.<br>• Cifrado WPA3 o AES-256.<br>• No usar redes WiFi públicas para controlar el hogar.<br>Trabajamos con marcas que cumplen estos estándares.`,
+  },
+  {
+    id:'remote',
+    keys:['fuera de casa','remoto','remota','desde lejos','viajar','en vacaciones','controlar lejos'],
+    response:`¡Claro que sí! ✈️ Mientras tus dispositivos tengan internet, los controlas desde cualquier parte del mundo con la app oficial. Útil para revisar cámaras, abrir la puerta o programar luces estando de viaje.`,
+  },
+  {
+    id:'no_internet',
+    keys:['se va la luz','sin internet','sin luz','sin wifi','apagon','apagón','corte de luz'],
+    response:`Buena previsión 💡. Los sensores con batería siguen funcionando aunque no haya luz. Los dispositivos WiFi se reactivan en cuanto vuelve la conexión. Algunos hubs avanzados pueden seguir operando localmente sin internet.`,
+  },
+  {
+    id:'monthly',
+    keys:['mensualidad','suscripcion','suscripción','mensual','cada mes','cuota'],
+    response:`Buena pregunta 💸. <strong>No hay mensualidad obligatoria.</strong> Solo pagas extra si quieres servicios premium opcionales (por ejemplo, almacenamiento en la nube de cámaras). El uso normal es <strong>$0 al mes</strong>.`,
+  },
+  {
+    id:'old_devices',
+    keys:['lampara antigua','lámpara antigua','dispositivos viejos','no inteligente','convertir','reciclar','tradicional'],
+    response:`¡Sí se puede! ♻️ Con <strong>enchufes inteligentes</strong> o <strong>relés inteligentes</strong> conviertes en "smart" cualquier dispositivo tradicional: lámparas, ventiladores, electrodomésticos… sin cambiar nada físico.`,
+  },
+  {
+    id:'routines',
+    keys:['rutina','rutinas','escenario','escenarios','automatizar','automatización','automatizacion'],
+    response:`Esto es lo más mágico ✨. Las <strong>rutinas</strong> ejecutan varias acciones con una sola orden:<br>• "Salir de casa" → apaga luces, activa alarma, baja persianas.<br>• "Buenos días" → enciende luces, sube persianas, pone música.<br>Las personalizamos contigo en la instalación.`,
+  },
+  {
+    id:'support',
+    keys:['soporte','ayuda','no funciona','problema','falla','averia','avería','daño','dañado','reparar'],
+    response:`Tranqui/a, te apoyamos 💙. Pasos rápidos:<br>1) Verifica que el dispositivo esté conectado.<br>2) Revisa batería si es inalámbrico.<br>3) Reinicia dispositivo y hub.<br>4) Si persiste, te atendemos por WhatsApp <strong>24/7</strong>.`,
+    action:{label:'Hablar por WhatsApp',icon:'fa-brands fa-whatsapp',fn:'openWhatsApp',cls:'wa'},
+  },
+  {
+    id:'sensors',
+    keys:['sensor','sensores','movimiento','puerta','ventana','humo','gas','temperatura','humedad'],
+    response:`Existen varios tipos de sensores 🛡️:<br>• <strong>Movimiento:</strong> enciende luces al detectar gente.<br>• <strong>Puerta/ventana:</strong> avisa si algo se abre.<br>• <strong>Temperatura/humedad:</strong> regula climatización.<br>• <strong>Humo/gas:</strong> activa alarmas en emergencias.`,
+  },
+  {
+    id:'kit_or_alone',
+    keys:['kit','suelto','suelta','separado','de a uno','empezar','por donde empezar','primer paso'],
+    response:`Depende de ti 🎯. Si quieres empezar rápido y con todo compatible, un <strong>kit</strong> es ideal. Si ya tienes algo armado y quieres sumar piezas, los <strong>dispositivos sueltos</strong> son perfectos. En la visita virtual te recomendamos el camino ideal.`,
+  },
+  {
+    id:'roi',
+    keys:['ahorro','retorno','roi','vale la pena','beneficio','ventaja','ahorrar'],
+    response:`Excelente que pienses así 📈. La domótica recupera la inversión por:<br>• <strong>Ahorro de energía</strong> (luces y termostatos inteligentes).<br>• <strong>Seguridad</strong> (evitar robos o fugas detectadas a tiempo).<br>• <strong>Comodidad</strong> y mayor valor de tu propiedad.`,
+  },
+  {
+    id:'products',
+    keys:['producto','productos','catalogo','catálogo','bombilla','luces','interruptor','camara','cámara','basura','sensor de basura'],
+    response:`En este momento ofrecemos cuatro líneas: <strong>luces LED inteligentes, interruptores (táctil y por voz), cámara de seguridad y sensor de basura inteligente</strong>. Puedes verlos en el catálogo de arriba y agregarlos al carrito para cotizar por WhatsApp.`,
+  },
+  {
+    id:'name',
+    keys:['como te llamas','cómo te llamas','quien eres','quién eres','tu nombre','eres humano','eres un bot','eres real'],
+    response:`Soy <strong>Luna</strong> 🌙, una asistente virtual creada por La Domotienda para ayudarte con domótica. No soy humana, pero sí muy real ayudándote 💙. Si quieres hablar con un asesor de carne y hueso, agendamos una videollamada.`,
+    action:{label:'Hablar con un asesor',icon:'fa-calendar-check',fn:'openCalendly'},
+  },
+  {
+    id:'goodbye',
+    keys:['adios','adiós','chao','hasta luego','nos vemos','bye'],
+    response:`¡Hasta pronto! 🌙 Ha sido un placer. Recuerda que estoy aquí 24/7 cuando necesites volver. Que tengas un día maravilloso 💙.`,
+  },
+];
+
+/* fallback fuera del array para garantizar respuesta */
+const FALLBACK = {
+  response:`Entiendo tu inquietud, déjame ayudarte 💙. No tengo esa información puntual en este momento, pero nuestro equipo de soporte está disponible <strong>24/7 por WhatsApp</strong>. ¿Te gustaría que te conectemos con un asesor o agendar una videollamada gratuita?`,
+  action:{label:'Hablar por WhatsApp',icon:'fa-brands fa-whatsapp',fn:'openWhatsApp',cls:'wa'},
+  altAction:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+};
+
+function normalize(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[¿?¡!.,;:]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function findIntent(text){
+  const n = normalize(text);
+  if(!n) return null;
+  let best = null, bestScore = 0;
+  for(const intent of INTENTS){
+    for(const k of intent.keys){
+      const nk = normalize(k);
+      if(n.includes(nk)){
+        const score = nk.length;
+        if(score > bestScore){ bestScore = score; best = intent; }
+      }
+    }
+  }
+  return best;
+}
+
+const chatState = { lastIntent:null, msgCount:0 };
+
+function appendMsg(role, html, opts={}){
+  const wrap = document.getElementById('chat-messages');
+  const m = document.createElement('div');
+  m.className = 'msg '+role;
+  const av = role==='bot'
+    ? `<div class="msg-av"><i class="fa-solid fa-moon"></i></div>`
+    : `<div class="msg-av"><i class="fa-solid fa-user"></i></div>`;
+  let bubble = `<div class="msg-bubble">${html}`;
+  if(opts.action){
+    const a = opts.action;
+    bubble += `<br><button class="msg-action ${a.cls||''}" onclick="${a.fn}()"><i class="fa-solid ${a.icon}"></i> ${a.label}</button>`;
+  }
+  if(opts.altAction){
+    const a = opts.altAction;
+    bubble += ` <button class="msg-action" onclick="${a.fn}()" style="background:rgba(0,240,255,.12);color:var(--c);box-shadow:none;border:1px solid rgba(0,240,255,.32)"><i class="fa-solid ${a.icon}"></i> ${a.label}</button>`;
+  }
+  bubble += `</div>`;
+  m.innerHTML = av + bubble;
+  wrap.appendChild(m);
+  wrap.scrollTop = wrap.scrollHeight;
+  chatState.msgCount++;
+}
+
+function appendTyping(){
+  const wrap = document.getElementById('chat-messages');
+  const m = document.createElement('div');
+  m.className = 'msg bot'; m.id = '__typing__';
+  m.innerHTML = `<div class="msg-av"><i class="fa-solid fa-moon"></i></div><div class="typing"><span></span><span></span><span></span></div>`;
+  wrap.appendChild(m);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+function removeTyping(){
+  const t = document.getElementById('__typing__');
+  if(t) t.remove();
+}
+
+function renderQuick(){
+  const c = document.getElementById('chat-quick');
+  c.innerHTML = '';
+  LUNA_QUICK.forEach(q=>{
+    const b = document.createElement('button');
+    b.className = 'qchip';
+    b.textContent = q;
+    b.onclick = ()=> sendUserMessage(q);
+    c.appendChild(b);
+  });
+}
+
+function sendUserMessage(text){
+  const t = (text||'').trim();
+  if(!t) return;
+  appendMsg('user', t.replace(/[<>]/g,''));
+  document.getElementById('chat-input').value = '';
+  setTimeout(()=>{
+    appendTyping();
+    const intent = findIntent(t);
+    const reply = intent || FALLBACK;
+    const delay = 650 + Math.min(900, reply.response.length * 6);
+    setTimeout(()=>{
+      removeTyping();
+      appendMsg('bot', reply.response, { action: reply.action, altAction: reply.altAction });
+      chatState.lastIntent = intent ? intent.id : 'fallback';
+    }, delay);
+  }, 180);
+}
+
+function initChatbot(){
+  const wrap = document.getElementById('chat-messages');
+  if(!wrap) return;
+  appendMsg('bot', LUNA_GREETING);
+  renderQuick();
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    sendUserMessage(input.value);
   });
 }
 
@@ -1305,11 +1671,12 @@ function initThree(){
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.12;
+  renderer.outputEncoding = THREE.sRGBEncoding;
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x040c0d);
-  scene.fog = new THREE.FogExp2(0x040c0d, 0.018);
+  scene.fog = new THREE.FogExp2(0x040c0d, 0.014);
 
   camera = new THREE.PerspectiveCamera(52, window.innerWidth/window.innerHeight, 0.1, 200);
   camera.position.set(0,22,6);
@@ -1843,9 +2210,12 @@ function startRenderLoop(){
     camTarget.x=kf.x; camTarget.y=kf.y; camTarget.z=kf.z;
     camTarget.lx=kf.lx; camTarget.ly=kf.ly; camTarget.lz=kf.lz;
 
-    const ease=0.058;
-    for(const k of ['x','y','z','lx','ly','lz'])
-      camCurrent[k]+=(camTarget[k]-camCurrent[k])*ease;
+    /* Suavizado más delicado para scrollytelling cinematográfico */
+    const easePos=0.042, easeLook=0.052;
+    for(const k of ['x','y','z'])
+      camCurrent[k]+=(camTarget[k]-camCurrent[k])*easePos;
+    for(const k of ['lx','ly','lz'])
+      camCurrent[k]+=(camTarget[k]-camCurrent[k])*easeLook;
 
     camera.position.set(camCurrent.x,camCurrent.y,camCurrent.z);
     camera.lookAt(camCurrent.lx,camCurrent.ly,camCurrent.lz);
@@ -1853,23 +2223,23 @@ function startRenderLoop(){
     if(window._fillLight)
       window._fillLight.position.lerp(new THREE.Vector3(camCurrent.x,camCurrent.y-2,camCurrent.z),.06);
 
-    /* Network pulse */
-    const pulse = Math.sin(t*.75)*.055+.09;
+    /* Network pulse — más sutil */
+    const pulse = Math.sin(t*.55)*.04+.07;
     if(tracked.netLineMat) tracked.netLineMat.opacity=pulse;
-    if(tracked.netPtMat)   tracked.netPtMat.opacity=.4+Math.sin(t*.5)*.1;
-    if(window._netPts)     window._netPts.rotation.y+=.00035;
+    if(tracked.netPtMat)   tracked.netPtMat.opacity=.32+Math.sin(t*.4)*.08;
+    if(window._netPts)     window._netPts.rotation.y+=.00022;
 
-    /* Floor accents pulse */
+    /* Floor accents pulse — respiración suave */
     tracked.floorAccents.forEach((m,i)=>{
-      m.opacity = .25 + (Math.sin(t*1.5 + i*1.2)*.5+.5)*.4;
+      m.opacity = .2 + (Math.sin(t*1.05 + i*1.2)*.5+.5)*.32;
     });
 
-    /* Particles flotando hacia arriba */
+    /* Particles flotando hacia arriba — más lentas y ligeras */
     if(tracked.particles){
       const pos = tracked.particles.geometry.attributes.position;
       const sp  = tracked.particles.userData.speeds;
       for(let i=0;i<sp.length;i++){
-        pos.array[i*3+1] += sp[i];
+        pos.array[i*3+1] += sp[i]*0.55;
         if(pos.array[i*3+1] > 14){
           pos.array[i*3+1] = 0.5;
           pos.array[i*3]   = (Math.random()-.5)*40;
@@ -1877,11 +2247,11 @@ function startRenderLoop(){
         }
       }
       pos.needsUpdate = true;
-      tracked.particleMat.opacity = .35 + Math.sin(t*.6)*.15;
+      tracked.particleMat.opacity = .26 + Math.sin(t*.45)*.1;
     }
 
     /* Plant subtle sway */
-    if(tracked.plantMat) tracked.plantMat.emissiveIntensity = .3 + Math.sin(t*1.2)*.12;
+    if(tracked.plantMat) tracked.plantMat.emissiveIntensity = .28 + Math.sin(t*.95)*.08;
 
     updateDevices(scrollProg, t);
 
@@ -2013,12 +2383,11 @@ function updateOverlays(t){
   setOv('a3', t, 0.32, 0.78);
   setOv('a4', t, 0.74, 0.925);
   setOv('a5', t, 0.90, 0.995);
-  /* 5 productos repartidos en el catálogo */
-  setPCard('p1', t, 0.345, 0.46);
-  setPCard('p2', t, 0.44,  0.56);
-  setPCard('p3', t, 0.54,  0.64);
-  setPCard('p4', t, 0.62,  0.71);
-  setPCard('p5', t, 0.69,  0.785);
+  /* 4 productos en orden bombilla → interruptores → cámara → basura */
+  setPCard('p1', t, 0.355, 0.49);
+  setPCard('p2', t, 0.485, 0.605);
+  setPCard('p3', t, 0.60,  0.70);
+  setPCard('p4', t, 0.695, 0.785);
 }
 
 function hideAllOverlays(){
@@ -2029,7 +2398,7 @@ function hideAllOverlays(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  renderFAQ();
+  initChatbot();
   renderCart();
   updateBadge();
   try { initThree(); initScroll(); }

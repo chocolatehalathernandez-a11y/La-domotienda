@@ -1,6 +1,6 @@
 # La Domotienda — Landing 3D
 
-Single-page experience que recorre una casa en 3D (Three.js + GSAP ScrollTrigger) y vende la instalación de domótica en Colombia. Pago 50/50, agendamiento por Calendly inline, checkout por WhatsApp, FAQ extendido y ventanas legales emergentes.
+Single-page experience que recorre una casa en 3D (Three.js + GSAP ScrollTrigger) y vende la instalación de domótica en Colombia. Pago 50/50, agendamiento por Calendly inline, checkout por WhatsApp, asistente conversacional Luna y ventanas legales emergentes.
 
 ## Estructura
 
@@ -27,7 +27,18 @@ Single-page experience que recorre una casa en 3D (Three.js + GSAP ScrollTrigger
 5. Eliminado widget kWh del header.
 6. FAQ inicial reducido a 3 preguntas.
 
-### Ronda 2 (actual)
+### Ronda 3 (actual)
+1. **Hero simplificado**: removidos los dos párrafos ("Domótica de última generación…" y "Paga el 50 % al instalar…"). El bloque de chips conserva el mensaje 50/50.
+2. **Catálogo reordenado a 4 tarjetas** siguiendo el flujo de la cámara 3D:
+   1) Luces LED inteligentes  
+   2) Interruptores inteligentes — táctil + por voz combinados en una sola tarjeta con sub-bloques y botón "Agregar" independiente para cada variante (mantiene IDs 2 y 3 del carrito)  
+   3) Cámara de seguridad  
+   4) Sensor basura inteligente con selector de tamaño  
+   Tiempos de aparición sincronizados con los keyframes (0.36 / 0.49 / 0.60 / 0.70).
+3. **3D más delicado**: easing diferenciado para posición (0.042) y mira (0.052), partículas un 45 % más lentas y suaves, pulso de red más sutil, accentos de piso con respiración menor, fog reducido (0.014) y exposición ACES ligeramente más alta (1.12) con `outputEncoding sRGB`.
+4. **Chatbot Luna en lugar del FAQ acordeón**: asistente femenina, empática, con avatar lunar y badge "Asistente IA". Motor de intents basado en reglas (normalización + matching por longitud de keyword) cubre 22 intents (saludo, despedida, agradecimiento, visita virtual, pago 50/50, qué es la domótica, tiempos de instalación, voz/Alexa, protocolos, hub, seguridad, control remoto, sin internet, mensualidad, dispositivos antiguos, rutinas, soporte, sensores, kit vs suelto, ROI, productos, identidad). Mensajes con animación, indicador "typing", chips de respuestas rápidas y botones de acción que abren Calendly o WhatsApp. Fallback empático que ofrece WhatsApp 24/7 y agenda Calendly. El bloque inferior conserva CTAs a videollamada y WhatsApp por si el usuario prefiere humano.
+
+### Ronda 2 (publicada)
 1. **Contacto unificado a `wa.me/573052332703`** en hero, footer, header, FAQ y carrito.
 2. **Stats sin números**: removidos los stats numéricos; en su lugar, 3 chips: Pago 50/50, Apoyo personalizado 24/7 post venta, Ahorro energético · Vida inteligente.
 3. **Eliminado** el botón "Comenzar tour 3D"; el botón "Más información" se movió al final del FAQ.
