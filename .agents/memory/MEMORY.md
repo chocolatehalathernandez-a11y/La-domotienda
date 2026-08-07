@@ -1,0 +1,1 @@
+- [Comunicación energética](energy-claims.md) — Evitar promesas generales de ahorro; explicar siempre que los resultados dependen del hogar, hábitos y factores externos.

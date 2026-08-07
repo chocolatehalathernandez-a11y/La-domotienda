@@ -698,7 +698,7 @@ footer{
     <div class="chips">
       <span class="chip"><i class="fa-solid fa-handshake"></i> Pago 50 / 50</span>
       <span class="chip purple"><i class="fa-solid fa-headset"></i> Apoyo personalizado 24/7 post venta</span>
-      <span class="chip green"><i class="fa-solid fa-leaf"></i> Ahorro energético · Vida inteligente</span>
+      <span class="chip green"><i class="fa-solid fa-sliders"></i> Confort y control adaptados a tu hogar</span>
     </div>
     <p class="scroll-hint"><i class="fa-solid fa-chevron-down"></i> Desplázate para recorrer la casa</p>
   </div>
@@ -745,16 +745,16 @@ footer{
   <!-- 1. Luces LED inteligentes -->
   <div id="p1" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 1 / 4</p>
+      <p class="pnum">Dispositivo 1 / 5</p>
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.32)">
           <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.05rem"></i>
         </div>
         <h3>Luces LED inteligentes</h3>
       </div>
-      <p class="desc">Ahorro energético notable y control total desde tu dispositivo o por voz. Programa escenarios y rutinas.</p>
+      <p class="desc">Control total desde tu dispositivo o por voz. Programa escenarios y rutinas según la forma en que usas cada espacio.</p>
       <div class="feats">
-        <span class="feat">Ahorro energético</span>
+        <span class="feat">Escenarios personalizados</span>
         <span class="feat">App móvil</span>
         <span class="feat">Alexa</span>
         <span class="feat">Google Home</span>
@@ -769,7 +769,7 @@ footer{
   <!-- 2. Interruptores inteligentes (táctil + por voz) -->
   <div id="p2" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 2 / 4</p>
+      <p class="pnum">Dispositivo 2 / 5</p>
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(123,97,255,.14);border:1px solid rgba(123,97,255,.32)">
           <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.05rem"></i>
@@ -815,7 +815,7 @@ footer{
   <!-- 3. Cámara seguridad -->
   <div id="p3" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 3 / 4</p>
+      <p class="pnum">Dispositivo 3 / 5</p>
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(255,68,68,.14);border:1px solid rgba(255,68,68,.32)">
           <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.05rem"></i>
@@ -838,7 +838,7 @@ footer{
   <!-- 4. Sensor basura inteligente con tamaños -->
   <div id="p4" class="pcard">
     <div class="pcard-inner">
-      <p class="pnum">Dispositivo 4 / 4</p>
+      <p class="pnum">Dispositivo 4 / 5</p>
       <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
         <div class="pcard-icon" style="background:rgba(0,170,136,.14);border:1px solid rgba(0,170,136,.32)">
           <i class="fa-solid fa-trash-can" style="color:#00C996;font-size:1.05rem"></i>
@@ -862,6 +862,29 @@ footer{
       </div>
     </div>
   </div>
+
+  <!-- 5. Control de persiana -->
+  <div id="p5" class="pcard">
+    <div class="pcard-inner">
+      <p class="pnum">Dispositivo 5 / 5</p>
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
+        <div class="pcard-icon" style="background:rgba(255,150,64,.14);border:1px solid rgba(255,150,64,.32)">
+          <i class="fa-solid fa-blinds" style="color:#FF9640;font-size:1.05rem"></i>
+        </div>
+        <h3>Control de persiana</h3>
+      </div>
+      <p class="desc">Acciona tus persianas por voz o de forma remota desde la app. Configura escenas según tus horarios y preferencias.</p>
+      <div class="feats">
+        <span class="feat">Alexa</span>
+        <span class="feat">Google Home</span>
+        <span class="feat">Control remoto</span>
+        <span class="feat">Escenas programables</span>
+      </div>
+      <div class="add-row">
+        <button class="btn-c padd" onclick="addToCart(6)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- TESTIMONIOS -->
@@ -877,7 +900,7 @@ footer{
         <div><p class="tname">Jorge Martínez</p><p class="tcity">Bogotá, Cundinamarca</p></div>
       </div>
       <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-      <p class="tbody">"El modelo 50/50 me dio total tranquilidad. La diferencia en mi factura fue inmediata."</p>
+      <p class="tbody">"El modelo 50/50 me dio total tranquilidad. Ahora puedo controlar la iluminación y las persianas según mis rutinas."</p>
     </div>
     <div class="tcard">
       <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem">
@@ -1074,6 +1097,7 @@ const PRODUCTS = [
   { id:3, name:'Interruptor por voz',       icon:'fa-microphone-lines', col:'#00F0FF' },
   { id:4, name:'Luces LED inteligentes',    icon:'fa-lightbulb',        col:'#FFD700' },
   { id:5, name:'Cámara de seguridad',       icon:'fa-video',            col:'#FF4444' },
+  { id:6, name:'Control de persiana',       icon:'fa-blinds',            col:'#FF9640' },
 ];
 
 /* FAQ — visita virtual + originales relevantes + 20 nuevas */
@@ -1091,7 +1115,7 @@ const FAQS = [
   { q:'¿Qué significa que un dispositivo sea "compatible" con Alexa, Google Home o Apple HomeKit?',
     a:'Significa que el dispositivo puede conectarse y ser controlado por el asistente de voz (Alexa, Google Assistant) o por la app Home de Apple. Por ejemplo: "Alexa, enciende la luz del salón".' },
   { q:'¿Cuál es la diferencia entre WiFi, Zigbee y Z-Wave?',
-    a:'<strong>WiFi:</strong> usa tu red doméstica, fácil de instalar pero puede saturar con muchos dispositivos.<br><strong>Zigbee y Z-Wave:</strong> protocolos diseñados para domótica, consumen menos energía y son más estables.<br><strong>Bluetooth:</strong> ideal para cerca (cerraduras), pero con alcance limitado.' },
+    a:'<strong>WiFi:</strong> usa tu red doméstica y suele ser fácil de instalar.<br><strong>Zigbee y Z-Wave:</strong> protocolos diseñados para domótica y comunicación entre dispositivos.<br><strong>Bluetooth:</strong> ideal para distancias cortas, aunque con alcance limitado.' },
   { q:'¿Puedo mezclar marcas o protocolos en un mismo sistema?',
     a:'Sí, pero necesitas un hub central (Samsung SmartThings, Hubitat, Aqara) que actúe como puente entre los dispositivos de diferentes protocolos. Así puedes tener bombillas Zigbee y un termostato WiFi controlados desde la misma app.' },
   { q:'¿Qué es un "hub" y por qué lo necesito?',
@@ -1118,8 +1142,8 @@ const FAQS = [
     a:'Evita dispositivos no compatibles con los hubs o asistentes que ya tienes, productos de marcas desconocidas sin soporte técnico y sistemas que requieran cables complejos si no tienes experiencia.' },
   { q:'¿Cómo elijo entre comprar dispositivos sueltos o un kit completo?',
     a:'<strong>Kit completo:</strong> ideal si quieres empezar rápido y con garantía de compatibilidad (ej.: Philips Hue o TP-Link Tapo).<br><strong>Sueltos:</strong> mejor si ya tienes un sistema y solo necesitas un dispositivo específico.' },
-  { q:'¿Qué es el retorno de inversión (ROI) en domótica?',
-    a:'Es el tiempo que tardas en recuperar el dinero invertido gracias al ahorro en energía (luces que se apagan solas, termostatos), seguridad (evitar robos o fugas) y mantenimiento (detectar fallos en electrodomésticos).' },
+  { q:'¿Qué factores se revisan antes de automatizar un hogar?',
+    a:'No hacemos promesas generales sobre el consumo. Revisamos las condiciones de cada hogar: hábitos de uso, orientación, aislamiento, horarios, clima, equipos existentes y la configuración prevista. En la visita hablamos de posibilidades concretas según esos factores, sin garantizar un resultado único.' },
   { q:'¿Puedo integrar mi sistema domótico con otros servicios (Netflix, Spotify)?',
     a:'Algunos dispositivos permiten integraciones limitadas. Por ejemplo: usar un asistente de voz para controlar dispositivos y decir "Alexa, pon música en Spotify", o automatizar que las luces se atenúen al ver una película.' },
   { q:'¿Qué hago si un dispositivo no funciona?',
@@ -1365,7 +1389,7 @@ document.querySelectorAll('.size-row').forEach(row=>{
 /* ═══════════════════════════════════════════════════
    CHATBOT LUNA — asistente femenina, empática
 ═══════════════════════════════════════════════════ */
-const LUNA_GREETING = `¡Hola! Soy <strong>Luna</strong> 🌙, tu asistente virtual de La Domotienda. Me encanta que quieras aprender sobre domótica. ¿En qué puedo ayudarte hoy?`;
+const LUNA_GREETING = `¡Hola! Soy <strong>Luna</strong> 🌙, tu asistente virtual de La Domotienda. Puedo orientarte sobre control, confort, seguridad y compatibilidad, siempre considerando las condiciones particulares de tu hogar. ¿En qué puedo ayudarte hoy?`;
 
 const LUNA_QUICK = [
   '¿Qué es la domótica?',
@@ -1402,7 +1426,7 @@ const INTENTS = [
   {
     id:'what',
     keys:['que es la domotica','qué es la domótica','que es domotica','qué es domótica','definicion','definición','que significa domotica','para qué sirve','para que sirve la domotica'],
-    response:`Me encanta que preguntes 🌟. La <strong>domótica</strong> es la tecnología que automatiza tu hogar: luces, cerraduras, cámaras, sensores… todo controlado desde tu celular o por voz. Funciona con sensores y una red (WiFi, Zigbee) que ejecutan acciones inteligentes para hacerte la vida más cómoda, segura y eficiente.<br>¿Quieres ver ejemplos en tu hogar?`,
+     response:`Me encanta que preguntes 🌟. La <strong>domótica</strong> es la tecnología que automatiza tu hogar: luces, cerraduras, cámaras, persianas y sensores… todo controlado desde tu celular o por voz. Funciona con sensores y una red (WiFi, Zigbee) que ejecutan acciones según tus rutinas y preferencias.<br>¿Quieres ver ejemplos en tu hogar?`,
     action:{label:'Conocer en una videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
   },
   {
@@ -1413,12 +1437,12 @@ const INTENTS = [
   {
     id:'voice',
     keys:['alexa','google home','google assistant','siri','homekit','apple homekit','voz','asistente','smartthings','controlar con voz','por voz'],
-    response:`¡Sí! 🎙️ Casi todos nuestros dispositivos son compatibles con los principales asistentes de voz: <strong>Alexa, Google Home, Apple HomeKit y SmartThings</strong>. Puedes decir "Alexa, enciende la sala" y listo. Si ya tienes un asistente, te ayudamos a integrar todo.`,
+     response:`¡Sí! 🎙️ Casi todos nuestros dispositivos son compatibles con los principales asistentes de voz: <strong>Alexa, Google Home, Apple HomeKit y SmartThings</strong>. El control de persiana, por ejemplo, puede accionarse por voz o de forma remota desde la app. Si ya tienes un asistente, te ayudamos a integrar todo.`,
   },
   {
     id:'protocols',
     keys:['wifi','zigbee','z-wave','zwave','bluetooth','protocolo','protocolos','red'],
-    response:`Pregunta muy técnica, pero te explico claro 📡:<br>• <strong>WiFi:</strong> usa tu red, fácil de instalar.<br>• <strong>Zigbee / Z-Wave:</strong> protocolos pensados para domótica, más estables y bajo consumo.<br>• <strong>Bluetooth:</strong> ideal para corto alcance (cerraduras).<br>Te asesoramos cuál conviene a tu caso.`,
+     response:`Pregunta muy técnica, pero te explico claro 📡:<br>• <strong>WiFi:</strong> usa tu red, fácil de instalar.<br>• <strong>Zigbee / Z-Wave:</strong> protocolos pensados para domótica y comunicación entre dispositivos.<br>• <strong>Bluetooth:</strong> ideal para corto alcance (cerraduras).<br>Te asesoramos cuál conviene a tu caso.`,
   },
   {
     id:'hub',
@@ -1453,7 +1477,7 @@ const INTENTS = [
   {
     id:'routines',
     keys:['rutina','rutinas','escenario','escenarios','automatizar','automatización','automatizacion'],
-    response:`Esto es lo más mágico ✨. Las <strong>rutinas</strong> ejecutan varias acciones con una sola orden:<br>• "Salir de casa" → apaga luces, activa alarma, baja persianas.<br>• "Buenos días" → enciende luces, sube persianas, pone música.<br>Las personalizamos contigo en la instalación.`,
+     response:`Esto es lo más útil ✨. Las <strong>rutinas</strong> ejecutan varias acciones con una sola orden:<br>• "Salir de casa" → apaga luces, activa alarma, baja persianas.<br>• "Buenos días" → enciende luces, sube persianas, pone música.<br>Las personalizamos contigo en la instalación, de acuerdo con tus horarios y preferencias.`,
   },
   {
     id:'support',
@@ -1472,14 +1496,14 @@ const INTENTS = [
     response:`Depende de ti 🎯. Si quieres empezar rápido y con todo compatible, un <strong>kit</strong> es ideal. Si ya tienes algo armado y quieres sumar piezas, los <strong>dispositivos sueltos</strong> son perfectos. En la visita virtual te recomendamos el camino ideal.`,
   },
   {
-    id:'roi',
-    keys:['ahorro','retorno','roi','vale la pena','beneficio','ventaja','ahorrar'],
-    response:`Excelente que pienses así 📈. La domótica recupera la inversión por:<br>• <strong>Ahorro de energía</strong> (luces y termostatos inteligentes).<br>• <strong>Seguridad</strong> (evitar robos o fugas detectadas a tiempo).<br>• <strong>Comodidad</strong> y mayor valor de tu propiedad.`,
+    id:'outcomes',
+    keys:['ahorro','retorno','roi','vale la pena','beneficio','ventaja','ahorrar','consumo'],
+     response:`Es una pregunta importante. No ofrecemos cifras generales ni prometemos resultados de consumo. Revisamos los factores externos de cada hogar —hábitos, orientación, aislamiento, horarios, clima, equipos existentes y configuración— para explicar posibilidades realistas. La domótica sí puede darte más control, comodidad y automatización.`,
   },
   {
     id:'products',
-    keys:['producto','productos','catalogo','catálogo','bombilla','luces','interruptor','camara','cámara','basura','sensor de basura'],
-    response:`En este momento ofrecemos cuatro líneas: <strong>luces LED inteligentes, interruptores (táctil y por voz), cámara de seguridad y sensor de basura inteligente</strong>. Puedes verlos en el catálogo de arriba y agregarlos al carrito para cotizar por WhatsApp.`,
+     keys:['producto','productos','catalogo','catálogo','bombilla','luces','interruptor','camara','cámara','basura','sensor de basura','persiana','persianas','blinds'],
+     response:`En este momento ofrecemos cinco líneas: <strong>luces LED inteligentes, interruptores (táctil y por voz), cámara de seguridad, sensor de basura inteligente y control de persiana</strong>. El control de persiana puede integrarse con Alexa o Google Home y manejarse de forma remota desde la app. Puedes verlos en el catálogo y agregarlos al carrito para cotizar por WhatsApp.`,
   },
   {
     id:'name',
@@ -2380,14 +2404,15 @@ function setPCard(id, t, start, end){
 function updateOverlays(t){
   setOv('a1', t, 0,    0.175);
   setOv('a2', t, 0.15, 0.345);
-  setOv('a3', t, 0.32, 0.78);
-  setOv('a4', t, 0.74, 0.925);
+   setOv('a3', t, 0.32, 0.84);
+   setOv('a4', t, 0.80, 0.925);
   setOv('a5', t, 0.90, 0.995);
-  /* 4 productos en orden bombilla → interruptores → cámara → basura */
-  setPCard('p1', t, 0.355, 0.49);
-  setPCard('p2', t, 0.485, 0.605);
-  setPCard('p3', t, 0.60,  0.70);
-  setPCard('p4', t, 0.695, 0.785);
+   /* 5 productos en orden luces → interruptores → cámara → basura → persiana */
+   setPCard('p1', t, 0.355, 0.46);
+   setPCard('p2', t, 0.455, 0.56);
+   setPCard('p3', t, 0.55,  0.65);
+   setPCard('p4', t, 0.64,  0.74);
+   setPCard('p5', t, 0.73,  0.82);
 }
 
 function hideAllOverlays(){
