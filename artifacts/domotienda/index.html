@@ -34,7 +34,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 ::-webkit-scrollbar-thumb{background:var(--c);border-radius:2px}
 
 #stage{position:fixed;inset:0;z-index:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,.7)}
-#scroll-driver{height:600vh;position:relative;z-index:1;pointer-events:none}
+#scroll-driver{height:800vh;position:relative;z-index:1;pointer-events:none}
 
 #pbar{
   position:fixed;top:0;left:0;height:3px;width:0;
@@ -65,7 +65,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 #cart-btn{
   position:relative;padding:.55rem .7rem;border-radius:10px;
   background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);
-  cursor:pointer;transition:all .25s;flex-shrink:0;
+  cursor:pointer;transition:all .25s;flex-shrink:0;min-width:44px;min-height:44px;
 }
 #cart-btn:hover{background:rgba(0,240,255,.14);border-color:rgba(0,240,255,.4)}
 #cart-btn i{color:#b0d8d8;font-size:.95rem}
@@ -110,7 +110,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;
   border:none;cursor:pointer;
   display:inline-flex;align-items:center;gap:.45rem;
-  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;min-height:44px;
   box-shadow:0 0 22px rgba(0,240,255,.32);
   transition:transform .25s,box-shadow .25s;
 }
@@ -121,7 +121,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   font-family:'Space Grotesk',sans-serif;font-weight:500;
   display:inline-flex;align-items:center;gap:.45rem;
   padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
-  cursor:pointer;transition:all .25s;
+  cursor:pointer;transition:all .25s;min-height:44px;
 }
 .btn-o:hover{background:rgba(0,240,255,.09);border-color:rgba(0,240,255,.7)}
 .btn-cal{
@@ -129,7 +129,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   border:1px solid rgba(123,97,255,.55);color:#b8a4ff;
   font-family:'Space Grotesk',sans-serif;font-weight:600;
   display:inline-flex;align-items:center;gap:.45rem;
-  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;min-height:44px;
   cursor:pointer;transition:all .25s;
   box-shadow:0 0 14px rgba(123,97,255,.18);
 }
@@ -141,7 +141,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;
   border:none;cursor:pointer;
   display:inline-flex;align-items:center;gap:.45rem;
-  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;
+  padding:.85rem 1.6rem;border-radius:12px;font-size:.88rem;min-height:44px;
   box-shadow:0 0 22px rgba(37,211,102,.3);
   transition:transform .25s,box-shadow .25s;
 }
@@ -261,7 +261,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 
 .size-row{display:flex;gap:.35rem;margin-bottom:.85rem}
 .size-btn{
-  flex:1;padding:.42rem;border-radius:8px;
+  flex:1;min-width:44px;min-height:44px;padding:.42rem;border-radius:8px;
   background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
   color:#9fb6b8;font-family:'Space Grotesk',sans-serif;font-size:.7rem;font-weight:500;
   cursor:pointer;transition:all .2s;text-align:center;
@@ -282,6 +282,84 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 .sub-prod .sub-head strong{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;color:#dceaec;text-shadow:var(--txt-shadow)}
 .sub-prod .sub-head i{font-size:.78rem}
 .sub-prod .feats{margin-bottom:.55rem}
+
+/* CATÁLOGO POST-SCROLL */
+#catalogo{
+  background:#060d0e;
+  border-top:1px solid rgba(0,240,255,.08);
+  max-width:100vw;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+}
+.catalog-inner{max-width:1180px;padding-top:5rem;padding-bottom:5.5rem}
+.catalog-heading{max-width:680px;margin-bottom:2rem}
+.catalog-heading .sec-sub{max-width:620px;margin-bottom:0}
+.catalog-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1rem;
+}
+.product-card{
+  background:linear-gradient(160deg,rgba(13,26,28,.96),rgba(6,13,14,.98));
+  border:1px solid rgba(0,240,255,.16);
+  border-radius:16px;
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  box-shadow:0 10px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.035);
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.product-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(0,240,255,.42);
+  box-shadow:0 16px 42px rgba(0,0,0,.45),0 0 24px rgba(0,240,255,.08);
+}
+.prod-img{
+  min-height:142px;
+  border-radius:12px;
+  margin-bottom:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(0,240,255,.15),transparent 42%),
+    linear-gradient(135deg,rgba(0,240,255,.08),rgba(123,97,255,.08));
+  border:1px solid rgba(0,240,255,.12);
+  color:var(--c);
+  font-size:3rem;
+}
+.prod-img i{filter:drop-shadow(0 0 14px rgba(0,240,255,.34))}
+.product-card h3{
+  color:#fff;font-size:1rem;font-weight:600;margin-bottom:.45rem;
+  text-shadow:var(--txt-shadow);
+}
+.product-card p{
+  color:#9fb6b8;font-size:.78rem;line-height:1.6;
+  text-shadow:var(--txt-shadow);
+}
+.product-card .product-copy{flex:1}
+.product-card .product-feats{display:flex;flex-wrap:wrap;gap:.35rem;margin:.85rem 0}
+.variant-label{
+  display:block;color:#7a9a9c;font-size:.64rem;
+  text-transform:uppercase;letter-spacing:.1em;margin:.25rem 0 .4rem;
+}
+.variant-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.9rem}
+.variant-btn{
+  min-height:44px;padding:.5rem .65rem;border-radius:9px;
+  color:#9fb6b8;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-size:.7rem;
+  transition:all .2s;
+}
+.variant-btn:hover,.variant-btn.active{
+  color:#fff;background:rgba(0,240,255,.14);
+  border-color:var(--c);box-shadow:0 0 12px rgba(0,240,255,.2);
+}
+.product-actions{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
+.product-actions button{flex:1;justify-content:center;min-width:44px;min-height:44px}
+.product-actions .btn-o{padding:.65rem .75rem;font-size:.72rem}
+#catalogo .btn-c,#catalogo .btn-o{min-height:44px}
 
 /* ACT 4: TESTIMONIOS */
 #a4{align-items:center;padding-bottom:5%;flex-direction:column;justify-content:center;padding-top:7%;gap:1.2rem}
@@ -442,7 +520,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   border-top:1px solid rgba(255,255,255,.04);
 }
 .qchip{
-  padding:.45rem .8rem;border-radius:999px;font-size:.74rem;
+  min-height:44px;padding:.45rem .8rem;border-radius:999px;font-size:.74rem;
   background:rgba(0,240,255,.07);color:#b8d6d8;
   border:1px solid rgba(0,240,255,.18);cursor:pointer;
   font-family:'Inter',sans-serif;transition:all .2s;
@@ -462,7 +540,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 #chat-input::placeholder{color:#5a7878}
 #chat-input:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,240,255,.14)}
 #chat-send{
-  width:42px;height:42px;border-radius:11px;border:none;cursor:pointer;
+  width:44px;height:44px;min-width:44px;min-height:44px;border-radius:11px;border:none;cursor:pointer;
   background:linear-gradient(135deg,var(--c),#3bd3e0);color:#001a1d;
   display:flex;align-items:center;justify-content:center;font-size:.95rem;
   transition:transform .15s, box-shadow .2s;
@@ -636,6 +714,12 @@ footer{
 
 /* MOBILE */
 @media(max-width:760px){
+  .ov{
+    background:rgba(6,13,14,.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    text-shadow:0 2px 8px rgba(0,0,0,.8);
+  }
   #hdr{padding:.7rem 1rem}
   .btn-c,.btn-o,.btn-cal,.btn-wa{padding:.75rem 1.2rem;font-size:.8rem}
   #a1 .wrap{padding:1.2rem .9rem;gap:.85rem;border-radius:18px;margin-top:3.5rem}
@@ -644,15 +728,29 @@ footer{
   #a1 .btns button{width:100%;justify-content:center}
   #a3-top{top:5%;padding:.7rem 1rem}
   #a3-top h2{font-size:1rem}
+  #a2 .step p,.pcard .desc{font-size:.82rem}
+  .pcard .feat{font-size:.67rem}
+  .catalog-inner{padding:4rem 1rem}
+  .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+  .product-card{padding:.85rem}
+  .prod-img{min-height:120px;font-size:2.5rem}
+  .product-actions{flex-direction:column}
+  .product-actions button{width:100%}
   #a4-cards{padding:0 4%}
   #cdr{width:100vw}
   #mbox{padding:1.2rem;border-radius:14px}
+  #cdr-items{padding:.75rem;overflow-y:auto}
+  #cdr-foot{padding:1rem}
+  .ci-ctrl button,.ci-del,.modal-close,#chat-send{min-width:44px;min-height:44px}
+  #mbox{max-height:calc(100vh - 1rem);overflow-y:auto}
+  .m-cancel{min-height:44px}
 }
 @media(max-width:420px){
   #hdr{padding:.6rem .8rem}
   .logo span{font-size:.95rem}
   .logo sub{font-size:.58rem}
   #cart-btn{padding:.45rem .6rem}
+  .catalog-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -973,6 +1071,139 @@ footer{
         <button class="btn-wa" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp</button>
       </div>
     </div>
+
+    <!-- CATÁLOGO DE PRODUCTOS -->
+    <section id="catalogo" aria-labelledby="catalogo-titulo">
+      <div class="catalog-inner">
+        <div class="catalog-heading">
+          <span class="sec-lbl">Catálogo de dispositivos</span>
+          <h2 class="sec-h" id="catalogo-titulo">Elige cómo quieres controlar tu hogar</h2>
+          <p class="sec-sub">Conoce las opciones disponibles y consulta una cotización personalizada según tu instalación, tus espacios y tus necesidades.</p>
+        </div>
+
+        <div class="catalog-grid">
+          <article class="product-card" data-product-id="1">
+            <div class="prod-img">
+              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
+              <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+            </div>
+            <div class="product-copy">
+              <h3>Contenedor de basura inteligente</h3>
+              <p>Abre la tapa sin contacto mediante su sensor de proximidad. Disponible en diferentes tamaños.</p>
+              <div class="product-feats">
+                <span class="feat">Apertura sin contacto</span><span class="feat">Sensor IR</span>
+              </div>
+              <span class="variant-label">Selecciona tamaño</span>
+              <div class="variant-row" data-variant-group="1">
+                <button class="variant-btn active" type="button" data-variant="Pequeño">Pequeño</button>
+                <button class="variant-btn" type="button" data-variant="Mediano">Mediano</button>
+                <button class="variant-btn" type="button" data-variant="Grande">Grande</button>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-c" type="button" onclick="addCatalogToCart(1,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+              <button class="btn-o" type="button" onclick="consultProduct(1,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-product-id="5">
+            <div class="prod-img">
+              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
+              <i class="fa-solid fa-video" aria-hidden="true"></i>
+            </div>
+            <div class="product-copy">
+              <h3>Cámara de seguridad</h3>
+              <p>Recibe alertas en tu teléfono cuando detecta movimiento y consulta el espacio desde la app.</p>
+              <div class="product-feats">
+                <span class="feat">Alertas en tiempo real</span><span class="feat">Visión nocturna</span>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-c" type="button" onclick="addCatalogToCart(5,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+              <button class="btn-o" type="button" onclick="consultProduct(5,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-product-id="2">
+            <div class="prod-img">
+              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
+              <i class="fa-solid fa-toggle-on" aria-hidden="true"></i>
+            </div>
+            <div class="product-copy">
+              <h3>Interruptor táctil WiFi</h3>
+              <p>Control táctil y desde la app para integrar la iluminación a tus rutinas diarias.</p>
+              <div class="product-feats">
+                <span class="feat">Táctil</span><span class="feat">WiFi</span><span class="feat">App móvil</span>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-c" type="button" onclick="addCatalogToCart(2,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+              <button class="btn-o" type="button" onclick="consultProduct(2,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-product-id="3">
+            <div class="prod-img">
+              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
+              <i class="fa-solid fa-microphone" aria-hidden="true"></i>
+            </div>
+            <div class="product-copy">
+              <h3>Interruptor por voz</h3>
+              <p>Controla la iluminación con Alexa, Google Home y otros asistentes compatibles.</p>
+              <div class="product-feats">
+                <span class="feat">Alexa</span><span class="feat">Google Home</span><span class="feat">HomeKit</span>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-c" type="button" onclick="addCatalogToCart(3,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+              <button class="btn-o" type="button" onclick="consultProduct(3,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-product-id="4">
+            <div class="prod-img">
+              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
+              <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+            </div>
+            <div class="product-copy">
+              <h3>Luces LED inteligentes</h3>
+              <p>Configura escenas y controla tus luces desde la app o por voz, según tus rutinas.</p>
+              <div class="product-feats">
+                <span class="feat">App móvil</span><span class="feat">Alexa</span><span class="feat">Google Home</span>
+              </div>
+              <span class="variant-label">Selecciona tu kit</span>
+              <div class="variant-row" data-variant-group="4">
+                <button class="variant-btn active" type="button" data-variant="Kit 1">Kit 1</button>
+                <button class="variant-btn" type="button" data-variant="Kit 2">Kit 2</button>
+                <button class="variant-btn" type="button" data-variant="Kit 4">Kit 4</button>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-c" type="button" onclick="addCatalogToCart(4,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+              <button class="btn-o" type="button" onclick="consultProduct(4,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-product-id="6">
+            <div class="prod-img">
+              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
+              <i class="fa-solid fa-blinds" aria-hidden="true"></i>
+            </div>
+            <div class="product-copy">
+              <h3>Control de persiana</h3>
+              <p>Acciona tus persianas por voz con Alexa o Google Home y contrólalas de forma remota desde la app.</p>
+              <div class="product-feats">
+                <span class="feat">Alexa</span><span class="feat">Google Home</span><span class="feat">Control remoto</span>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-c" type="button" onclick="addCatalogToCart(6,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+              <button class="btn-o" type="button" onclick="consultProduct(6,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
   </div>
 
   <footer>
@@ -1293,9 +1524,26 @@ function selectedSize(prodId){
 
 function cartKey(id, size){ return size ? `${id}_${size}` : `${id}`; }
 
-function addToCart(id){
+function catalogVariant(card){
+  const active = card && card.querySelector('.variant-btn.active');
+  return active ? active.dataset.variant : null;
+}
+
+function addCatalogToCart(id, card){
+  addToCart(id, catalogVariant(card));
+}
+
+function consultProduct(id, card){
   const p = PRODUCTS.find(x => x.id===id);
-  const size = p.sized ? selectedSize(id) : null;
+  if(!p) return;
+  const variant = catalogVariant(card);
+  const variantText = variant ? ` — Variante: ${variant}` : '';
+  openWhatsApp(`¡Hola La Domotienda! Quisiera cotizar ${p.name}${variantText}. Me gustaría conocer la instalación y compatibilidad para mi hogar.`);
+}
+
+function addToCart(id, variantOverride=null){
+  const p = PRODUCTS.find(x => x.id===id);
+  const size = variantOverride || (p.sized ? selectedSize(id) : null);
   const key = cartKey(id, size);
   const ex = cart.find(x => x.key===key);
   if(ex) ex.qty++;
@@ -1381,6 +1629,16 @@ document.querySelectorAll('.size-row').forEach(row=>{
     btn.addEventListener('click', e=>{
       e.stopPropagation();
       row.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+document.querySelectorAll('.variant-row').forEach(row=>{
+  row.querySelectorAll('.variant-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      row.querySelectorAll('.variant-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
     });
   });
@@ -1658,18 +1916,18 @@ const camCurrent = {x:0,y:22,z:6,  lx:0,ly:0,lz:0};
 
 const KF = [
   { t:0.00, p:[ 0,  22,  6], l:[0,0, 0] },
-  { t:0.08, p:[ 7,  17, 14], l:[0,1, 0] },
+  { t:0.07, p:[ 7,  17, 14], l:[0,1, 0] },
   { t:0.15, p:[ 2,  14, 16], l:[0,2, 0] },
-  { t:0.20, p:[ 1,   9, 17], l:[0,2.5,0] },
-  { t:0.27, p:[ 0,   5, 11], l:[0,3,  0] },
-  { t:0.34, p:[-1, 3.8,  7], l:[0,3.5,0] },
-  { t:0.40, p:[ 0, 4.5,  2], l:[ 0, 5,   -0.5] },
-  { t:0.51, p:[ 3, 3.2,  0.5], l:[5.2, 3,  0  ] },
-  { t:0.61, p:[-2.5, 4.2, -0.5], l:[-5.5, 3.8, -1] },
-  { t:0.70, p:[ 1.5, 2.5,  4], l:[3.5, 0.8, 3.5] },
-  { t:0.77, p:[-11, 12, 20], l:[0,2,0] },
-  { t:0.88, p:[  0,  9, 23], l:[0,2,0] },
-  { t:0.93, p:[  0,  7, 21], l:[0,5,12] },
+  { t:0.24, p:[ 1,   9, 17], l:[0,2.5,0] },
+  { t:0.33, p:[ 0,   5, 11], l:[0,3,  0] },
+  { t:0.43, p:[-1, 3.8,  7], l:[0,3.5,0] },
+  { t:0.54, p:[ 0, 4.5,  2], l:[ 0, 5,   -0.5] },
+  { t:0.65, p:[ 3, 3.2,  0.5], l:[5.2, 3,  0  ] },
+  { t:0.75, p:[-2.5, 4.2, -0.5], l:[-5.5, 3.8, -1] },
+  { t:0.84, p:[ 1.5, 2.5,  4], l:[3.5, 0.8, 3.5] },
+  { t:0.90, p:[-11, 12, 20], l:[0,2,0] },
+  { t:0.95, p:[  0,  9, 23], l:[0,2,0] },
+  { t:0.98, p:[  0,  7, 21], l:[0,5,12] },
   { t:1.00, p:[  0,  5, 19], l:[0,4.5,12] },
 ];
 
@@ -1690,9 +1948,9 @@ function interpCam(t){
 function initThree(){
   const canvas = document.getElementById('stage');
   renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setPixelRatio(window.innerWidth < 768 ? 1 : Math.min(window.devicePixelRatio,2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = window.innerWidth > 768;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.12;
@@ -1711,6 +1969,8 @@ function initThree(){
     camera.aspect = window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.innerWidth < 768 ? 1 : Math.min(window.devicePixelRatio,2));
+    renderer.shadowMap.enabled = window.innerWidth > 768;
   });
 
   buildLights();
@@ -1881,7 +2141,7 @@ function buildDevices(){
     roughness:.18, metalness:.1, transparent:true, opacity:.92
   });
   tracked.bulbMat = bm;
-  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 24), bm);
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 16), bm);
   bulbGroup.add(bulb);
 
   const threadMat = new THREE.MeshStandardMaterial({
@@ -1982,7 +2242,7 @@ function buildDevices(){
     roughness:.35, metalness:.7
   });
   tracked.camMat=cm;
-  const camBody = new THREE.Mesh(new THREE.SphereGeometry(0.4, 18, 14, 0, Math.PI*2, 0, Math.PI*0.65), cm);
+  const camBody = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16, 0, Math.PI*2, 0, Math.PI*0.65), cm);
   camBody.scale.set(1, 0.85, 1);
   camBody.rotation.x = Math.PI;
   camGroup.add(camBody);
@@ -1998,7 +2258,7 @@ function buildDevices(){
     color:0x111111, emissive:0x001020, emissiveIntensity:.35,
     metalness:.85, roughness:.12
   });
-  const lens=new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.16, 0.18, 18), lensMat);
+  const lens=new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.16, 0.18, 16), lensMat);
   lens.rotation.x = Math.PI/2;
   lens.position.set(0, 0, 0.18);
   camGroup.add(lens);
@@ -2039,7 +2299,7 @@ function buildDevices(){
     roughness:.35, metalness:.75
   });
   tracked.trashMat=tm;
-  const tBody=new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.6, 1.3, 22, 1, true), tm);
+  const tBody=new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.6, 1.3, 16, 1, true), tm);
   tBody.position.set(0, 0.65, 0);
   trashGroup.add(tBody);
 
@@ -2054,7 +2314,7 @@ function buildDevices(){
   }
 
   const tBottom = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.6, 0.6, 0.05, 22),
+    new THREE.CylinderGeometry(0.6, 0.6, 0.05, 16),
     new THREE.MeshStandardMaterial({color:0x111111, metalness:.7, roughness:.4})
   );
   tBottom.position.set(0,0.025,0);
@@ -2064,7 +2324,7 @@ function buildDevices(){
     color:0x3a3a3a, emissive:0x0a0a0a, emissiveIntensity:.1,
     roughness:.3, metalness:.8
   });
-  const lid=new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.58, 0.1, 22), lidMat);
+  const lid=new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.58, 0.1, 16), lidMat);
   lid.position.set(0, 1.36, 0);
   trashGroup.add(lid);
 
@@ -2081,7 +2341,7 @@ function buildDevices(){
     roughness:.4, metalness:.2
   });
   tracked.trashRingMat = ringEmitMat;
-  const ledRing = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.022, 10, 36), ringEmitMat);
+  const ledRing = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.022, 8, 16), ringEmitMat);
   ledRing.rotation.x = Math.PI/2;
   ledRing.position.set(0, 1.32, 0);
   trashGroup.add(ledRing);
@@ -2204,7 +2464,7 @@ function buildVideoScreen(){
   sl.position.set(0,4.5,12); scene.add(sl); tracked.screenLight=sl;
 
   const playMat=new THREE.MeshPhongMaterial({color:0x00F0FF,emissive:0x00F0FF,emissiveIntensity:.55});
-  const play=new THREE.Mesh(new THREE.CylinderGeometry(1,1,0.08,32),playMat);
+  const play=new THREE.Mesh(new THREE.CylinderGeometry(1,1,0.08,16),playMat);
   play.rotation.x=Math.PI/2; play.position.set(0,4.5,12.35); scene.add(play);
 }
 
@@ -2224,10 +2484,15 @@ function buildPeople(){
 }
 
 let scrollProg = 0;
+let renderPaused = document.hidden;
+document.addEventListener('visibilitychange',()=>{
+  renderPaused = document.hidden;
+});
 
 function startRenderLoop(){
   function tick(){
     requestAnimationFrame(tick);
+    if(renderPaused) return;
     const t = clock.getElapsedTime();
 
     const kf = interpCam(scrollProg);
@@ -2356,7 +2621,7 @@ function initScroll(){
     trigger:'#scroll-driver',
     start:'top top',
     end:'bottom bottom',
-    scrub:1.4,
+    scrub:2,
     onUpdate(self){
       const p = self.progress;
       scrollProg = p;
@@ -2378,7 +2643,7 @@ function initScroll(){
   });
 }
 
-function setOv(id, t, start, end, fade=0.07){
+function setOv(id, t, start, end, fade=0.09){
   const el=document.getElementById(id); if(!el) return;
   let op=0;
   if(t<start) op=0;
@@ -2392,7 +2657,7 @@ function setOv(id, t, start, end, fade=0.07){
 
 function setPCard(id, t, start, end){
   const el=document.getElementById(id); if(!el) return;
-  const fade=0.025;
+  const fade=0.045;
   let op=0;
   if(t>=start && t<start+fade) op=(t-start)/fade;
   else if(t>=start+fade && t<end-fade) op=1;
@@ -2402,17 +2667,17 @@ function setPCard(id, t, start, end){
 }
 
 function updateOverlays(t){
-  setOv('a1', t, 0,    0.175);
-  setOv('a2', t, 0.15, 0.345);
-   setOv('a3', t, 0.32, 0.84);
-   setOv('a4', t, 0.80, 0.925);
+  setOv('a1', t, 0,    0.16);
+  setOv('a2', t, 0.13, 0.34);
+  setOv('a3', t, 0.29, 0.86);
+  setOv('a4', t, 0.81, 0.94);
   setOv('a5', t, 0.90, 0.995);
-   /* 5 productos en orden luces → interruptores → cámara → basura → persiana */
-   setPCard('p1', t, 0.355, 0.46);
-   setPCard('p2', t, 0.455, 0.56);
-   setPCard('p3', t, 0.55,  0.65);
-   setPCard('p4', t, 0.64,  0.74);
-   setPCard('p5', t, 0.73,  0.82);
+  /* 5 productos en orden luces → interruptores → cámara → basura → persiana */
+  setPCard('p1', t, 0.34, 0.47);
+  setPCard('p2', t, 0.43, 0.58);
+  setPCard('p3', t, 0.54, 0.69);
+  setPCard('p4', t, 0.65, 0.79);
+  setPCard('p5', t, 0.75, 0.86);
 }
 
 function hideAllOverlays(){

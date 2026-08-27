@@ -56,6 +56,12 @@ Single-page experience que recorre una casa en 3D (Three.js + GSAP ScrollTrigger
 10. **Sección "Cómo funciona" rediseñada a 5 pasos**: visita virtual → eliges equipo → pagas 50% → instalamos → acompañamiento 24/7.
 11. **3D refinado**: tone mapping ACES Filmic, partículas flotantes cyan, anillos emisivos en el piso con pulso, listones de madera en el piso interior, marco luminoso sobre la puerta, picaporte metálico, cruces en las ventanas, planta con maceta y hojas estilizadas, halo de luz alrededor de la bombilla, biseles y reflejos en cada dispositivo, anillo táctil en el interruptor, reflejo en el lente de la cámara, refuerzos toroidales en el contenedor.
 
+### Ronda 4 (optimización móvil y catálogo)
+1. **Render 3D adaptable**: pixel ratio y sombras reducidos en móvil, geometrías con máximo de 16 segmentos y pausa del render cuando la pestaña queda oculta.
+2. **Scrollytelling más delicado**: driver de 800vh, keyframes y rangos redistribuidos, `scrub: 2` y fades más amplios.
+3. **Catálogo independiente** después del recorrido 3D: grid responsive con placeholders `.prod-img`, seis productos actuales, variantes de tamaño para basura y kits para luces LED, carrito y consulta individual por WhatsApp sin mostrar precios.
+4. **Usabilidad táctil**: controles principales de al menos 44×44 px, mejor espaciado móvil y carrito/modal de cotización con scroll usable en pantallas pequeñas.
+
 ## Cómo correr
 
 El workflow `artifacts/domotienda: web` arranca Vite en el `PORT` asignado y sirve el HTML directamente. Cualquier cambio en `index.html` se refresca solo (HMR overlay deshabilitado).

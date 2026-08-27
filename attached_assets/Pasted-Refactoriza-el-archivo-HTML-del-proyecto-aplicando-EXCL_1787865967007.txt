@@ -1,0 +1,50 @@
+Refactoriza el archivo HTML del proyecto aplicando EXCLUSIVAMENTE los siguientes cambios. Todo lo no mencionado queda intacto.
+
+═══════════════════════════════
+ÁREA 1: SCROLLYTELLING 3D
+═══════════════════════════════
+
+**Optimización de rendimiento:**
+- Desactiva sombras en móvil: `renderer.shadowMap.enabled = window.innerWidth > 768;`
+- Reduce pixelRatio en móvil: `renderer.setPixelRatio(window.innerWidth < 768 ? 1 : Math.min(window.devicePixelRatio, 2));`
+- Pausa el render cuando el tab no sea visible con `visibilitychange`.
+- Reduce segmentos de esferas y cilindros a 16.
+
+**Reemplaza las geometrías de los dispositivos por versiones detalladas y reconocibles:**
+- Bombilla: esfera (0.45, 16 seg) + cilindro roscado gris + cordón al techo. Color #FFD700, emissive.
+- Interruptor: caja plana (1.2 × 0.7 × 0.12) + anillo táctil central (TorusGeometry) + punto de luz cyan.
+- Cámara: cuerpo semiesférico + lente cilíndrico + LED rojo (esfera minúscula, emissive #FF0000) + base de montaje.
+- Contenedor: cilindro principal (0.55 × 1.3, gris metálico) + tapa con bisel + anillo LED superior (torus, emissive #00AA88) + sensor frontal.
+
+**No alterar:** transiciones, tiempos, narrativa ni estructura de overlays.
+
+═══════════════════════════════
+ÁREA 2: CATÁLOGO DE PRODUCTOS
+═══════════════════════════════
+
+**Añadir nueva sección `<section id="catalogo">`** justo después del cierre del scrollytelling y antes del footer. Fondo sólido `#060d0e`, encabezado con estilo de las otras secciones.
+
+**Grid de tarjetas** (1 col móvil, 3 desktop) con TODOS los productos:
+- Contenedor de basura inteligente (selector: Pequeño / Mediano / Grande)
+- Cámara de seguridad (sin variantes)
+- Interruptor táctil WiFi (sin variantes)
+- Interruptor por voz (nuevo, compatible con Alexa, Google Home y otros)
+- Luces LED inteligentes (selector: Kit 1 / Kit 2 / Kit 4)
+
+**Cada tarjeta:**
+- Icono Font Awesome (fa-trash-can, fa-video, fa-toggle-on, fa-microphone, fa-lightbulb)
+- Nombre y descripción breve (sin precios)
+- Selector de variantes si aplica
+- Botón "Agregar al carrito" (funcional, localStorage)
+- Botón "Consultar por WhatsApp" → `wa.me/573052332703` con mensaje que incluya nombre y variante seleccionada
+
+**El carrito, drawer, modal y localStorage permanecen intactos. Los precios internos siguen usándose para calcular totales, solo se ocultan en la vista del catálogo.**
+
+═══════════════════════════════
+CONFIRMACIÓN REQUERIDA
+═══════════════════════════════
+
+Al terminar responde con:
+- Lista de cambios aplicados en Área 1
+- Lista de cambios aplicados en Área 2
+- Cualquier error o ajuste no aplicado con justificación breve
