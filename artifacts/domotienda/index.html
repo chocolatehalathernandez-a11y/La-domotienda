@@ -210,10 +210,10 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   #a2-steps{margin-top:.4rem}
 }
 
-/* ACT 3: CATÁLOGO */
-#a3{pointer-events:none}
+/* ACT 3: MAPA 2D */
+#a3{pointer-events:none;align-items:flex-start;padding:5.2rem 1rem 1.2rem;overflow-y:auto}
 #a3-top{
-  position:absolute;top:7%;left:50%;transform:translateX(-50%);
+  position:relative;flex:0 0 auto;
   text-align:center;width:90%;max-width:560px;
   background:var(--glass);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
@@ -224,39 +224,78 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 #a3-top .lbl{font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--c);text-shadow:var(--txt-shadow)}
 #a3-top h2{font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:600;color:#fff;margin:.25rem 0 0;letter-spacing:-.01em;text-shadow:var(--txt-shadow)}
 
-@keyframes borderShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-.pcard{
-  position:absolute;right:3.5%;top:50%;transform:translateY(-50%);
-  width:min(330px,92vw);
-  opacity:0;pointer-events:none;
-  transition:opacity .15s;
+/* El mapa es una capa ligera e independiente del lienzo 3D. */
+#automation-map{
+  width:min(1180px,100%);display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.72fr);
+  gap:1rem;align-items:center;margin:0 auto;pointer-events:auto;
 }
-@media(max-width:760px){.pcard{right:50%;transform:translate(50%,calc(-50% + 70px));top:auto;bottom:5%;width:92vw}}
-.pcard-inner{
-  position:relative;
-  background:var(--glass-strong);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(0,240,255,.25);
-  border-radius:16px;padding:1.3rem;
-  box-shadow:0 10px 40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+.map-scene{
+  position:relative;min-height:500px;overflow:hidden;border-radius:22px;
+  background:linear-gradient(145deg,rgba(13,31,33,.94),rgba(6,13,14,.98));
+  border:1px solid rgba(0,240,255,.2);box-shadow:0 14px 55px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.04);
 }
-.pcard-inner::before{
-  content:'';position:absolute;inset:-1px;border-radius:17px;padding:1px;
-  background:linear-gradient(120deg, rgba(0,240,255,.6), rgba(123,97,255,.5), rgba(0,240,255,.6), rgba(123,97,255,.4));
-  background-size:300% 300%;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  animation:borderShift 5.5s ease infinite;
-  pointer-events:none;opacity:.85;
+.map-scene::before,.map-scene::after{content:'';position:absolute;pointer-events:none;border-radius:50%;filter:blur(1px)}
+.map-scene::before{width:320px;height:320px;left:3%;top:-18%;background:radial-gradient(circle,rgba(0,240,255,.13),transparent 68%)}
+.map-scene::after{width:300px;height:300px;right:-10%;bottom:-20%;background:radial-gradient(circle,rgba(123,97,255,.16),transparent 68%)}
+.map-scene svg{position:absolute;inset:3%;width:94%;height:94%;overflow:visible}
+.map-outline{fill:rgba(7,20,22,.7);stroke:rgba(157,229,230,.28);stroke-width:3}
+.map-room{fill:rgba(0,240,255,.035);stroke:rgba(157,229,230,.17);stroke-width:2}
+.map-room.alt{fill:rgba(123,97,255,.045)}
+.map-furniture{fill:rgba(164,214,216,.11);stroke:rgba(164,214,216,.3);stroke-width:2}
+.map-detail{fill:none;stroke:rgba(0,240,255,.24);stroke-width:2;stroke-linecap:round}
+.map-label{fill:#7a9a9c;font:600 13px 'Space Grotesk',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.map-caption{position:absolute;left:1.1rem;bottom:1rem;color:#527274;font-size:.69rem;letter-spacing:.08em;text-transform:uppercase}
+.map-hotspots{position:absolute;inset:0}
+.hotspot{
+  --spot-color:var(--c);position:absolute;transform:translate(-50%,-50%);z-index:2;
+  min-width:58px;min-height:58px;padding:.2rem;border:0;background:none;color:#dffafa;
+  cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:.64rem;font-weight:600;
+  display:flex;flex-direction:column;align-items:center;gap:.25rem;text-shadow:0 2px 7px #000;
 }
-.pcard-icon{
-  width:40px;height:40px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+.hotspot-core{
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  color:var(--spot-color);background:rgba(6,13,14,.9);border:1px solid var(--spot-color);
+  box-shadow:0 0 0 5px rgba(0,240,255,.08),0 0 20px rgba(0,240,255,.2);
+  transition:transform .35s,background .35s,box-shadow .35s;
 }
-.pcard h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:600;color:#fff;text-shadow:var(--txt-shadow)}
-.pcard .desc{font-size:.78rem;color:#a8c4c6;line-height:1.6;margin:.5rem 0 .8rem;text-shadow:var(--txt-shadow)}
-.pcard .feats{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.85rem}
+.hotspot-core i{font-size:.95rem}
+.hotspot::after{content:'';position:absolute;top:9px;width:40px;height:40px;border-radius:50%;border:1px solid var(--spot-color);opacity:.35;animation:hotspotPulse 2.8s ease-out infinite;pointer-events:none}
+.hotspot:hover .hotspot-core,.hotspot:focus-visible .hotspot-core,.hotspot.active .hotspot-core{transform:scale(1.13);background:rgba(0,240,255,.16);box-shadow:0 0 0 7px rgba(0,240,255,.12),0 0 30px rgba(0,240,255,.4)}
+.hotspot.active{color:#fff}
+.hotspot:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:12px}
+@keyframes hotspotPulse{0%{transform:scale(.75);opacity:.55}72%,100%{transform:scale(1.45);opacity:0}}
+.map-panel{
+  position:relative;background:var(--glass-strong);border:1px solid rgba(0,240,255,.22);border-radius:18px;
+  padding:1.35rem;min-height:330px;box-shadow:0 12px 42px rgba(0,0,0,.5);display:flex;flex-direction:column;
+}
+.map-panel-top{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem}
+.map-panel-icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--c);font-size:1.1rem;flex:none}
+.map-panel-zone{font-size:.63rem;color:#6f9698;text-transform:uppercase;letter-spacing:.14em}
+.map-panel h3{font-size:1.35rem;color:#fff;margin-top:.2rem}
+.map-panel-summary{color:#a8c4c6;font-size:.83rem;line-height:1.65;min-height:4.2rem}
+.map-panel-label{display:block;color:#6f9698;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;margin:1rem 0 .45rem}
+#automation-compatibility{color:#d4eeee;font-size:.78rem;line-height:1.5}
+#automation-features{display:flex;flex-wrap:wrap;gap:.35rem;min-height:24px}
+#automation-features .feat{font-size:.61rem}
+.map-panel .btn-c{width:100%;justify-content:center;margin-top:auto}
+.map-panel-note{color:#5f8182;font-size:.67rem;line-height:1.45;text-align:center;margin-top:.7rem}
+@media(max-width:860px){
+  #automation-map{grid-template-columns:1fr;max-width:720px}
+  .map-scene{min-height:410px}
+  .map-panel{min-height:275px}
+}
+@media(max-width:760px){
+  #a3{padding:4.7rem .7rem .8rem}
+  #a3-top{padding:.7rem 1rem}
+  .map-scene{min-height:330px;border-radius:18px}
+  .map-caption{left:.75rem;bottom:.7rem;font-size:.58rem}
+  .hotspot{font-size:.57rem;min-width:52px;min-height:52px}
+  .hotspot-core{width:35px;height:35px}
+  .hotspot::after{top:8px;width:35px;height:35px}
+  .map-panel{padding:1rem;min-height:255px}
+  .map-panel h3{font-size:1.15rem}
+  .map-panel-summary{font-size:.78rem;min-height:3.5rem}
+}
 .feat{
   font-size:.62rem;font-family:'Space Grotesk',sans-serif;font-weight:500;
   padding:.22rem .55rem;border-radius:14px;
@@ -730,10 +769,9 @@ footer{
   #a1 h1{font-size:clamp(1.8rem,8vw,3rem)}
   #a1 .btns{flex-direction:column;width:100%}
   #a1 .btns button{width:100%;justify-content:center}
-  #a3-top{top:5%;padding:.7rem 1rem}
+  #a3-top{padding:.7rem 1rem}
   #a3-top h2{font-size:1rem}
-  #a2 .step p,.pcard .desc{font-size:.82rem}
-  .pcard .feat{font-size:.67rem}
+  #a2 .step p{font-size:.82rem}
   .catalog-inner{padding:4rem 1rem}
   .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
   .product-card{padding:.85rem}
@@ -838,155 +876,76 @@ footer{
   </div>
 </div>
 
-<!-- CATÁLOGO -->
+<!-- MAPA 2D DE AUTOMATIZACIÓN -->
 <div id="a3" class="ov">
   <div id="a3-top">
-    <span class="lbl">Catálogo inteligente</span>
-    <h2>Elige tu automatización</h2>
+    <span class="lbl">Recorrido 2D del hogar</span>
+    <h2>Explora por espacio</h2>
   </div>
-
-  <!-- 1. Luces LED inteligentes -->
-  <div id="p1" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 1 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.32)">
-          <i class="fa-solid fa-lightbulb" style="color:#FFD700;font-size:1.05rem"></i>
-        </div>
-        <h3>Luces LED inteligentes</h3>
+  <div id="automation-map">
+    <div class="map-scene" aria-label="Mapa interactivo de una casa inteligente">
+      <svg viewBox="0 0 720 480" role="img" aria-labelledby="map-title map-desc">
+        <title id="map-title">Mapa de zonas de una casa inteligente</title>
+        <desc id="map-desc">Sala, cocina, habitación, baño y acceso exterior conectados por un pasillo.</desc>
+        <rect class="map-outline" x="36" y="28" width="648" height="424" rx="16"/>
+        <rect class="map-room" x="58" y="52" width="290" height="190" rx="8"/>
+        <rect class="map-room alt" x="372" y="52" width="290" height="190" rx="8"/>
+        <rect class="map-room" x="58" y="270" width="180" height="154" rx="8"/>
+        <rect class="map-room alt" x="262" y="270" width="180" height="154" rx="8"/>
+        <rect class="map-room" x="466" y="270" width="196" height="154" rx="8"/>
+        <path class="map-detail" d="M348 52v190M372 242H58M372 242v28M238 270v154M442 270v154"/>
+        <rect class="map-furniture" x="112" y="112" width="136" height="48" rx="15"/>
+        <rect class="map-furniture" x="102" y="82" width="34" height="20" rx="6"/>
+        <rect class="map-furniture" x="190" y="82" width="34" height="20" rx="6"/>
+        <circle class="map-furniture" cx="292" cy="189" r="25"/>
+        <rect class="map-furniture" x="425" y="94" width="120" height="76" rx="8"/>
+        <path class="map-detail" d="M446 115h78M446 133h78M446 151h54"/>
+        <rect class="map-furniture" x="90" y="322" width="106" height="45" rx="7"/>
+        <rect class="map-furniture" x="500" y="330" width="122" height="38" rx="8"/>
+        <path class="map-detail" d="M520 315v-18M545 315v-18M570 315v-18M595 315v-18"/>
+        <circle class="map-furniture" cx="352" cy="345" r="38"/>
+        <path class="map-detail" d="M336 345h32M352 329v32"/>
+        <text class="map-label" x="160" y="76">Sala</text>
+        <text class="map-label" x="470" y="76">Cocina</text>
+        <text class="map-label" x="100" y="298">Exterior</text>
+        <text class="map-label" x="310" y="298">Baño</text>
+        <text class="map-label" x="515" y="298">Habitación</text>
+        <circle cx="160" cy="190" r="5" fill="#FFD700"/>
+        <circle cx="214" cy="190" r="5" fill="#FFD700"/>
+        <circle cx="402" cy="190" r="5" fill="#FFD700"/>
+      </svg>
+      <div class="map-hotspots">
+        <button class="hotspot active" type="button" data-product-id="4" style="left:28%;top:39%" aria-pressed="true">
+          <span class="hotspot-core"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span><span>Luces</span>
+        </button>
+        <button class="hotspot" type="button" data-product-id="2" style="left:48%;top:50%" aria-pressed="false">
+          <span class="hotspot-core"><i class="fa-solid fa-toggle-on" aria-hidden="true"></i></span><span>Interruptor</span>
+        </button>
+        <button class="hotspot" type="button" data-product-id="5" style="left:17%;top:66%" aria-pressed="false">
+          <span class="hotspot-core"><i class="fa-solid fa-video" aria-hidden="true"></i></span><span>Cámara</span>
+        </button>
+        <button class="hotspot" type="button" data-product-id="1" style="left:73%;top:69%" aria-pressed="false">
+          <span class="hotspot-core"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></span><span>Basura</span>
+        </button>
+        <button class="hotspot" type="button" data-product-id="6" style="left:85%;top:30%" aria-pressed="false">
+          <span class="hotspot-core"><i class="fa-solid fa-blinds" aria-hidden="true"></i></span><span>Persianas</span>
+        </button>
       </div>
-      <p class="desc">Control total desde tu dispositivo o por voz. Programa escenarios y rutinas según la forma en que usas cada espacio.</p>
-      <div class="feats">
-        <span class="feat">Escenarios personalizados</span>
-        <span class="feat">App móvil</span>
-        <span class="feat">Alexa</span>
-        <span class="feat">Google Home</span>
-        <span class="feat">SmartThings</span>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(4)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
+      <p class="map-caption"><i class="fa-solid fa-hand-pointer"></i> Toca un punto o desplázate para explorar</p>
     </div>
-  </div>
-
-  <!-- 2. Interruptores inteligentes (táctil + por voz) -->
-  <div id="p2" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 2 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(123,97,255,.14);border:1px solid rgba(123,97,255,.32)">
-          <i class="fa-solid fa-toggle-on" style="color:#7B61FF;font-size:1.05rem"></i>
-        </div>
-        <h3>Interruptores inteligentes</h3>
+    <aside class="map-panel" id="automation-panel" aria-live="polite">
+      <div class="map-panel-top">
+        <div class="map-panel-icon" id="automation-icon"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></div>
+        <div><span class="map-panel-zone" id="automation-zone">Sala · Ambiente</span><h3 id="automation-title">Luces LED inteligentes</h3></div>
       </div>
-      <p class="desc">Dos opciones para controlar la luz desde donde quieras. Elige la que mejor se adapte a tu hogar.</p>
-
-      <div class="sub-prod">
-        <div class="sub-head">
-          <i class="fa-solid fa-hand-pointer" style="color:#7B61FF"></i>
-          <strong>Interruptor táctil</strong>
-        </div>
-        <div class="feats">
-          <span class="feat">Táctil</span>
-          <span class="feat">WiFi</span>
-          <span class="feat">App móvil</span>
-          <span class="feat">Programable</span>
-        </div>
-        <div class="add-row">
-          <button class="btn-o padd" onclick="addToCart(2)"><i class="fa-solid fa-plus"></i> Agregar táctil</button>
-        </div>
-      </div>
-
-      <div class="sub-prod">
-        <div class="sub-head">
-          <i class="fa-solid fa-microphone-lines" style="color:#00F0FF"></i>
-          <strong>Interruptor por voz</strong>
-        </div>
-        <div class="feats">
-          <span class="feat">Alexa</span>
-          <span class="feat">Google Home</span>
-          <span class="feat">HomeKit</span>
-          <span class="feat">SmartThings</span>
-        </div>
-        <div class="add-row">
-          <button class="btn-o padd" onclick="addToCart(3)"><i class="fa-solid fa-plus"></i> Agregar por voz</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. Cámara seguridad -->
-  <div id="p3" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 3 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(255,68,68,.14);border:1px solid rgba(255,68,68,.32)">
-          <i class="fa-solid fa-video" style="color:#FF4444;font-size:1.05rem"></i>
-        </div>
-        <h3>Cámara de seguridad</h3>
-      </div>
-      <p class="desc">Alertas instantáneas en tu teléfono cuando detecta movimiento. Seguimiento inteligente del objeto.</p>
-      <div class="feats">
-        <span class="feat">Alertas en tiempo real</span>
-        <span class="feat">Seguimiento inteligente</span>
-        <span class="feat">Visión nocturna</span>
-        <span class="feat">App móvil</span>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(5)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. Sensor basura inteligente con tamaños -->
-  <div id="p4" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 4 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(0,170,136,.14);border:1px solid rgba(0,170,136,.32)">
-          <i class="fa-solid fa-trash-can" style="color:#00C996;font-size:1.05rem"></i>
-        </div>
-        <h3>Sensor basura inteligente</h3>
-      </div>
-      <p class="desc">Sensor de proximidad que abre la tapa automáticamente. Sin tocar nada, totalmente higiénico.</p>
-      <div class="feats">
-        <span class="feat">Apertura sin contacto</span>
-        <span class="feat">Sensor IR</span>
-        <span class="feat">Batería larga duración</span>
-      </div>
-      <p style="font-size:.66rem;color:#5a7878;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em">Selecciona tamaño</p>
-      <div class="size-row" data-prod="1">
-        <button class="size-btn" data-size="Pequeño">Pequeño</button>
-        <button class="size-btn active" data-size="Mediano">Mediano</button>
-        <button class="size-btn" data-size="Grande">Grande</button>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(1)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. Control de persiana -->
-  <div id="p5" class="pcard">
-    <div class="pcard-inner">
-      <p class="pnum">Dispositivo 5 / 5</p>
-      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem">
-        <div class="pcard-icon" style="background:rgba(255,150,64,.14);border:1px solid rgba(255,150,64,.32)">
-          <i class="fa-solid fa-blinds" style="color:#FF9640;font-size:1.05rem"></i>
-        </div>
-        <h3>Control de persiana</h3>
-      </div>
-      <p class="desc">Acciona tus persianas por voz o de forma remota desde la app. Configura escenas según tus horarios y preferencias.</p>
-      <div class="feats">
-        <span class="feat">Alexa</span>
-        <span class="feat">Google Home</span>
-        <span class="feat">Control remoto</span>
-        <span class="feat">Escenas programables</span>
-      </div>
-      <div class="add-row">
-        <button class="btn-c padd" onclick="addToCart(6)"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-      </div>
-    </div>
+      <p class="map-panel-summary" id="automation-summary"></p>
+      <span class="map-panel-label">Compatibilidad</span>
+      <p id="automation-compatibility"></p>
+      <span class="map-panel-label">Lo que puedes hacer</span>
+      <div id="automation-features"></div>
+      <a class="btn-c" id="automation-cta" href="#catalogo">Ver en catálogo <i class="fa-solid fa-arrow-down"></i></a>
+      <p class="map-panel-note">Elige el equipo en el catálogo para agregarlo al carrito o consultarlo por WhatsApp.</p>
+    </aside>
   </div>
 </div>
 
@@ -1086,127 +1045,7 @@ footer{
           <p class="sec-sub">Conoce las opciones disponibles y consulta una cotización personalizada según tu instalación, tus espacios y tus necesidades.</p>
         </div>
 
-        <div class="catalog-grid">
-          <article class="product-card" data-product-id="1">
-            <div class="prod-img">
-              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
-              <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
-            </div>
-            <div class="product-copy">
-              <h3>Contenedor de basura inteligente</h3>
-              <p>Abre la tapa sin contacto mediante su sensor de proximidad. Disponible en diferentes tamaños.</p>
-              <div class="product-feats">
-                <span class="feat">Apertura sin contacto</span><span class="feat">Sensor IR</span>
-              </div>
-              <span class="variant-label">Selecciona tamaño</span>
-              <div class="variant-row" data-variant-group="1">
-                <button class="variant-btn active" type="button" data-variant="Pequeño">Pequeño</button>
-                <button class="variant-btn" type="button" data-variant="Mediano">Mediano</button>
-                <button class="variant-btn" type="button" data-variant="Grande">Grande</button>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-c" type="button" onclick="addCatalogToCart(1,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-              <button class="btn-o" type="button" onclick="consultProduct(1,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
-            </div>
-          </article>
-
-          <article class="product-card" data-product-id="5">
-            <div class="prod-img">
-              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
-              <i class="fa-solid fa-video" aria-hidden="true"></i>
-            </div>
-            <div class="product-copy">
-              <h3>Cámara de seguridad</h3>
-              <p>Recibe alertas en tu teléfono cuando detecta movimiento y consulta el espacio desde la app.</p>
-              <div class="product-feats">
-                <span class="feat">Alertas en tiempo real</span><span class="feat">Visión nocturna</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-c" type="button" onclick="addCatalogToCart(5,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-              <button class="btn-o" type="button" onclick="consultProduct(5,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
-            </div>
-          </article>
-
-          <article class="product-card" data-product-id="2">
-            <div class="prod-img">
-              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
-              <i class="fa-solid fa-toggle-on" aria-hidden="true"></i>
-            </div>
-            <div class="product-copy">
-              <h3>Interruptor táctil WiFi</h3>
-              <p>Control táctil y desde la app para integrar la iluminación a tus rutinas diarias.</p>
-              <div class="product-feats">
-                <span class="feat">Táctil</span><span class="feat">WiFi</span><span class="feat">App móvil</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-c" type="button" onclick="addCatalogToCart(2,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-              <button class="btn-o" type="button" onclick="consultProduct(2,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
-            </div>
-          </article>
-
-          <article class="product-card" data-product-id="3">
-            <div class="prod-img">
-              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
-              <i class="fa-solid fa-microphone" aria-hidden="true"></i>
-            </div>
-            <div class="product-copy">
-              <h3>Interruptor por voz</h3>
-              <p>Controla la iluminación con Alexa, Google Home y otros asistentes compatibles.</p>
-              <div class="product-feats">
-                <span class="feat">Alexa</span><span class="feat">Google Home</span><span class="feat">HomeKit</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-c" type="button" onclick="addCatalogToCart(3,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-              <button class="btn-o" type="button" onclick="consultProduct(3,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
-            </div>
-          </article>
-
-          <article class="product-card" data-product-id="4">
-            <div class="prod-img">
-              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
-              <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
-            </div>
-            <div class="product-copy">
-              <h3>Luces LED inteligentes</h3>
-              <p>Configura escenas y controla tus luces desde la app o por voz, según tus rutinas.</p>
-              <div class="product-feats">
-                <span class="feat">App móvil</span><span class="feat">Alexa</span><span class="feat">Google Home</span>
-              </div>
-              <span class="variant-label">Selecciona tu kit</span>
-              <div class="variant-row" data-variant-group="4">
-                <button class="variant-btn active" type="button" data-variant="Kit 1">Kit 1</button>
-                <button class="variant-btn" type="button" data-variant="Kit 2">Kit 2</button>
-                <button class="variant-btn" type="button" data-variant="Kit 4">Kit 4</button>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-c" type="button" onclick="addCatalogToCart(4,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-              <button class="btn-o" type="button" onclick="consultProduct(4,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
-            </div>
-          </article>
-
-          <article class="product-card" data-product-id="6">
-            <div class="prod-img">
-              <!-- Reemplazar con <img src="ruta/imagen.jpg" alt="Producto"> -->
-              <i class="fa-solid fa-blinds" aria-hidden="true"></i>
-            </div>
-            <div class="product-copy">
-              <h3>Control de persiana</h3>
-              <p>Acciona tus persianas por voz con Alexa o Google Home y contrólalas de forma remota desde la app.</p>
-              <div class="product-feats">
-                <span class="feat">Alexa</span><span class="feat">Google Home</span><span class="feat">Control remoto</span>
-              </div>
-            </div>
-            <div class="product-actions">
-              <button class="btn-c" type="button" onclick="addCatalogToCart(6,this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
-              <button class="btn-o" type="button" onclick="consultProduct(6,this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
-            </div>
-          </article>
-        </div>
+        <div class="catalog-grid" id="catalog-grid"></div>
       </div>
     </section>
   </div>
@@ -1328,13 +1167,51 @@ const CALENDLY_URL = 'https://calendly.com/famhalat01/30min?background_color=000
 
 /* PRODUCTOS (sin precios visibles) */
 const PRODUCTS = [
-  { id:1, name:'Sensor basura inteligente', icon:'fa-trash-can',        col:'#00C996', sized:true },
-  { id:2, name:'Interruptor táctil inteligente', icon:'fa-toggle-on',   col:'#7B61FF' },
-  { id:3, name:'Interruptor por voz',       icon:'fa-microphone-lines', col:'#00F0FF' },
-  { id:4, name:'Luces LED inteligentes',    icon:'fa-lightbulb',        col:'#FFD700' },
-  { id:5, name:'Cámara de seguridad',       icon:'fa-video',            col:'#FF4444' },
-  { id:6, name:'Control de persiana',       icon:'fa-blinds',            col:'#FF9640' },
+  { id:1, name:'Sensor basura inteligente', icon:'fa-trash-can', col:'#00C996', summary:'Abre la tapa sin contacto mediante su sensor de proximidad, con una experiencia higiénica para la cocina.', compatibility:'Sensor IR · Disponible en tamaños Pequeño, Mediano y Grande', features:['Apertura sin contacto','Sensor IR'], variants:['Pequeño','Mediano','Grande'] },
+  { id:2, name:'Interruptor táctil inteligente', icon:'fa-toggle-on', col:'#7B61FF', summary:'Controla la iluminación con un toque o desde la app y suma rutinas a tus espacios.', compatibility:'WiFi · App móvil · Escenas programables', features:['Táctil','WiFi','App móvil'] },
+  { id:3, name:'Interruptor por voz', icon:'fa-microphone-lines', col:'#00F0FF', summary:'Controla tus luces con una orden de voz y conecta la iluminación con tus rutinas.', compatibility:'Alexa · Google Home · Apple HomeKit · SmartThings', features:['Alexa','Google Home','HomeKit','SmartThings'] },
+  { id:4, name:'Luces LED inteligentes', icon:'fa-lightbulb', col:'#FFD700', summary:'Crea ambientes y escenarios personalizados desde la app o por voz, según la forma en que usas cada espacio.', compatibility:'App móvil · Alexa · Google Home · SmartThings', features:['Escenarios personalizados','App móvil','Alexa','Google Home'], variants:['Kit 1','Kit 2','Kit 4'] },
+  { id:5, name:'Cámara de seguridad', icon:'fa-video', col:'#FF4444', summary:'Recibe alertas en tu teléfono cuando detecta movimiento y consulta el espacio desde la app.', compatibility:'Alertas en tiempo real · Visión nocturna · Seguimiento inteligente', features:['Alertas en tiempo real','Visión nocturna','Seguimiento inteligente'] },
+  { id:6, name:'Control de persiana', icon:'fa-blinds', col:'#FF9640', summary:'Acciona tus persianas por voz o desde la app y configura escenas según tus horarios.', compatibility:'Alexa · Google Home · Control remoto · Escenas programables', features:['Alexa','Google Home','Control remoto','Escenas programables'] },
 ];
+
+const AUTOMATION_SPOTS = [
+  { productId:4, zone:'Sala · Ambiente', label:'Luces' },
+  { productId:2, zone:'Pasillo · Control', label:'Interruptor' },
+  { productId:5, zone:'Exterior · Seguridad', label:'Cámara' },
+  { productId:1, zone:'Cocina · Higiene', label:'Basura' },
+  { productId:6, zone:'Habitación · Confort', label:'Persianas' },
+];
+
+function renderCatalog(){
+  const grid = document.getElementById('catalog-grid');
+  if(!grid) return;
+  grid.innerHTML = PRODUCTS.map(p => `
+    <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}">
+      <div class="prod-img" style="color:${p.col}">
+        <i class="fa-solid ${p.icon}" aria-hidden="true"></i>
+      </div>
+      <div class="product-copy">
+        <h3>${p.name}</h3>
+        <p>${p.summary}</p>
+        <div class="product-feats">${p.features.map(feature => `<span class="feat">${feature}</span>`).join('')}</div>
+        ${p.variants ? `<span class="variant-label">Selecciona una opción</span><div class="variant-row">${p.variants.map((variant, i) => `<button class="variant-btn${i === 0 ? ' active' : ''}" type="button" data-variant="${variant}">${variant}</button>`).join('')}</div>` : ''}
+      </div>
+      <div class="product-actions">
+        <button class="btn-c" type="button" onclick="addCatalogToCart(${p.id},this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+        <button class="btn-o" type="button" onclick="consultProduct(${p.id},this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+      </div>
+    </article>
+  `).join('');
+  grid.querySelectorAll('.variant-row').forEach(row => {
+    row.querySelectorAll('.variant-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        row.querySelectorAll('.variant-btn').forEach(item => item.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
+  });
+}
 
 /* FAQ — visita virtual + originales relevantes + 20 nuevas */
 const FAQS = [
@@ -1546,9 +1423,46 @@ function consultProduct(id, card){
   openWhatsApp(`¡Hola La Domotienda! Quisiera cotizar ${p.name}${variantText}. Me gustaría conocer la instalación y compatibilidad para mi hogar.`);
 }
 
+function setAutomationSpot(productId, shouldScroll=false){
+  const spot = AUTOMATION_SPOTS.find(item => item.productId===productId) || AUTOMATION_SPOTS[0];
+  const p = PRODUCTS.find(item => item.id===spot.productId);
+  if(!p) return;
+  document.querySelectorAll('.hotspot').forEach(button => {
+    const active = Number(button.dataset.productId) === p.id;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  document.getElementById('automation-panel').style.setProperty('--spot-color', p.col);
+  document.getElementById('automation-icon').style.color = p.col;
+  document.getElementById('automation-icon').style.borderColor = `${p.col}66`;
+  document.getElementById('automation-icon').style.background = `${p.col}18`;
+  document.getElementById('automation-icon').innerHTML = `<i class="fa-solid ${p.icon}" aria-hidden="true"></i>`;
+  document.getElementById('automation-zone').textContent = spot.zone;
+  document.getElementById('automation-title').textContent = p.name;
+  document.getElementById('automation-summary').textContent = p.summary;
+  document.getElementById('automation-compatibility').textContent = p.compatibility;
+  document.getElementById('automation-features').innerHTML = p.features.map(feature => `<span class="feat">${feature}</span>`).join('');
+  const cta = document.getElementById('automation-cta');
+  cta.href = `#product-card-${p.id}`;
+  cta.onclick = event => {
+    event.preventDefault();
+    const card = document.getElementById(`product-card-${p.id}`);
+    if(card) card.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>card && card.querySelector('.btn-c')?.focus(), 500);
+  };
+  if(shouldScroll) document.getElementById('automation-panel')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function initAutomationMap(){
+  document.querySelectorAll('.hotspot').forEach(button => {
+    button.addEventListener('click', () => setAutomationSpot(Number(button.dataset.productId), true));
+  });
+  setAutomationSpot(4);
+}
+
 function addToCart(id, variantOverride=null){
   const p = PRODUCTS.find(x => x.id===id);
-  const size = variantOverride || (p.sized ? selectedSize(id) : null);
+  const size = variantOverride || (p.variants ? p.variants[0] : null);
   const key = cartKey(id, size);
   const ex = cart.find(x => x.key===key);
   if(ex) ex.qty++;
@@ -2660,29 +2574,23 @@ function setOv(id, t, start, end, fade=0.14){
   el.style.pointerEvents=op>.06 ? 'auto' : 'none';
 }
 
-function setPCard(id, t, start, end){
-  const el=document.getElementById(id); if(!el) return;
-  const fade=0.08;
-  let op=0;
-  if(t>=start && t<start+fade) op=(t-start)/fade;
-  else if(t>=start+fade && t<end-fade) op=1;
-  else if(t>=end-fade && t<end) op=(end-t)/fade;
-  el.style.opacity=op;
-  el.style.pointerEvents=op>.06 ? 'auto' : 'none';
-}
-
 function updateOverlays(t){
   setOv('a1', t, 0,    0.20);
   setOv('a2', t, 0.16, 0.38);
-  setOv('a3', t, 0.32, 0.84);
+  setOv('a3', t, 0.30, 0.84);
   setOv('a4', t, 0.78, 0.94);
   setOv('a5', t, 0.89, 0.995);
-  /* 5 productos en orden luces → interruptores → cámara → basura → persiana */
-  setPCard('p1', t, 0.36, 0.50);
-  setPCard('p2', t, 0.46, 0.62);
-  setPCard('p3', t, 0.58, 0.73);
-  setPCard('p4', t, 0.69, 0.82);
-  setPCard('p5', t, 0.78, 0.88);
+  /* El 3D ambienta el hero; el recorrido de producto vive en el mapa 2D. */
+  const stage = document.getElementById('stage');
+  stage.style.opacity = t < 0.16 ? 1 : t < 0.32 ? 1 - ((t - 0.16) / 0.16) : 0;
+  if(t >= 0.30 && t < 0.84){
+    const index = Math.min(AUTOMATION_SPOTS.length - 1, Math.floor(((t - 0.30) / 0.54) * AUTOMATION_SPOTS.length));
+    const nextId = AUTOMATION_SPOTS[index].productId;
+    if(window._activeAutomationSpot !== nextId){
+      window._activeAutomationSpot = nextId;
+      setAutomationSpot(nextId);
+    }
+  }
 }
 
 function hideAllOverlays(){
@@ -2694,6 +2602,8 @@ function hideAllOverlays(){
 
 document.addEventListener('DOMContentLoaded',()=>{
   initChatbot();
+  renderCatalog();
+  initAutomationMap();
   renderCart();
   updateBadge();
   try { initThree(); initScroll(); }
