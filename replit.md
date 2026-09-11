@@ -58,9 +58,10 @@ Single-page experience que recorre una casa en 3D (Three.js + GSAP ScrollTrigger
 
 ### Ronda 4 (optimización móvil y catálogo)
 1. **Render 3D adaptable**: pixel ratio y sombras reducidos en móvil, geometrías con máximo de 16 segmentos y pausa del render cuando la pestaña queda oculta.
-2. **Scrollytelling más delicado**: driver de 800vh, keyframes y rangos redistribuidos, `scrub: 2` y fades más amplios.
+2. **Scrollytelling más delicado**: driver de 800vh, keyframes y rangos redistribuidos, `scrub: 3` y fades más amplios.
 3. **Catálogo independiente** después del recorrido 3D: grid responsive con placeholders `.prod-img`, seis productos actuales, variantes de tamaño para basura y kits para luces LED, carrito y consulta individual por WhatsApp sin mostrar precios.
 4. **Usabilidad táctil**: controles principales de al menos 44×44 px, mejor espaciado móvil y carrito/modal de cotización con scroll usable en pantallas pequeñas.
+5. **Navegación directa**: enlace “Catálogo” junto a WhatsApp, con desplazamiento suave y adaptación móvil para conservar los accesos prioritarios.
 
 ## Cómo correr
 

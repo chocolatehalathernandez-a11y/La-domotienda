@@ -61,7 +61,11 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 #hdr nav a{color:#7a9a9c;text-decoration:none;font-size:.82rem;font-weight:500;transition:color .2s;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
 #hdr nav a:hover{color:var(--c)}
 @media(max-width:760px){#hdr nav{gap:.85rem}#hdr nav a{font-size:.74rem}}
-@media(max-width:420px){#hdr nav a:nth-child(1){display:none}}
+@media(max-width:420px){
+  #hdr nav a:nth-child(1),#hdr nav a:nth-child(2){display:none}
+  #hdr nav{gap:.5rem}
+  #hdr nav a{font-size:.68rem}
+}
 #cart-btn{
   position:relative;padding:.55rem .7rem;border-radius:10px;
   background:rgba(0,240,255,.07);border:1px solid rgba(0,240,255,.18);
@@ -83,7 +87,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
   position:fixed;inset:0;z-index:10;
   opacity:0;pointer-events:none;
   display:flex;align-items:center;justify-content:center;
-  transition:opacity .5s ease;
+  transition:opacity 1.05s ease;
   padding:0 1.2rem;
 }
 
@@ -771,6 +775,7 @@ footer{
     <a onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Preguntas</a>
     <a onclick="openCalendly()">Visita virtual</a>
     <a onclick="openWhatsApp()">WhatsApp</a>
+    <a href="#catalogo" onclick="event.preventDefault();document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})">Catálogo</a>
   </nav>
   <button id="cart-btn" aria-label="Abrir carrito">
     <i class="fa-solid fa-bag-shopping"></i>
@@ -2621,7 +2626,7 @@ function initScroll(){
     trigger:'#scroll-driver',
     start:'top top',
     end:'bottom bottom',
-    scrub:2,
+    scrub:3,
     onUpdate(self){
       const p = self.progress;
       scrollProg = p;
@@ -2634,7 +2639,7 @@ function initScroll(){
     trigger:'#post',
     start:'top 96%',
     end:'top 30%',
-    scrub:true,
+    scrub:2,
     onUpdate(self){
       const op = Math.max(0, 1-self.progress*1.3);
       document.getElementById('stage').style.opacity=op;
@@ -2643,7 +2648,7 @@ function initScroll(){
   });
 }
 
-function setOv(id, t, start, end, fade=0.09){
+function setOv(id, t, start, end, fade=0.14){
   const el=document.getElementById(id); if(!el) return;
   let op=0;
   if(t<start) op=0;
@@ -2657,7 +2662,7 @@ function setOv(id, t, start, end, fade=0.09){
 
 function setPCard(id, t, start, end){
   const el=document.getElementById(id); if(!el) return;
-  const fade=0.045;
+  const fade=0.08;
   let op=0;
   if(t>=start && t<start+fade) op=(t-start)/fade;
   else if(t>=start+fade && t<end-fade) op=1;
@@ -2667,17 +2672,17 @@ function setPCard(id, t, start, end){
 }
 
 function updateOverlays(t){
-  setOv('a1', t, 0,    0.16);
-  setOv('a2', t, 0.13, 0.34);
-  setOv('a3', t, 0.29, 0.86);
-  setOv('a4', t, 0.81, 0.94);
-  setOv('a5', t, 0.90, 0.995);
+  setOv('a1', t, 0,    0.20);
+  setOv('a2', t, 0.16, 0.38);
+  setOv('a3', t, 0.32, 0.84);
+  setOv('a4', t, 0.78, 0.94);
+  setOv('a5', t, 0.89, 0.995);
   /* 5 productos en orden luces → interruptores → cámara → basura → persiana */
-  setPCard('p1', t, 0.34, 0.47);
-  setPCard('p2', t, 0.43, 0.58);
-  setPCard('p3', t, 0.54, 0.69);
-  setPCard('p4', t, 0.65, 0.79);
-  setPCard('p5', t, 0.75, 0.86);
+  setPCard('p1', t, 0.36, 0.50);
+  setPCard('p2', t, 0.46, 0.62);
+  setPCard('p3', t, 0.58, 0.73);
+  setPCard('p4', t, 0.69, 0.82);
+  setPCard('p5', t, 0.78, 0.88);
 }
 
 function hideAllOverlays(){
