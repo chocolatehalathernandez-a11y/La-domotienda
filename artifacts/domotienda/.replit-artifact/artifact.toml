@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "La Domotienda — 3D"
+title = "La Domotienda"
 version = "1.0.0"
 id = "artifacts/domotienda"
 router = "path"
