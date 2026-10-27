@@ -3478,6 +3478,133 @@
       <p id="recaptcha-error" class="recaptcha-error" style="display:none;"></p>
     </div>
   </div>
+
+<script>
+(function() {
+  var SITE_KEY = '6LeFegMuAAAAAJNTqsJTnzicgAuvCZl2J6vAKeD-';
+  var OK_KEY = 'recaptcha_ok_until';
+  var TTL = 30 * 60 * 1000;
+  var pending = null;
+  var widgetId = null;
+  var wrapped = false;
+  var attempts = 0;
+
+  function init() {
+    var modal = document.getElementById('recaptcha-modal');
+    var errEl = document.getElementById('recaptcha-error');
+    if (!modal) { console.error('[reCAPTCHA] Modal no encontrado'); return; }
+
+    function isVerified() {
+      var until = Number(sessionStorage.getItem(OK_KEY) || 0);
+      return Date.now() < until;
+    }
+    function markVerified() { sessionStorage.setItem(OK_KEY, String(Date.now() + TTL)); }
+    function showErr(msg) { if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; } }
+    function clearErr() { if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; } }
+
+    function ensureGrecaptcha(cb, tries) {
+      tries = tries || 0;
+      if (window.grecaptcha && window.grecaptcha.render) return cb();
+      if (tries > 100) { showErr('No se pudo cargar. Recarga la página.'); return; }
+      setTimeout(function() { ensureGrecaptcha(cb, tries + 1); }, 100);
+    }
+
+    function openModal(action) {
+      pending = action;
+      clearErr();
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      ensureGrecaptcha(function() {
+        if (widgetId === null) {
+          widgetId = grecaptcha.render('recaptcha-widget', {
+            sitekey: SITE_KEY,
+            callback: onSuccess,
+            'expired-callback': function() { if (widgetId !== null) grecaptcha.reset(widgetId); },
+            'error-callback': function() { showErr('Error al cargar la verificación.'); }
+          });
+        } else {
+          grecaptcha.reset(widgetId);
+        }
+      });
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      pending = null;
+    }
+
+    function onSuccess(token) {
+      fetch('/.netlify/functions/verify-recaptcha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        if (!data.success) {
+          showErr('Verificación no válida. Intenta de nuevo.');
+          if (widgetId !== null) grecaptcha.reset(widgetId);
+          return;
+        }
+        markVerified();
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        var action = pending;
+        pending = null;
+        if (typeof action === 'function') action();
+      }).catch(function() {
+        showErr('No se pudo verificar. Revisa tu conexión.');
+        if (widgetId !== null) grecaptcha.reset(widgetId);
+      });
+    }
+
+    function gate(action) {
+      if (isVerified()) { action(); return; }
+      openModal(action);
+    }
+
+    var closeBtn = document.getElementById('recaptcha-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+
+    function tryWrap() {
+      if (wrapped) return;
+      attempts++;
+      if (attempts > 50) {
+        console.warn('[reCAPTCHA] No se pudieron envolver las funciones tras 5s');
+        console.log('[reCAPTCHA] openWhatsApp:', typeof window.openWhatsApp);
+        console.log('[reCAPTCHA] openCalendly:', typeof window.openCalendly);
+        console.log('[reCAPTCHA] sendUserMessage:', typeof window.sendUserMessage);
+        return;
+      }
+      var wa = window.openWhatsApp;
+      var cal = window.openCalendly;
+      var msg = window.sendUserMessage;
+      if (typeof wa === 'function' && typeof cal === 'function' && typeof msg === 'function') {
+        window.openWhatsApp = function() { var a = arguments, c = this; gate(function() { wa.apply(c, a); }); };
+        window.openCalendly = function() { var a = arguments, c = this; gate(function() { cal.apply(c, a); }); };
+        window.sendUserMessage = function() { var a = arguments, c = this; gate(function() { msg.apply(c, a); }); };
+        wrapped = true;
+        console.log('[reCAPTCHA] Gate instalado ✅');
+        console.log('[reCAPTCHA] openWhatsApp envuelta');
+        console.log('[reCAPTCHA] openCalendly envuelta');
+        console.log('[reCAPTCHA] sendUserMessage envuelta');
+      } else {
+        setTimeout(tryWrap, 100);
+      }
+    }
+    tryWrap();
+
+    // Exponer para debug
+    window.__recaptchaGate = gate;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 
 </html>
