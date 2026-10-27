@@ -19,11 +19,17 @@ Thumbs.db
 *.tmp
 *.bak
 
-# Dependencias (si en el futuro se agregan)
+# Dependencias
 node_modules/
 
-# Respaldos locales (no se versionan)
-*.bak
-*.pre-*
+# ═══════════════════════════════════════════════
+# RESPALDOS LOCALES (NUNCA SE VERSIONAN)
+# ═══════════════════════════════════════════════
+*.duplicado
 *.CORRUPTO
+*.pre-*
+*.old
+*.orig
+_check.js
+*_check.js
 auditoria.txt
