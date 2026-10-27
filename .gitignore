@@ -21,3 +21,9 @@ Thumbs.db
 
 # Dependencias (si en el futuro se agregan)
 node_modules/
+
+# Respaldos locales (no se versionan)
+*.bak
+*.pre-*
+*.CORRUPTO
+auditoria.txt
