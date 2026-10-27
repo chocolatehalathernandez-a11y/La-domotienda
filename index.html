@@ -21,7 +21,7 @@
     content="domótica Colombia, hogar inteligente, automatización hogar, luces inteligentes, cámaras seguridad, cerraduras electrónicas">
   <link rel="canonical" href="https://ladomotiendacol.netlify.app/">
   <meta name="robots" content="index, follow, max-image-preview:large">
-
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="La Domotienda | Domótica Inteligente en Colombia">
@@ -675,6 +675,66 @@
 
     .sub-prod .feats {
       margin-bottom: .55rem
+    }
+
+    .recaptcha-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .78);
+      backdrop-filter: blur(12px);
+      z-index: 4000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .recaptcha-modal.open {
+      display: flex;
+    }
+
+    .recaptcha-box {
+      background: linear-gradient(145deg, #0a1618, #0d1e20);
+      border: 1px solid rgba(0, 240, 255, .22);
+      border-radius: 18px;
+      padding: 1.6rem;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 0 50px rgba(0, 240, 255, .12), 0 24px 60px rgba(0, 0, 0, .6);
+      position: relative;
+    }
+
+    .recaptcha-box h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #e0ecec;
+      font-size: 1.1rem;
+      margin-bottom: .5rem;
+    }
+
+    .recaptcha-box p {
+      color: #7a9a9c;
+      font-size: .85rem;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .recaptcha-close {
+      position: absolute;
+      top: .8rem;
+      right: .8rem;
+      background: var(--s2);
+      border: none;
+      color: #6a8888;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .recaptcha-error {
+      color: #ff6b6b;
+      font-size: .8rem;
+      margin-top: .8rem;
     }
 
     /* CATÁLOGO POST-SCROLL */
@@ -2137,7 +2197,18 @@
         grid-template-columns: 1fr
       }
     }
-  </style>
+  
+/* RECAPTCHA MODAL */
+.recaptcha-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);z-index:4000;display:none;align-items:center;justify-content:center;padding:1rem}
+.recaptcha-modal.open{display:flex}
+.recaptcha-box{background:linear-gradient(145deg,#0a1618,#0d1e20);border:1px solid rgba(0,240,255,.22);border-radius:18px;padding:1.6rem;max-width:400px;width:100%;box-shadow:0 0 50px rgba(0,240,255,.12),0 24px 60px rgba(0,0,0,.6);position:relative}
+.recaptcha-box h3{font-family:'Space Grotesk',sans-serif;color:#e0ecec;font-size:1.15rem;margin-bottom:.5rem}
+.recaptcha-box p{color:#7a9a9c;font-size:.85rem;line-height:1.55;margin-bottom:1rem}
+.recaptcha-close{position:absolute;top:.8rem;right:.8rem;background:#111e20;border:none;color:#6a8888;width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.recaptcha-close:hover{color:#fff}
+.recaptcha-error{color:#ff6b6b;font-size:.8rem;margin-top:.8rem;display:none}
+#recaptcha-widget{display:flex;justify-content:center;margin:1rem 0;min-height:78px}
+</style>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -2187,7 +2258,141 @@
     { "@type": "ListItem", "position": 12, "name": "Limpieza y exteriores",              "url": "https://ladomotiendacol.netlify.app/#catalogo" }
   ]
 }
+/* ═══════════════════════════════════════════════════════════
+   RECAPTCHA GATE — protege Luna, WhatsApp y Calendly
+═══════════════════════════════════════════════════════════ */
+(function () {
+  const SITE_KEY = '6LeFegMuAAAAAJNTqsJTnzicgAuvCZl2J6vAKeD-';
+  const OK_KEY = 'recaptcha_ok_until';
+  const TTL = 30 * 60 * 1000; // 30 minutos de sesión verificada
+
+  let pendingAction = null;
+  let widgetId = null;
+
+  const modal = document.getElementById('recaptcha-modal');
+  const widgetWrap = document.getElementById('recaptcha-widget');
+  const errorEl = document.getElementById('recaptcha-error');
+
+  function isVerified() {
+    const until = Number(sessionStorage.getItem(OK_KEY) || 0);
+    return Date.now() < until;
+  }
+
+  function markVerified() {
+    sessionStorage.setItem(OK_KEY, String(Date.now() + TTL));
+  }
+
+  function openModal(action) {
+    pendingAction = action;
+    errorEl.style.display = 'none';
+    modal.classList.add('open');
+
+    // Renderizar el widget solo una vez
+    if (widgetId === null && window.grecaptcha) {
+      widgetId = grecaptcha.render('recaptcha-widget', {
+        sitekey: SITE_KEY,
+        callback: onSuccess,
+        'expired-callback': onExpired,
+        'error-callback': () => showError('Error al cargar la verificación.')
+      });
+    }
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    pendingAction = null;
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+  }
+
+  function resetWidget() {
+    if (widgetId !== null && window.grecaptcha) {
+      grecaptcha.reset(widgetId);
+    }
+  }
+
+  async function onSuccess(token) {
+    try {
+      const res = await fetch('/.netlify/functions/verify-recaptcha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        showError('La verificación no fue válida. Intenta de nuevo.');
+        resetWidget();
+        return;
+      }
+
+      markVerified();
+      modal.classList.remove('open');
+      const action = pendingAction;
+      pendingAction = null;
+      if (typeof action === 'function') action();
+    } catch (e) {
+      showError('No se pudo verificar. Revisa tu conexión e intenta de nuevo.');
+      resetWidget();
+    }
+  }
+
+  function onExpired() {
+    resetWidget();
+  }
+
+  window.__recaptchaGate = function (action) {
+    if (isVerified()) {
+      action();
+      return;
+    }
+    openModal(action);
+  };
+
+  document.getElementById('recaptcha-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Exponer callbacks que reCAPTCHA necesita en window
+  window.__recaptchaOnSuccess = onSuccess;
+  window.__recaptchaOnExpired = onExpired;
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   ENVOLVER LAS FUNCIONES EXISTENTES
+   (no borra nada, solo intercepta antes de ejecutar)
+═══════════════════════════════════════════════════════════ */
+(function () {
+  // WhatsApp
+  if (typeof window.openWhatsApp === 'function') {
+    const _original = window.openWhatsApp;
+    window.openWhatsApp = function (msg) {
+      window.__recaptchaGate(() => _original(msg));
+    };
+  }
+
+  // Calendly
+  if (typeof window.openCalendly === 'function') {
+    const _original = window.openCalendly;
+    window.openCalendly = function () {
+      window.__recaptchaGate(() => _original());
+    };
+  }
+
+  // Luna (sendUserMessage)
+  if (typeof window.sendUserMessage === 'function') {
+    const _original = window.sendUserMessage;
+    window.sendUserMessage = function (text) {
+      window.__recaptchaGate(() => _original(text));
+    };
+  }
+})();
 </script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -3252,6 +3457,132 @@
       updateBadge();
     });
   </script>
+  <!-- MODAL RECAPTCHA -->
+  <div id="recaptcha-modal" class="recaptcha-modal" aria-hidden="true">
+    <div class="recaptcha-box">
+      <button id="recaptcha-close" class="recaptcha-close" aria-label="Cerrar">✕</button>
+      <h3>Verificación de seguridad</h3>
+      <p>Para continuar, confirma que no eres un robot. Esto protege tu conversación y nuestros canales de contacto.</p>
+      <div id="recaptcha-widget"></div>
+      <p id="recaptcha-error" class="recaptcha-error" style="display:none;"></p>
+    </div>
+  </div>
+
+<!-- MODAL RECAPTCHA -->
+<div id="recaptcha-modal" class="recaptcha-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="recaptcha-box">
+    <button id="recaptcha-close" class="recaptcha-close" aria-label="Cerrar">✕</button>
+    <h3>Verificación de seguridad</h3>
+    <p>Para continuar, confirma que no eres un robot. Esto protege tu conversación y nuestros canales de contacto.</p>
+    <div id="recaptcha-widget"></div>
+    <p id="recaptcha-error" class="recaptcha-error"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SITE_KEY = '6LeFegMuAAAAAJNTqsJTnzicgAuvCZl2J6vAKeD-';
+  var OK_KEY = 'recaptcha_ok_until';
+  var TTL = 30 * 60 * 1000;
+  var pending = null;
+  var widgetId = null;
+  var modal = document.getElementById('recaptcha-modal');
+  var wrap = document.getElementById('recaptcha-widget');
+  var errEl = document.getElementById('recaptcha-error');
+
+  function isVerified(){
+    var until = Number(sessionStorage.getItem(OK_KEY) || 0);
+    return Date.now() < until;
+  }
+  function markVerified(){
+    sessionStorage.setItem(OK_KEY, String(Date.now() + TTL));
+  }
+  function showErr(msg){ errEl.textContent = msg; errEl.style.display = 'block'; }
+  function clearErr(){ errEl.textContent = ''; errEl.style.display = 'none'; }
+  function ensureGrecaptcha(cb, tries){
+    tries = tries || 0;
+    if (window.grecaptcha && window.grecaptcha.render) return cb();
+    if (tries > 100) { showErr('No se pudo cargar la verificación. Recarga la página.'); return; }
+    setTimeout(function(){ ensureGrecaptcha(cb, tries + 1); }, 100);
+  }
+  function openModal(action){
+    pending = action;
+    clearErr();
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    ensureGrecaptcha(function(){
+      if (widgetId === null) {
+        widgetId = grecaptcha.render('recaptcha-widget', {
+          sitekey: SITE_KEY,
+          callback: onSuccess,
+          'expired-callback': function(){ grecaptcha.reset(widgetId); },
+          'error-callback': function(){ showErr('Error al cargar la verificación.'); }
+        });
+      } else {
+        grecaptcha.reset(widgetId);
+      }
+    });
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    pending = null;
+  }
+  function onSuccess(token){
+    fetch('/.netlify/functions/verify-recaptcha', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token })
+    }).then(function(r){ return r.json(); }).then(function(data){
+      if (!data.success) {
+        showErr('La verificación no fue válida. Intenta de nuevo.');
+        if (widgetId !== null) grecaptcha.reset(widgetId);
+        return;
+      }
+      markVerified();
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      var action = pending;
+      pending = null;
+      if (typeof action === 'function') action();
+    }).catch(function(){
+      showErr('No se pudo verificar. Revisa tu conexión e intenta de nuevo.');
+      if (widgetId !== null) grecaptcha.reset(widgetId);
+    });
+  }
+  function gate(action){
+    if (isVerified()) { action(); return; }
+    openModal(action);
+  }
+  document.getElementById('recaptcha-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+
+  var wrapped = false;
+  var attempts = 0;
+  function tryWrap(){
+    if (wrapped) return;
+    attempts++;
+    if (attempts > 50) { console.warn('[reCAPTCHA] No se pudieron envolver las funciones'); return; }
+    var wa = window.openWhatsApp;
+    var cal = window.openCalendly;
+    var msg = window.sendUserMessage;
+    if (typeof wa === 'function' && typeof cal === 'function' && typeof msg === 'function') {
+      window.openWhatsApp = function(){ var args = arguments; var ctx = this; gate(function(){ wa.apply(ctx, args); }); };
+      window.openCalendly = function(){ var args = arguments; var ctx = this; gate(function(){ cal.apply(ctx, args); }); };
+      window.sendUserMessage = function(){ var args = arguments; var ctx = this; gate(function(){ msg.apply(ctx, args); }); };
+      wrapped = true;
+      console.log('[reCAPTCHA] Gate instalado en WhatsApp, Calendly y Luna');
+    } else {
+      setTimeout(tryWrap, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryWrap);
+  } else {
+    tryWrap();
+  }
+})();
+</script>
 </body>
 
 </html>
