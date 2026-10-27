@@ -875,12 +875,12 @@ const CALENDLY_URL = 'https://calendly.com/famhalat01/30min?background_color=000
 
 /* PRODUCTOS (sin precios visibles) */
 const PRODUCTS = [
-  { id:1, name:'Sensor basura inteligente', icon:'fa-trash-can', col:'#00C996', summary:'Abre la tapa sin contacto mediante su sensor de proximidad, con una experiencia higiénica para la cocina.', compatibility:'Sensor IR · Disponible en tamaños Pequeño, Mediano y Grande', features:['Apertura sin contacto','Sensor IR'], variants:['Pequeño','Mediano','Grande'] },
-  { id:2, name:'Interruptor táctil inteligente', icon:'fa-toggle-on', col:'#7B61FF', summary:'Controla la iluminación con un toque o desde la app y suma rutinas a tus espacios.', compatibility:'WiFi · App móvil · Escenas programables', features:['Táctil','WiFi','App móvil'] },
-  { id:3, name:'Interruptor por voz', icon:'fa-microphone-lines', col:'#00F0FF', summary:'Controla tus luces con una orden de voz y conecta la iluminación con tus rutinas.', compatibility:'Alexa · Google Home · Apple HomeKit · SmartThings', features:['Alexa','Google Home','HomeKit','SmartThings'] },
-  { id:4, name:'Luces LED inteligentes', icon:'fa-lightbulb', col:'#FFD700', summary:'Crea ambientes y escenarios personalizados desde la app o por voz, según la forma en que usas cada espacio.', compatibility:'App móvil · Alexa · Google Home · SmartThings', features:['Escenarios personalizados','App móvil','Alexa','Google Home'], variants:['Kit 1','Kit 2','Kit 4'] },
-  { id:5, name:'Cámara de seguridad', icon:'fa-video', col:'#FF4444', summary:'Recibe alertas en tu teléfono cuando detecta movimiento y consulta el espacio desde la app.', compatibility:'Alertas en tiempo real · Visión nocturna · Seguimiento inteligente', features:['Alertas en tiempo real','Visión nocturna','Seguimiento inteligente'] },
-  { id:6, name:'Control de persiana', icon:'fa-blinds', col:'#FF9640', summary:'Acciona tus persianas por voz o desde la app y configura escenas según tus horarios.', compatibility:'Alexa · Google Home · Control remoto · Escenas programables', features:['Alexa','Google Home','Control remoto','Escenas programables'] },
+  { id:1, img:'contenedor-basura', name:'Sensor basura inteligente', icon:'fa-trash-can', col:'#00C996', summary:'Abre la tapa sin contacto mediante su sensor de proximidad, con una experiencia higiénica para la cocina.', compatibility:'Sensor IR · Disponible en tamaños Pequeño, Mediano y Grande', features:['Apertura sin contacto','Sensor IR'], variants:['Pequeño','Mediano','Grande'] },
+  { id:2, img:'interruptor-tactil', name:'Interruptor táctil inteligente', icon:'fa-toggle-on', col:'#7B61FF', summary:'Controla la iluminación con un toque o desde la app y suma rutinas a tus espacios.', compatibility:'WiFi · App móvil · Escenas programables', features:['Táctil','WiFi','App móvil'] },
+  { id:3, img:'interruptor-voz', name:'Interruptor por voz', icon:'fa-microphone-lines', col:'#00F0FF', summary:'Controla tus luces con una orden de voz y conecta la iluminación con tus rutinas.', compatibility:'Alexa · Google Home · Apple HomeKit · SmartThings', features:['Alexa','Google Home','HomeKit','SmartThings'] },
+  { id:4, img:'kit-luces-led', name:'Luces LED inteligentes', icon:'fa-lightbulb', col:'#FFD700', summary:'Crea ambientes y escenarios personalizados desde la app o por voz, según la forma en que usas cada espacio.', compatibility:'App móvil · Alexa · Google Home · SmartThings', features:['Escenarios personalizados','App móvil','Alexa','Google Home'], variants:['Kit 1','Kit 2','Kit 4'] },
+  { id:5, img:'camara-seguridad', name:'Cámara de seguridad', icon:'fa-video', col:'#FF4444', summary:'Recibe alertas en tu teléfono cuando detecta movimiento y consulta el espacio desde la app.', compatibility:'Alertas en tiempo real · Visión nocturna · Seguimiento inteligente', features:['Alertas en tiempo real','Visión nocturna','Seguimiento inteligente'] },
+  { id:6, img:'control-persiana', name:'Control de persiana', icon:'fa-blinds', col:'#FF9640', summary:'Acciona tus persianas por voz o desde la app y configura escenas según tus horarios.', compatibility:'Alexa · Google Home · Control remoto · Escenas programables', features:['Alexa','Google Home','Control remoto','Escenas programables'] },
 ];
 
 function renderCatalog(){
@@ -889,7 +889,8 @@ function renderCatalog(){
   grid.innerHTML = PRODUCTS.map(p => `
     <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}">
       <div class="prod-img" style="color:${p.col}">
-        <i class="fa-solid ${p.icon}" aria-hidden="true"></i>
+        <img src="assets/productos/${p.img}.svg" alt="${p.name}" loading="lazy" style="max-width:100%;max-height:140px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <i class="fa-solid ${p.icon}" aria-hidden="true" style="display:none"></i>
       </div>
       <div class="product-copy">
         <h3>${p.name}</h3>
@@ -1067,6 +1068,13 @@ function openCalendly(){
   document.getElementById('calov').classList.add('open');
   document.body.style.overflow='hidden';
 }
+
+function scrollToCatalogo(){
+  const cat = document.getElementById('catalogo');
+  if(cat){
+    cat.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
 function closeCalendly(){
   document.getElementById('calov').classList.remove('open');
   document.body.style.overflow='';
@@ -1233,10 +1241,13 @@ const LUNA_GREETING = `¡Hola! Soy <strong>Luna</strong> 🌙, tu asistente virt
 
 const LUNA_QUICK = [
   '¿Qué es la domótica?',
+  '¿Qué WiFi necesito?',
   '¿Cómo funciona el pago?',
+  '¿Cómo cubro mi apartamento?',
   'Quiero agendar una visita',
   '¿Cuánto tarda la instalación?',
   '¿Funciona con Alexa?',
+  '¿Gasta mucha luz?',
 ];
 
 /* INTENTS — orden importa: primero las más específicas */
@@ -1329,6 +1340,8 @@ const INTENTS = [
     id:'sensors',
     keys:['sensor','sensores','movimiento','puerta','ventana','humo','gas','temperatura','humedad'],
     response:`Existen varios tipos de sensores 🛡️:<br>• <strong>Movimiento:</strong> enciende luces al detectar gente.<br>• <strong>Puerta/ventana:</strong> avisa si algo se abre.<br>• <strong>Temperatura/humedad:</strong> regula climatización.<br>• <strong>Humo/gas:</strong> activa alarmas en emergencias.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+    altAction:{label:'Ver catálogo',icon:'fa-solid fa-box',fn:'scrollToCatalogo'}
   },
   {
     id:'kit_or_alone',
@@ -1344,6 +1357,8 @@ const INTENTS = [
     id:'products',
      keys:['producto','productos','catalogo','catálogo','bombilla','luces','interruptor','camara','cámara','basura','sensor de basura','persiana','persianas','blinds'],
      response:`En este momento ofrecemos cinco líneas: <strong>luces LED inteligentes, interruptores (táctil y por voz), cámara de seguridad, sensor de basura inteligente y control de persiana</strong>. El control de persiana puede integrarse con Alexa o Google Home y manejarse de forma remota desde la app. Puedes verlos en el catálogo y agregarlos al carrito para cotizar por WhatsApp.`,
+    action:{label:'Ver catálogo',icon:'fa-solid fa-box',fn:'scrollToCatalogo'},
+    altAction:{label:'Hablar por WhatsApp',icon:'fa-brands fa-whatsapp',fn:'openWhatsApp',cls:'wa'}
   },
   {
     id:'name',
@@ -1352,6 +1367,59 @@ const INTENTS = [
     action:{label:'Hablar con un asesor',icon:'fa-calendar-check',fn:'openCalendly'},
   },
   {
+  {
+    id:'wifi_coverage',
+    keys:['repetidor','repetidores','mesh','cobertura','alcance','señal','senal','muros','paredes','zonas muertas','no llega','wifi debil','wifi débil'],
+    response:`Gran pregunta 📡. Para domótica necesitas <strong>WiFi estable en toda la casa</strong>. Si tienes muros gruesos o el apartamento es grande, la señal puede no llegar bien. Soluciones:<br>• <strong>Repetidores WiFi:</strong> económicos, fáciles, extienden la señal.<br>• <strong>Sistema mesh:</strong> más estable, una sola red con varios nodos.<br>• <strong>Puntos de acceso con cable:</strong> la opción más sólida si puedes cablear.<br>¿Cuántos m² tiene tu espacio? Te asesoro mejor.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+    altAction:{label:'Ver catálogo',icon:'fa-solid fa-box',fn:'scrollToCatalogo'}
+  },
+  {
+    id:'wifi_band',
+    keys:['2.4','2,4','5g','5ghz','banda','frecuencia','dual band','dualband'],
+    response:`Dato técnico importante 🎯: la mayoría de dispositivos de domótica funcionan en <strong>2.4 GHz</strong>, no en 5 GHz. La banda 2.4 GHz tiene más alcance y atraviesa mejor los muros, aunque es más lenta. Cuando instales un dispositivo, verifica que tu router tenga activada la red 2.4 GHz.`,
+    action:{label:'Ver catálogo',icon:'fa-solid fa-box',fn:'scrollToCatalogo'},
+    altAction:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'}
+  },
+  {
+    id:'installation_work',
+    keys:['obra','romper','romper muro','romper pared','canaleta','cablear','cableado','instalacion electrica','instalación eléctrica','interruptor existente','mecanismo'],
+    response:`Buena noticia 💡: la mayoría de dispositivos de domótica <strong>no requieren obra</strong>. Los interruptores inteligentes se instalan sobre la caja eléctrica existente. Las luces van en el mismo socket. Las cámaras se atornillan en pared. Solo sistemas avanzados como KNX requieren cableado nuevo. Si tienes dudas, agendamos una visita virtual y lo revisamos juntos.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+    altAction:{label:'Ver catálogo',icon:'fa-solid fa-box',fn:'scrollToCatalogo'}
+  },
+  {
+    id:'apartment_vs_house',
+    keys:['apartamento','apto','casa','diferencias','cual conviene','qué conviene','que conviene'],
+    response:`Buena comparación 🏠. En <strong>apartamento</strong>: prioriza WiFi estable, cámaras compactas, sensores discretos, control de luces. No puedes hacer obra grande. En <strong>casa</strong>: más flexibilidad para cablear, más espacio para hubs y repetidores, y puedes automatizar zonas exteriores. En ambos casos, la visita virtual nos permite ver tu espacio real y recomendarte lo ideal.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+    altAction:{label:'Ver catálogo',icon:'fa-solid fa-box',fn:'scrollToCatalogo'}
+  },
+  {
+    id:'wifi_weak',
+    keys:['wifi malo','internet lento','no tengo buena señal','se cae el wifi','se desconecta','inestable'],
+    response:`Tranquilo/a, tiene solución 💙. Si tu WiFi es inestable, la domótica puede fallar. Antes de invertir en dispositivos:<br>1) Verifica que tu router sea reciente (WiFi 5 o 6).<br>2) Si el router es del operador, considera cambiarlo o añadir un repetidor.<br>3) Ubica el router en un punto central, no en un armario cerrado.<br>Un buen WiFi es la base de una domótica confiable.`,
+    action:{label:'Consultar por WhatsApp',icon:'fa-brands fa-whatsapp',fn:'openWhatsApp',cls:'wa'},
+  },
+  {
+    id:'consumption',
+    keys:['consume','consumo electrico','consumo eléctrico','cuánta energia','cuanta energia','gasta mucha luz','factura sube','incrementa la factura'],
+    response:`Buena duda 💡. Los dispositivos consumen muy poco individualmente:<br>• Interruptor inteligente: menos de 1W en reposo.<br>• Cámara WiFi: 3-5W en uso.<br>• Hub: 2-4W.<br>En conjunto, un hogar automatizado puede consumir <strong>5-15W continuos</strong>, equivalente a muy poco en tu factura. El ahorro que genera (luces que se apagan solas, climatización eficiente) suele compensar.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'}
+  },
+  {
+    id:'how_many_devices',
+    keys:['cuántos dispositivos','cuantos dispositivos','cuántos equipos','cuantos equipos','limite','límite','máximo','maximo','router aguanta'],
+    response:`Buena pregunta técnica 🌐. Un router doméstico moderno soporta entre <strong>30 y 50 dispositivos</strong> conectados simultáneamente. Si planeas muchos dispositivos o un sistema mesh, puedes llegar a 100+ sin problemas. Si tu router es viejo o básico, podría saturarse con 10-15 dispositivos. En la visita virtual revisamos tu caso.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+    altAction:{label:'Hablar por WhatsApp',icon:'fa-brands fa-whatsapp',fn:'openWhatsApp',cls:'wa'}
+  },
+  {
+    id:'first_steps',
+    keys:['empezar','comenzar','primer paso','por donde','por dónde','nunca he tenido','novato','principiante','no se nada','no sé nada'],
+    response:`Me encanta acompañarte en el inicio 🌱. Mi recomendación:<br>1) <strong>Verifica tu WiFi</strong> (2.4 GHz estable en toda la casa).<br>2) Empieza con <strong>un kit básico</strong>: luces + un interruptor + una cámara.<br>3) Cuando te sientas cómodo/a, amplía con sensores y automatizaciones.<br>No necesitas invertir mucho de golpe. En una videollamada gratuita de 30 min te ayudo a definir el kit ideal.`,
+    action:{label:'Agendar videollamada',icon:'fa-calendar-check',fn:'openCalendly'},
+  },
     id:'goodbye',
     keys:['adios','adiós','chao','hasta luego','nos vemos','bye'],
     response:`¡Hasta pronto! 🌙 Ha sido un placer. Recuerda que estoy aquí 24/7 cuando necesites volver. Que tengas un día maravilloso 💙.`,
