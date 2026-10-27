@@ -1,0 +1,3588 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#060d0e">
+  <title>La Domotienda — Hogar Inteligente</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- SEO básico -->
+  <title>La Domotienda | Domótica Inteligente en Colombia</title>
+  <meta name="description"
+    content="Automatiza tu hogar con inteligencia. Domótica de última generación: luces, cámaras, cerraduras y más. Paga el 50% al instalar.">
+  <meta name="keywords"
+    content="domótica Colombia, hogar inteligente, automatización hogar, luces inteligentes, cámaras seguridad, cerraduras electrónicas">
+  <link rel="canonical" href="https://ladomotiendacol.netlify.app/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="La Domotienda | Domótica Inteligente en Colombia">
+  <meta property="og:description"
+    content="Automatiza tu hogar con inteligencia. Paga el 50% al instalar, el resto contra entrega.">
+  <meta property="og:image" content="https://ladomotiendacol.netlify.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:url" content="https://ladomotiendacol.netlify.app/">
+  <meta property="og:site_name" content="La Domotienda">
+
+  <!-- Twitter Card (X) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="La Domotienda | Domótica Inteligente en Colombia">
+  <meta name="twitter:description" content="Automatiza tu hogar con inteligencia. Paga el 50% al instalar.">
+  <meta name="twitter:image" content="https://ladomotiendacol.netlify.app/assets/og-image.jpg">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --c: #00F0FF;
+      --p: #7B61FF;
+      --bg: #060d0e;
+      --sf: #0d1a1c;
+      --s2: #111e20;
+      --glass: rgba(6, 13, 14, 0.86);
+      --glass-strong: rgba(6, 13, 14, 0.93);
+      --txt-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(0, 0, 0, 0.7);
+    }
+
+    html {
+      scroll-behavior: auto;
+      -webkit-text-size-adjust: 100%
+    }
+
+    body {
+      background: var(--bg);
+      color: #e0ecec;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Space Grotesk', sans-serif
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--c);
+      border-radius: 2px
+    }
+
+    /* HEADER */
+    #hdr {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .85rem 2rem;
+      background: rgba(6, 13, 14, .8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 240, 255, .1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .55rem
+    }
+
+    .logo i {
+      color: var(--c);
+      font-size: 1.15rem
+    }
+
+    .logo span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -.01em
+    }
+
+    .logo sub {
+      font-size: .65rem;
+      color: #3a5555;
+      display: block;
+      margin-top: -2px;
+      line-height: 1
+    }
+
+    #hdr nav {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem
+    }
+
+    #hdr nav a,
+    #hdr nav button {
+      color: #7a9a9c;
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: 500;
+      transition: color .2s;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 0
+    }
+
+    #hdr nav a:hover,
+    #hdr nav button:hover {
+      color: var(--c)
+    }
+
+    #hdr nav a:focus-visible,
+    #hdr nav button:focus-visible {
+      outline: 2px solid var(--c);
+      outline-offset: 5px;
+      border-radius: 2px
+    }
+
+    @media(max-width:760px) {
+      #hdr nav {
+        gap: .85rem
+      }
+
+      #hdr nav a,
+      #hdr nav button {
+        font-size: .74rem
+      }
+    }
+
+    @media(max-width:420px) {
+
+      #hdr nav a:nth-child(1),
+      #hdr nav button:nth-child(2) {
+        display: none
+      }
+
+      #hdr nav {
+        gap: .5rem
+      }
+
+      #hdr nav a,
+      #hdr nav button {
+        font-size: .68rem
+      }
+    }
+
+    #cart-btn {
+      position: relative;
+      padding: .55rem .7rem;
+      border-radius: 10px;
+      background: rgba(0, 240, 255, .07);
+      border: 1px solid rgba(0, 240, 255, .18);
+      cursor: pointer;
+      transition: all .25s;
+      flex-shrink: 0;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    #cart-btn:hover {
+      background: rgba(0, 240, 255, .14);
+      border-color: rgba(0, 240, 255, .4)
+    }
+
+    #cart-btn i {
+      color: #b0d8d8;
+      font-size: .95rem
+    }
+
+    #cbadge {
+      background: var(--c);
+      color: #000;
+      font-size: .58rem;
+      font-weight: 700;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    #cbadge.bump {
+      animation: bump .26s
+    }
+
+    @keyframes bump {
+      50% {
+        transform: scale(1.5)
+      }
+    }
+
+    /* HERO */
+    #a1 {
+      position: relative;
+      isolation: isolate;
+      min-height: min(760px, 92svh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 1.2rem 4rem;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(0, 240, 255, .11), transparent 44%),
+        radial-gradient(ellipse at 80% 80%, rgba(123, 97, 255, .09), transparent 40%),
+        linear-gradient(160deg, #081315 0%, #060d0e 60%, #091214 100%);
+    }
+
+    #a1::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .23;
+      background-image: linear-gradient(rgba(0, 240, 255, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, .08) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black, transparent 86%);
+    }
+
+    #a1 .wrap {
+      text-align: center;
+      max-width: 880px;
+      width: 100%;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.1rem;
+      background: linear-gradient(150deg, rgba(8, 20, 22, .78), rgba(6, 13, 14, .94));
+      border: 1px solid rgba(0, 240, 255, .18);
+      border-radius: 24px;
+      box-shadow: 0 8px 50px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .04);
+    }
+
+    #a1 .lbl {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--c);
+      text-shadow: var(--txt-shadow)
+    }
+
+    #a1 h1 {
+      font-size: clamp(2rem, 6.5vw, 5.4rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.06;
+      letter-spacing: -.025em;
+      text-shadow: var(--txt-shadow)
+    }
+
+    .neon {
+      color: var(--c);
+      text-shadow: 0 0 18px rgba(0, 240, 255, .55), 0 0 40px rgba(0, 240, 255, .22), 0 2px 8px rgba(0, 0, 0, .85)
+    }
+
+    #a1 p {
+      font-size: clamp(.92rem, 2vw, 1.15rem);
+      color: #b8d4d6;
+      max-width: 580px;
+      line-height: 1.7;
+      text-shadow: var(--txt-shadow)
+    }
+
+    #a1 .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      justify-content: center
+    }
+
+    .btn-c {
+      background: linear-gradient(135deg, var(--c), #00b5c0);
+      color: #000;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .85rem 1.6rem;
+      border-radius: 12px;
+      font-size: .88rem;
+      min-height: 44px;
+      box-shadow: 0 0 22px rgba(0, 240, 255, .32);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .btn-c:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 0 38px rgba(0, 240, 255, .55)
+    }
+
+    .btn-o {
+      background: transparent;
+      border: 1px solid rgba(0, 240, 255, .42);
+      color: var(--c);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .85rem 1.6rem;
+      border-radius: 12px;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: all .25s;
+      min-height: 44px;
+    }
+
+    .btn-o:hover {
+      background: rgba(0, 240, 255, .09);
+      border-color: rgba(0, 240, 255, .7)
+    }
+
+    .btn-cal {
+      background: transparent;
+      border: 1px solid rgba(123, 97, 255, .55);
+      color: #b8a4ff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .85rem 1.6rem;
+      border-radius: 12px;
+      font-size: .88rem;
+      min-height: 44px;
+      cursor: pointer;
+      transition: all .25s;
+      box-shadow: 0 0 14px rgba(123, 97, 255, .18);
+    }
+
+    .btn-cal:hover {
+      background: rgba(123, 97, 255, .12);
+      border-color: rgba(123, 97, 255, .85);
+      color: #fff;
+      box-shadow: 0 0 22px rgba(123, 97, 255, .4)
+    }
+
+    .btn-cal i {
+      color: var(--p)
+    }
+
+    .btn-cal:hover i {
+      color: #fff
+    }
+
+    .btn-wa {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .85rem 1.6rem;
+      border-radius: 12px;
+      font-size: .88rem;
+      min-height: 44px;
+      box-shadow: 0 0 22px rgba(37, 211, 102, .3);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .btn-wa:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 38px rgba(37, 211, 102, .5)
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .55rem;
+      justify-content: center;
+      margin-top: .3rem
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .5rem .85rem;
+      border-radius: 24px;
+      background: rgba(0, 240, 255, .07);
+      border: 1px solid rgba(0, 240, 255, .22);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .72rem;
+      font-weight: 500;
+      color: #cae8ea;
+      text-shadow: var(--txt-shadow);
+    }
+
+    .chip i {
+      color: var(--c);
+      font-size: .72rem
+    }
+
+    .chip.purple {
+      background: rgba(123, 97, 255, .08);
+      border-color: rgba(123, 97, 255, .28)
+    }
+
+    .chip.purple i {
+      color: var(--p)
+    }
+
+    .chip.green {
+      background: rgba(0, 170, 136, .09);
+      border-color: rgba(0, 170, 136, .3)
+    }
+
+    .chip.green i {
+      color: #00C996
+    }
+
+    /* CÓMO FUNCIONA */
+    #a2 {
+      padding: 5rem 1.5rem;
+      background: linear-gradient(180deg, #081113, #060d0e);
+      border-top: 1px solid rgba(0, 240, 255, .08);
+      border-bottom: 1px solid rgba(0, 240, 255, .08);
+    }
+
+    #a2 .process-inner {
+      max-width: 1120px;
+      margin: 0 auto
+    }
+
+    #a2 .process-heading {
+      max-width: 650px;
+      margin: 0 auto 2.2rem;
+      text-align: center
+    }
+
+    #a2 .lbl {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--c)
+    }
+
+    #a2 h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.7rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      margin: .45rem 0 .65rem
+    }
+
+    #a2 .sub {
+      font-size: .9rem;
+      color: #a8c4c6;
+      line-height: 1.65
+    }
+
+    #a2-steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: .8rem
+    }
+
+    .step {
+      background: linear-gradient(155deg, rgba(14, 30, 32, .9), rgba(8, 17, 19, .96));
+      border: 1px solid rgba(0, 240, 255, .15);
+      border-radius: 14px;
+      padding: 1rem;
+      transition: border-color .25s, transform .25s;
+      min-height: 175px;
+    }
+
+    .step:hover {
+      border-color: rgba(0, 240, 255, .4);
+      transform: translateY(-3px)
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .35rem
+    }
+
+    .snum {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--c), var(--p));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #000;
+      font-size: .82rem;
+      box-shadow: 0 0 14px rgba(0, 240, 255, .4);
+    }
+
+    .step h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      color: #e0ecec;
+      text-shadow: var(--txt-shadow)
+    }
+
+    .step p {
+      font-size: .74rem;
+      color: #a0bcbe;
+      line-height: 1.55;
+      text-shadow: var(--txt-shadow)
+    }
+
+    @media(max-width:900px) {
+      #a2-steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .step:last-child {
+        grid-column: 1/-1
+      }
+    }
+
+    .feat {
+      font-size: .62rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      padding: .22rem .55rem;
+      border-radius: 14px;
+      background: rgba(0, 240, 255, .07);
+      border: 1px solid rgba(0, 240, 255, .18);
+      color: #9fd4d8;
+    }
+
+    .size-row {
+      display: flex;
+      gap: .35rem;
+      margin-bottom: .85rem
+    }
+
+    .size-btn {
+      flex: 1;
+      min-width: 44px;
+      min-height: 44px;
+      padding: .42rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      color: #9fb6b8;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+    }
+
+    .size-btn:hover {
+      background: rgba(0, 240, 255, .07);
+      border-color: rgba(0, 240, 255, .25)
+    }
+
+    .size-btn.active {
+      background: rgba(0, 240, 255, .15);
+      border-color: var(--c);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(0, 240, 255, .3)
+    }
+
+    .pcard .add-row {
+      display: flex;
+      justify-content: flex-end
+    }
+
+    .padd {
+      padding: .55rem 1rem;
+      border-radius: 10px;
+      font-size: .78rem;
+      pointer-events: auto
+    }
+
+    .pnum {
+      font-size: .62rem;
+      color: #5a7878;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: .45rem;
+      text-shadow: var(--txt-shadow)
+    }
+
+    .sub-prod {
+      background: rgba(0, 0, 0, .32);
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 11px;
+      padding: .7rem .85rem;
+      margin-top: .6rem;
+    }
+
+    .sub-prod .sub-head {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      margin-bottom: .45rem
+    }
+
+    .sub-prod .sub-head strong {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      color: #dceaec;
+      text-shadow: var(--txt-shadow)
+    }
+
+    .sub-prod .sub-head i {
+      font-size: .78rem
+    }
+
+    .sub-prod .feats {
+      margin-bottom: .55rem
+    }
+
+    .recaptcha-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .78);
+      backdrop-filter: blur(12px);
+      z-index: 4000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .recaptcha-modal.open {
+      display: flex;
+    }
+
+    .recaptcha-box {
+      background: linear-gradient(145deg, #0a1618, #0d1e20);
+      border: 1px solid rgba(0, 240, 255, .22);
+      border-radius: 18px;
+      padding: 1.6rem;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 0 50px rgba(0, 240, 255, .12), 0 24px 60px rgba(0, 0, 0, .6);
+      position: relative;
+    }
+
+    .recaptcha-box h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #e0ecec;
+      font-size: 1.1rem;
+      margin-bottom: .5rem;
+    }
+
+    .recaptcha-box p {
+      color: #7a9a9c;
+      font-size: .85rem;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+
+    .recaptcha-close {
+      position: absolute;
+      top: .8rem;
+      right: .8rem;
+      background: var(--s2);
+      border: none;
+      color: #6a8888;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .recaptcha-error {
+      color: #ff6b6b;
+      font-size: .8rem;
+      margin-top: .8rem;
+    }
+
+    /* CATÁLOGO POST-SCROLL */
+    #catalogo {
+      background: #060d0e;
+      border-top: 1px solid rgba(0, 240, 255, .08);
+      max-width: 100vw;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+    }
+
+    .catalog-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem 5.5rem
+    }
+
+    .catalog-heading {
+      max-width: 680px;
+      margin-bottom: 2rem
+    }
+
+    .catalog-heading .sec-sub {
+      max-width: 620px;
+      margin-bottom: 0
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .product-card {
+      background: linear-gradient(160deg, rgba(13, 26, 28, .96), rgba(6, 13, 14, .98));
+      border: 1px solid rgba(0, 240, 255, .16);
+      border-radius: 16px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      box-shadow: 0 10px 34px rgba(0, 0, 0, .32), inset 0 1px 0 rgba(255, 255, 255, .035);
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 240, 255, .42);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, .45), 0 0 24px rgba(0, 240, 255, .08);
+    }
+
+    .prod-img {
+      min-height: 142px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(0, 240, 255, .15), transparent 42%),
+        linear-gradient(135deg, rgba(0, 240, 255, .08), rgba(123, 97, 255, .08));
+      border: 1px solid rgba(0, 240, 255, .12);
+      color: var(--c);
+      font-size: 3rem;
+    }
+
+    .prod-img i {
+      filter: drop-shadow(0 0 14px rgba(0, 240, 255, .34))
+    }
+
+    .product-card h3 {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: .45rem;
+      text-shadow: var(--txt-shadow);
+    }
+
+    .product-card p {
+      color: #9fb6b8;
+      font-size: .78rem;
+      line-height: 1.6;
+      text-shadow: var(--txt-shadow);
+    }
+
+    .product-card .product-copy {
+      flex: 1
+    }
+
+    .product-card .product-feats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin: .85rem 0
+    }
+
+    .variant-label {
+      display: block;
+      color: #7a9a9c;
+      font-size: .64rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin: .25rem 0 .4rem;
+    }
+
+    .variant-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-bottom: .9rem
+    }
+
+    .variant-btn {
+      min-height: 44px;
+      padding: .5rem .65rem;
+      border-radius: 9px;
+      color: #9fb6b8;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .1);
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .7rem;
+      transition: all .2s;
+    }
+
+    .variant-btn:hover,
+    .variant-btn.active {
+      color: #fff;
+      background: rgba(0, 240, 255, .14);
+      border-color: var(--c);
+      box-shadow: 0 0 12px rgba(0, 240, 255, .2);
+    }
+
+    .product-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-top: 1rem
+    }
+
+    .product-actions button {
+      flex: 1;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px
+    }
+
+    .product-actions .btn-o {
+      padding: .65rem .75rem;
+      font-size: .72rem
+    }
+
+    #catalogo .btn-c,
+    #catalogo .btn-o {
+      min-height: 44px
+    }
+
+    /* LANDING CONTENT */
+    #post {
+      position: relative;
+      background: var(--bg)
+    }
+
+    .section {
+      padding: 5rem 1.5rem;
+      max-width: 900px;
+      margin: 0 auto
+    }
+
+    .sec-lbl {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--c);
+      display: block;
+      margin-bottom: .6rem
+    }
+
+    .sec-h {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .6rem
+    }
+
+    .sec-sub {
+      font-size: .95rem;
+      color: #9fb6b8;
+      margin-bottom: 2rem;
+      line-height: 1.65
+    }
+
+    /* CHATBOT LUNA */
+    .chatbox {
+      background: linear-gradient(180deg, rgba(8, 18, 22, .92), rgba(6, 14, 18, .96));
+      border: 1px solid rgba(0, 240, 255, .16);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px -32px rgba(0, 240, 255, .32), inset 0 1px 0 rgba(255, 255, 255, .04);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: 1rem 1.15rem;
+      background: linear-gradient(135deg, rgba(123, 97, 255, .16), rgba(0, 240, 255, .08));
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .bot-avatar {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #b8a4ff, #7B61FF 55%, #3b2a99);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(123, 97, 255, .4), inset 0 1px 0 rgba(255, 255, 255, .25);
+    }
+
+    .bot-status {
+      position: absolute;
+      right: -1px;
+      bottom: -1px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #00C996;
+      border: 2px solid #0a1618;
+      box-shadow: 0 0 8px rgba(0, 201, 150, .6);
+    }
+
+    .bot-meta h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: .98rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .bot-tag {
+      font-size: .58rem;
+      font-weight: 500;
+      padding: .18rem .45rem;
+      border-radius: 6px;
+      background: rgba(0, 240, 255, .14);
+      color: var(--c);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(0, 240, 255, .25);
+    }
+
+    .bot-meta p {
+      font-size: .72rem;
+      color: #8da8ab;
+      margin-top: .15rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem
+    }
+
+    .dot-live {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00C996;
+      display: inline-block;
+      animation: pulse-live 2s infinite
+    }
+
+    @keyframes pulse-live {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .5;
+        transform: scale(.85)
+      }
+    }
+
+    .chat-messages {
+      padding: 1.1rem 1.15rem;
+      min-height: 280px;
+      max-height: 440px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(0, 240, 255, .18);
+      border-radius: 3px
+    }
+
+    .msg {
+      display: flex;
+      gap: .55rem;
+      max-width: 88%;
+      align-items: flex-end;
+      animation: msgIn .3s ease both
+    }
+
+    @keyframes msgIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .msg.bot {
+      align-self: flex-start
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      flex-direction: row-reverse
+    }
+
+    .msg-av {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      color: #fff;
+    }
+
+    .msg.bot .msg-av {
+      background: linear-gradient(135deg, #7B61FF, #3b2a99)
+    }
+
+    .msg.user .msg-av {
+      background: linear-gradient(135deg, #00f0ff, #0078a5)
+    }
+
+    .msg-bubble {
+      padding: .7rem .9rem;
+      border-radius: 14px;
+      font-size: .85rem;
+      line-height: 1.55;
+      color: #dceaec;
+    }
+
+    .msg.bot .msg-bubble {
+      background: rgba(123, 97, 255, .1);
+      border: 1px solid rgba(123, 97, 255, .18);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.user .msg-bubble {
+      background: rgba(0, 240, 255, .1);
+      border: 1px solid rgba(0, 240, 255, .22);
+      color: #eaf8f9;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-bubble strong {
+      color: #fff;
+      font-weight: 600
+    }
+
+    .msg-action {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      margin-top: .55rem;
+      padding: .5rem .85rem;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--c), #3bd3e0);
+      color: #001a1d;
+      font-weight: 600;
+      font-size: .78rem;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 12px rgba(0, 240, 255, .32);
+    }
+
+    .msg-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0, 240, 255, .45)
+    }
+
+    .msg-action.wa {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, .32)
+    }
+
+    .msg-action.wa:hover {
+      box-shadow: 0 6px 18px rgba(37, 211, 102, .45)
+    }
+
+    .typing {
+      display: flex;
+      gap: .25rem;
+      padding: .7rem .9rem;
+      border-radius: 14px;
+      background: rgba(123, 97, 255, .1);
+      border: 1px solid rgba(123, 97, 255, .18);
+      border-bottom-left-radius: 4px;
+      width: fit-content
+    }
+
+    .typing span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #7B61FF;
+      animation: typing 1.2s infinite
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: .15s
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: .3s
+    }
+
+    @keyframes typing {
+
+      0%,
+      60%,
+      100% {
+        opacity: .3;
+        transform: translateY(0)
+      }
+
+      30% {
+        opacity: 1;
+        transform: translateY(-3px)
+      }
+    }
+
+    .chat-quick {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      padding: .5rem 1.15rem .7rem;
+      border-top: 1px solid rgba(255, 255, 255, .04);
+    }
+
+    .qchip {
+      min-height: 44px;
+      padding: .45rem .8rem;
+      border-radius: 999px;
+      font-size: .74rem;
+      background: rgba(0, 240, 255, .07);
+      color: #b8d6d8;
+      border: 1px solid rgba(0, 240, 255, .18);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all .2s;
+    }
+
+    .qchip:hover {
+      background: rgba(0, 240, 255, .14);
+      color: #fff;
+      border-color: var(--c);
+      transform: translateY(-1px)
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: .55rem;
+      padding: .85rem 1.15rem 1rem;
+      background: rgba(0, 0, 0, .25);
+      border-top: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    #chat-input {
+      flex: 1;
+      padding: .7rem .95rem;
+      border-radius: 11px;
+      background: rgba(0, 0, 0, .4);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: #eaf8f9;
+      font-family: 'Inter', sans-serif;
+      font-size: .86rem;
+      outline: none;
+      transition: border .2s, box-shadow .2s;
+    }
+
+    #chat-input::placeholder {
+      color: #5a7878
+    }
+
+    #chat-input:focus {
+      border-color: var(--c);
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, .14)
+    }
+
+    #chat-send {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 11px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--c), #3bd3e0);
+      color: #001a1d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .95rem;
+      transition: transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 12px rgba(0, 240, 255, .32);
+    }
+
+    #chat-send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0, 240, 255, .45)
+    }
+
+    #chat-send:active {
+      transform: translateY(0)
+    }
+
+    .faq-foot {
+      margin-top: 2.5rem;
+      padding: 1.6rem;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0, 240, 255, .06), rgba(123, 97, 255, .05));
+      border: 1px solid rgba(0, 240, 255, .15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .faq-foot h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: #fff
+    }
+
+    .faq-foot p {
+      color: #a0bcbe;
+      font-size: .86rem;
+      max-width: 480px;
+      line-height: 1.6
+    }
+
+    .faq-foot .btns2 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      justify-content: center
+    }
+
+    /* CART DRAWER */
+    #cov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s
+    }
+
+    #cov.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    #cdr {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(400px, 100vw);
+      background: #0a1618;
+      border-left: 1px solid rgba(0, 240, 255, .12);
+      box-shadow: -16px 0 50px rgba(0, 0, 0, .7);
+      z-index: 2001;
+      transform: translateX(100%);
+      transition: transform .36s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #cdr.open {
+      transform: translateX(0)
+    }
+
+    #cdr-head {
+      padding: 1.1rem 1.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    #cdr-head h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e0ecec;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    #cdr-head h3 i {
+      color: var(--c)
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: var(--s2);
+      border: none;
+      color: #6a8888;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .82rem
+    }
+
+    #cdr-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: .9rem
+    }
+
+    #cdr-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center
+    }
+
+    #cdr-empty i {
+      font-size: 2.2rem;
+      color: #1a2e2e;
+      margin-bottom: .9rem
+    }
+
+    #cdr-empty p {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #5a7878;
+      font-size: .95rem;
+      margin-bottom: .4rem
+    }
+
+    #cdr-empty small {
+      color: #3a5555;
+      font-size: .8rem;
+      line-height: 1.5;
+      max-width: 240px
+    }
+
+    .ci {
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      padding: .7rem 0;
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .ci-ic {
+      width: 36px;
+      height: 36px;
+      border-radius: 7px;
+      background: rgba(0, 240, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .ci-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .ci-info p {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .74rem;
+      font-weight: 500;
+      color: #b0c8ca;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3
+    }
+
+    .ci-info small {
+      font-size: .66rem;
+      color: #5a7878;
+      display: block;
+      margin-top: 2px
+    }
+
+    .ci-ctrl {
+      display: flex;
+      align-items: center;
+      gap: .2rem;
+      flex-shrink: 0
+    }
+
+    .ci-ctrl button {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--s2);
+      border: none;
+      color: #6a8888;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem
+    }
+
+    .ci-ctrl span {
+      width: 16px;
+      text-align: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #e0ecec;
+      font-size: .8rem
+    }
+
+    .ci-del {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--s2);
+      border: none;
+      color: #c0392b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      margin-left: .15rem
+    }
+
+    #cdr-foot {
+      padding: 1.1rem 1.2rem;
+      border-top: 1px solid rgba(255, 255, 255, .07)
+    }
+
+    #cdr-foot .qty-info {
+      font-size: .74rem;
+      color: #7a9a9c;
+      text-align: center;
+      margin-bottom: .85rem;
+      padding: .55rem;
+      background: rgba(0, 240, 255, .05);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 240, 255, .12)
+    }
+
+    #cdr-foot .qty-info i {
+      color: var(--c);
+      margin-right: .3rem
+    }
+
+    /* CALENDLY MODAL */
+    #calov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      backdrop-filter: blur(16px);
+      z-index: 3500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+      padding: 1rem
+    }
+
+    #calov.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    #calbox {
+      background: linear-gradient(145deg, #0a1618, #0d1e20);
+      border: 1px solid rgba(0, 240, 255, .25);
+      border-radius: 18px;
+      box-shadow: 0 0 60px rgba(0, 240, 255, .18), 0 24px 60px rgba(0, 0, 0, .7);
+      max-width: 900px;
+      width: 100%;
+      max-height: 96vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(.92) translateY(20px);
+      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    #calov.open #calbox {
+      transform: scale(1) translateY(0)
+    }
+
+    .cal-head {
+      padding: 1.2rem 1.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: .7rem
+    }
+
+    .cal-head-l {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: .85rem
+    }
+
+    .cal-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--c), var(--p));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .cal-icon i {
+      color: #000;
+      font-size: 1.15rem
+    }
+
+    .cal-head h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.05rem;
+      margin-bottom: .3rem
+    }
+
+    .cal-head p {
+      font-size: .78rem;
+      color: #9fb6b8;
+      line-height: 1.5
+    }
+
+    .cal-info {
+      background: rgba(0, 240, 255, .05);
+      border: 1px solid rgba(0, 240, 255, .14);
+      margin: 0 1.4rem;
+      border-radius: 10px;
+      padding: .75rem .95rem;
+      display: flex;
+      gap: .55rem;
+      align-items: flex-start;
+      font-size: .78rem;
+      color: #a8c4c6;
+      line-height: 1.55;
+      margin-top: .85rem;
+    }
+
+    .cal-info i {
+      color: var(--c);
+      margin-top: 2px;
+      flex-shrink: 0
+    }
+
+    .cal-info strong {
+      color: #cae8ea;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      display: block;
+      margin-bottom: .15rem
+    }
+
+    #cal-embed-wrap {
+      padding: .95rem 1.4rem 1.4rem;
+      flex: 1;
+      overflow: auto;
+      min-height: 0
+    }
+
+    .calendly-inline-widget {
+      min-width: 280px;
+      width: 100%;
+      height: 680px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000
+    }
+
+    @media(max-width:760px) {
+      #calbox {
+        max-height: 100vh;
+        height: 100vh;
+        border-radius: 0
+      }
+
+      .calendly-inline-widget {
+        height: calc(100vh - 240px);
+        min-height: 500px
+      }
+
+      .cal-head {
+        padding: 1rem
+      }
+
+      #cal-embed-wrap {
+        padding: .7rem 1rem 1rem
+      }
+    }
+
+    /* MODAL PAGO (confirmar carrito) */
+    #mov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .82);
+      backdrop-filter: blur(16px);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s;
+      padding: 1rem
+    }
+
+    #mov.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    #mbox {
+      background: linear-gradient(145deg, #0a1618, #0d1e20);
+      border: 1px solid rgba(0, 240, 255, .22);
+      border-radius: 18px;
+      box-shadow: 0 0 50px rgba(0, 240, 255, .14), 0 24px 60px rgba(0, 0, 0, .65);
+      max-width: 490px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 1.6rem;
+      transform: scale(.9) translateY(18px);
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    #mov.open #mbox {
+      transform: scale(1) translateY(0)
+    }
+
+    .mh {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.3rem
+    }
+
+    .mh-l {
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .mh-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .mh-icon i {
+      color: #fff;
+      font-size: 1.1rem
+    }
+
+    .mh h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #e0ecec;
+      font-size: 1.02rem
+    }
+
+    .mh small {
+      font-size: .66rem;
+      color: #5a7878
+    }
+
+    .mblock {
+      background: var(--sf);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255, 255, 255, .05)
+    }
+
+    .mblock label {
+      font-size: .62rem;
+      color: #5a7878;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      display: block;
+      margin-bottom: .6rem
+    }
+
+    .m-item {
+      display: flex;
+      justify-content: space-between;
+      padding: .32rem 0;
+      font-size: .8rem;
+      color: #b0c8ca;
+      gap: .5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .04)
+    }
+
+    .m-item:last-child {
+      border-bottom: none
+    }
+
+    .m-item .qq {
+      color: var(--c);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      flex-shrink: 0
+    }
+
+    .info-box {
+      background: linear-gradient(90deg, rgba(0, 240, 255, .06), rgba(123, 97, 255, .06));
+      border: 1px solid rgba(0, 240, 255, .15);
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: .6rem
+    }
+
+    .info-box i {
+      color: var(--c);
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .info-box strong {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .82rem;
+      color: #e0ecec;
+      display: block;
+      margin-bottom: .25rem
+    }
+
+    .info-box p {
+      font-size: .76rem;
+      color: #7a9a9c;
+      line-height: 1.55
+    }
+
+    .m-divider {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      margin: 1.1rem 0 .9rem;
+      color: #3a5555;
+      font-size: .7rem;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: .1em;
+      text-transform: uppercase
+    }
+
+    .m-divider::before,
+    .m-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1), transparent)
+    }
+
+    .m-alt-text {
+      font-size: .78rem;
+      color: #a0bcbe;
+      text-align: center;
+      margin-bottom: .7rem
+    }
+
+    .m-cancel {
+      width: 100%;
+      padding: .65rem;
+      background: none;
+      border: none;
+      color: #5a7878;
+      cursor: pointer;
+      font-size: .82rem;
+      margin-top: .5rem;
+      transition: color .2s
+    }
+
+    .m-cancel:hover {
+      color: #a8c4c6
+    }
+
+    /* LEGAL MODAL */
+    #legov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      backdrop-filter: blur(16px);
+      z-index: 3200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s;
+      padding: 1rem
+    }
+
+    #legov.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    #legbox {
+      background: linear-gradient(145deg, #0a1618, #0d1e20);
+      border: 1px solid rgba(0, 240, 255, .22);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .7);
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(.92) translateY(18px);
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    #legov.open #legbox {
+      transform: scale(1) translateY(0)
+    }
+
+    .leg-head {
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .leg-head h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.02rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .leg-head h3 i {
+      color: var(--c)
+    }
+
+    .leg-body {
+      padding: 1.3rem;
+      overflow-y: auto;
+      color: #a8c4c6;
+      font-size: .86rem;
+      line-height: 1.7
+    }
+
+    .leg-body h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      color: #cae8ea;
+      margin: 1.1rem 0 .4rem;
+      font-size: .95rem
+    }
+
+    .leg-body h4:first-child {
+      margin-top: 0
+    }
+
+    .leg-body p {
+      margin-bottom: .7rem
+    }
+
+    .leg-body ul {
+      padding-left: 1.2rem;
+      margin-bottom: .7rem
+    }
+
+    .leg-body li {
+      margin-bottom: .3rem
+    }
+
+    .leg-body strong {
+      color: #cae8ea
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      bottom: 1.8rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #0d1e20;
+      border: 1px solid rgba(0, 240, 255, .32);
+      border-radius: 11px;
+      padding: .65rem 1.3rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .84rem;
+      z-index: 9999;
+      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, .55);
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0)
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      z-index: 30;
+      background: var(--bg);
+    }
+
+    .footer-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem
+    }
+
+    .footer-inner .logo span {
+      font-size: 1rem
+    }
+
+    .flinks {
+      display: flex;
+      gap: 1.5rem;
+      font-size: .82rem;
+      flex-wrap: wrap
+    }
+
+    .flinks a,
+    .flinks button {
+      color: #5a7878;
+      text-decoration: none;
+      transition: color .2s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 0
+    }
+
+    .flinks a:hover,
+    .flinks button:hover {
+      color: var(--c)
+    }
+
+    .fcopy {
+      font-size: .7rem;
+      color: #3a5555
+    }
+
+    /* MOBILE */
+    @media(max-width:760px) {
+      #hdr {
+        padding: .7rem 1rem
+      }
+
+      .btn-c,
+      .btn-o,
+      .btn-cal,
+      .btn-wa {
+        padding: .75rem 1.2rem;
+        font-size: .8rem
+      }
+
+      #a1 {
+        min-height: auto;
+        padding: 7rem 1rem 3rem
+      }
+
+      #a1 .wrap {
+        padding: 1.3rem .9rem;
+        gap: .85rem;
+        border-radius: 18px
+      }
+
+      #a1 h1 {
+        font-size: clamp(1.8rem, 8vw, 3rem)
+      }
+
+      #a1 .btns {
+        flex-direction: column;
+        width: 100%
+      }
+
+      #a1 .btns>* {
+        width: 100%;
+        justify-content: center
+      }
+
+      #a2 {
+        padding: 3.5rem 1rem
+      }
+
+      #a2-steps {
+        grid-template-columns: 1fr
+      }
+
+      #a2-steps .step:last-child {
+        grid-column: auto
+      }
+
+      .step {
+        min-height: 0
+      }
+
+      .catalog-inner {
+        padding: 4rem 1rem
+      }
+
+      .catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .8rem
+      }
+
+      .product-card {
+        padding: .85rem
+      }
+
+      .prod-img {
+        min-height: 120px;
+        font-size: 2.5rem
+      }
+
+      .product-actions {
+        flex-direction: column
+      }
+
+      .product-actions button {
+        width: 100%
+      }
+
+      #cdr {
+        width: 100vw
+      }
+
+      #mbox {
+        padding: 1.2rem;
+        border-radius: 14px
+      }
+
+      #cdr-items {
+        padding: .75rem;
+        overflow-y: auto
+      }
+
+      #cdr-foot {
+        padding: 1rem
+      }
+
+      .ci-ctrl button,
+      .ci-del,
+      .modal-close,
+      #chat-send {
+        min-width: 44px;
+        min-height: 44px
+      }
+
+      #mbox {
+        max-height: calc(100vh - 1rem);
+        overflow-y: auto
+      }
+
+      .m-cancel {
+        min-height: 44px
+      }
+    }
+
+    @media(max-width:420px) {
+      #hdr {
+        padding: .6rem .8rem
+      }
+
+      .logo span {
+        font-size: .95rem
+      }
+
+      .logo sub {
+        font-size: .58rem
+      }
+
+      #cart-btn {
+        padding: .45rem .6rem
+      }
+
+      .catalog-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  
+/* RECAPTCHA MODAL */
+.recaptcha-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);z-index:4000;display:none;align-items:center;justify-content:center;padding:1rem}
+.recaptcha-modal.open{display:flex}
+.recaptcha-box{background:linear-gradient(145deg,#0a1618,#0d1e20);border:1px solid rgba(0,240,255,.22);border-radius:18px;padding:1.6rem;max-width:400px;width:100%;box-shadow:0 0 50px rgba(0,240,255,.12),0 24px 60px rgba(0,0,0,.6);position:relative}
+.recaptcha-box h3{font-family:'Space Grotesk',sans-serif;color:#e0ecec;font-size:1.15rem;margin-bottom:.5rem}
+.recaptcha-box p{color:#7a9a9c;font-size:.85rem;line-height:1.55;margin-bottom:1rem}
+.recaptcha-close{position:absolute;top:.8rem;right:.8rem;background:#111e20;border:none;color:#6a8888;width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.recaptcha-close:hover{color:#fff}
+.recaptcha-error{color:#ff6b6b;font-size:.8rem;margin-top:.8rem;display:none}
+#recaptcha-widget{display:flex;justify-content:center;margin:1rem 0;min-height:78px}
+</style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "La Domotienda",
+  "url": "https://ladomotiendacol.netlify.app",
+  "logo": "https://ladomotiendacol.netlify.app/assets/favicon.svg",
+  "description": "Domótica inteligente para el hogar colombiano. Paga el 50% al instalar, el resto contra entrega.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "CO",
+    "addressRegion": "Cundinamarca",
+    "addressLocality": "Bogotá"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+57-305-233-2703",
+    "contactType": "sales",
+    "availableLanguage": ["Spanish"]
+  },
+  "sameAs": [
+    "https://www.instagram.com/ladomotienda",
+    "https://www.facebook.com/ladomotienda"
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Catálogo de domótica — La Domotienda",
+  "description": "12 categorías de dispositivos inteligentes para el hogar colombiano.",
+  "url": "https://ladomotiendacol.netlify.app/#catalogo",
+  "numberOfItems": 12,
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1,  "name": "Sensor basura inteligente",       "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 2,  "name": "Interruptor táctil inteligente",   "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 3,  "name": "Interruptor por voz",               "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 4,  "name": "Luces LED inteligentes",            "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 5,  "name": "Cámara de seguridad",                "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 6,  "name": "Control de persiana",                "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 7,  "name": "Asistente de voz",                   "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 8,  "name": "Enchufe inteligente versátil",       "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 9,  "name": "Climatización inteligente",          "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 10, "name": "Seguridad avanzada",                 "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 11, "name": "Sensores de entorno",                "url": "https://ladomotiendacol.netlify.app/#catalogo" },
+    { "@type": "ListItem", "position": 12, "name": "Limpieza y exteriores",              "url": "https://ladomotiendacol.netlify.app/#catalogo" }
+  ]
+}
+/* ═══════════════════════════════════════════════════════════
+   RECAPTCHA GATE — protege Luna, WhatsApp y Calendly
+═══════════════════════════════════════════════════════════ */
+(function () {
+  const SITE_KEY = '6LeFegMuAAAAAJNTqsJTnzicgAuvCZl2J6vAKeD-';
+  const OK_KEY = 'recaptcha_ok_until';
+  const TTL = 30 * 60 * 1000; // 30 minutos de sesión verificada
+
+  let pendingAction = null;
+  let widgetId = null;
+
+  const modal = document.getElementById('recaptcha-modal');
+  const widgetWrap = document.getElementById('recaptcha-widget');
+  const errorEl = document.getElementById('recaptcha-error');
+
+  function isVerified() {
+    const until = Number(sessionStorage.getItem(OK_KEY) || 0);
+    return Date.now() < until;
+  }
+
+  function markVerified() {
+    sessionStorage.setItem(OK_KEY, String(Date.now() + TTL));
+  }
+
+  function openModal(action) {
+    pendingAction = action;
+    errorEl.style.display = 'none';
+    modal.classList.add('open');
+
+    // Renderizar el widget solo una vez
+    if (widgetId === null && window.grecaptcha) {
+      widgetId = grecaptcha.render('recaptcha-widget', {
+        sitekey: SITE_KEY,
+        callback: onSuccess,
+        'expired-callback': onExpired,
+        'error-callback': () => showError('Error al cargar la verificación.')
+      });
+    }
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    pendingAction = null;
+  }
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+  }
+
+  function resetWidget() {
+    if (widgetId !== null && window.grecaptcha) {
+      grecaptcha.reset(widgetId);
+    }
+  }
+
+  async function onSuccess(token) {
+    try {
+      const res = await fetch('/.netlify/functions/verify-recaptcha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        showError('La verificación no fue válida. Intenta de nuevo.');
+        resetWidget();
+        return;
+      }
+
+      markVerified();
+      modal.classList.remove('open');
+      const action = pendingAction;
+      pendingAction = null;
+      if (typeof action === 'function') action();
+    } catch (e) {
+      showError('No se pudo verificar. Revisa tu conexión e intenta de nuevo.');
+      resetWidget();
+    }
+  }
+
+  function onExpired() {
+    resetWidget();
+  }
+
+  window.__recaptchaGate = function (action) {
+    if (isVerified()) {
+      action();
+      return;
+    }
+    openModal(action);
+  };
+
+  document.getElementById('recaptcha-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Exponer callbacks que reCAPTCHA necesita en window
+  window.__recaptchaOnSuccess = onSuccess;
+  window.__recaptchaOnExpired = onExpired;
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   ENVOLVER LAS FUNCIONES EXISTENTES
+   (no borra nada, solo intercepta antes de ejecutar)
+═══════════════════════════════════════════════════════════ */
+(function () {
+  // WhatsApp
+  if (typeof window.openWhatsApp === 'function') {
+    const _original = window.openWhatsApp;
+    window.openWhatsApp = function (msg) {
+      window.__recaptchaGate(() => _original(msg));
+    };
+  }
+
+  // Calendly
+  if (typeof window.openCalendly === 'function') {
+    const _original = window.openCalendly;
+    window.openCalendly = function () {
+      window.__recaptchaGate(() => _original());
+    };
+  }
+
+  // Luna (sendUserMessage)
+  if (typeof window.sendUserMessage === 'function') {
+    const _original = window.sendUserMessage;
+    window.sendUserMessage = function (text) {
+      window.__recaptchaGate(() => _original(text));
+    };
+  }
+})();
+</script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+
+  <header id="hdr">
+    <div class="logo">
+      <i class="fa-solid fa-house-signal"></i>
+      <div>
+        <span>La Domotienda</span>
+        <sub>Automatiza tu hogar</sub>
+      </div>
+    </div>
+    <nav aria-label="Navegación principal">
+      <a href="#post">Preguntas</a>
+      <button type="button" onclick="openCalendly()">Visita virtual</button>
+      <button type="button" onclick="openWhatsApp()">WhatsApp</button>
+      <a href="#catalogo"
+        onclick="event.preventDefault();document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})">Catálogo</a>
+    </nav>
+    <button id="cart-btn" aria-label="Abrir carrito">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span id="cbadge" style="display:none">0</span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section id="a1" aria-labelledby="hero-title">
+    <div class="wrap">
+      <span class="lbl">Domótica · Colombia</span>
+      <h1 id="hero-title">Tecnología que<br><span class="neon">simplifica</span> tu vida</h1>
+      <div class="btns">
+        <button class="btn-cal" onclick="openCalendly()">
+          <i class="fa-solid fa-calendar-check"></i> Agendar visita virtual
+        </button>
+        <button class="btn-wa" onclick="openWhatsApp()">
+          <i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp
+        </button>
+        <a class="btn-o" href="#catalogo">Ver catálogo <i class="fa-solid fa-arrow-down"></i></a>
+      </div>
+      <div class="chips">
+        <span class="chip"><i class="fa-solid fa-handshake"></i> Pago 50 / 50</span>
+        <span class="chip purple"><i class="fa-solid fa-headset"></i> Apoyo personalizado 24/7 post venta</span>
+        <span class="chip green"><i class="fa-solid fa-sliders"></i> Confort y control adaptados a tu hogar</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section id="a2" aria-labelledby="process-title">
+    <div class="process-inner">
+      <div class="process-heading">
+        <span class="lbl">Cómo funciona</span>
+        <h2 id="process-title">Así de <span class="neon">simple</span></h2>
+        <p class="sub">De la primera videollamada al acompañamiento permanente. Te guiamos en cada paso.</p>
+      </div>
+      <div id="a2-steps">
+        <div class="step">
+          <div class="step-head">
+            <div class="snum">1</div>
+            <h3>Visita virtual sin costo</h3>
+          </div>
+          <p>Agenda una videollamada de 30 min. Revisamos contigo los espacios, las instalaciones y tus dudas.</p>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <div class="snum">2</div>
+            <h3>Eliges tu equipo</h3>
+          </div>
+          <p>Te asesoramos sobre dispositivos adecuados y compatibilidad con WiFi, Alexa o Google Home.</p>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <div class="snum">3</div>
+            <h3>Pagas el 50 %</h3>
+          </div>
+          <p>Confirmas la mitad del valor cotizado por WhatsApp. El saldo se paga al finalizar la instalación.</p>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <div class="snum">4</div>
+            <h3>Instalamos en tu hogar</h3>
+          </div>
+          <p>Instalamos y configuramos los dispositivos y te enseñamos a controlarlos desde la app.</p>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <div class="snum">5</div>
+            <h3>Acompañamiento postventa</h3>
+          </div>
+          <p>Recibes apoyo personalizado por WhatsApp y videollamada cuando lo necesites.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POST -->
+  <div id="post">
+    <div class="section">
+      <span class="sec-lbl">Conversa con Luna</span>
+      <h2 class="sec-h">Tu asistente de domótica</h2>
+      <p class="sec-sub">Luna es tu asistente virtual de La Domotienda. Pregúntale lo que quieras sobre domótica,
+        instalación, pagos o agenda una visita virtual sin compromiso.</p>
+
+      <div class="chatbox">
+        <div class="chat-header">
+          <div class="bot-avatar">
+            <i class="fa-solid fa-moon"></i>
+            <span class="bot-status"></span>
+          </div>
+          <div class="bot-meta">
+            <h4>Luna <span class="bot-tag">Asistente IA</span></h4>
+            <p><span class="dot-live"></span> En línea · Responde al instante</p>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+
+        <div class="chat-quick" id="chat-quick"></div>
+
+        <form class="chat-input-row" id="chat-form" autocomplete="off">
+          <input id="chat-input" type="text" placeholder="Escríbele a Luna…" aria-label="Mensaje para Luna"
+            maxlength="400">
+          <button type="submit" id="chat-send" aria-label="Enviar mensaje">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+      <div class="faq-foot">
+        <h3>¿Prefieres hablar con una persona?</h3>
+        <p>Si Luna no resuelve tu duda, agenda una videollamada gratuita o escríbenos por WhatsApp y un asesor humano te
+          ayuda enseguida.</p>
+        <div class="btns2">
+          <button class="btn-cal" onclick="openCalendly()"><i class="fa-solid fa-calendar-check"></i> Agendar visita
+            virtual</button>
+          <button class="btn-wa" onclick="openWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Hablar por
+            WhatsApp</button>
+        </div>
+      </div>
+
+      <!-- CATÁLOGO DE PRODUCTOS -->
+      <section id="catalogo" aria-labelledby="catalogo-titulo">
+        <div class="catalog-inner">
+          <div class="catalog-heading">
+            <span class="sec-lbl">Catálogo de dispositivos</span>
+            <h2 class="sec-h" id="catalogo-titulo">Elige cómo quieres controlar tu hogar</h2>
+            <p class="sec-sub">Conoce las opciones disponibles y consulta una cotización personalizada según tu
+              instalación, tus espacios y tus necesidades.</p>
+          </div>
+
+          <div class="catalog-grid" id="catalog-grid"></div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="logo">
+          <i class="fa-solid fa-house-signal"></i>
+          <div><span>La Domotienda</span></div>
+        </div>
+        <nav class="flinks">
+          <button onclick="openLegal('terms')">Términos</button>
+          <button onclick="openLegal('privacy')">Privacidad</button>
+          <button onclick="openWhatsApp()">Contacto</button>
+        </nav>
+        <p class="fcopy">© 2026 La Domotienda · Todos los derechos reservados</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div id="cov"></div>
+  <div id="cdr">
+    <div id="cdr-head">
+      <h3><i class="fa-solid fa-bag-shopping"></i> Tu Carrito</h3>
+      <button class="modal-close" id="cdr-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="cdr-items"></div>
+    <div id="cdr-empty">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <p>Tu carrito está vacío</p>
+      <small>Agrega los dispositivos que te interesan y te enviamos la cotización personalizada por WhatsApp.</small>
+    </div>
+    <div id="cdr-foot" style="display:none">
+      <div class="qty-info"><i class="fa-solid fa-circle-info"></i> Los precios se cotizan según tu hogar y se confirman
+        por WhatsApp.</div>
+      <button class="btn-wa"
+        style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="checkout-btn">
+        <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Solicitar cotización por WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL CARRITO → CONFIRMAR -->
+  <div id="mov">
+    <div id="mbox">
+      <div class="mh">
+        <div class="mh-l">
+          <div class="mh-icon"><i class="fa-brands fa-whatsapp"></i></div>
+          <div>
+            <h3>Confirmar solicitud</h3><small>Cotización por WhatsApp</small>
+          </div>
+        </div>
+        <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="mblock">
+        <label>Productos seleccionados</label>
+        <div id="m-items"></div>
+      </div>
+      <div class="info-box">
+        <i class="fa-solid fa-circle-info"></i>
+        <div><strong>Cotización personalizada</strong>
+          <p>Al confirmar, abrirás WhatsApp con un mensaje listo. Un asesor te enviará el precio actualizado y agendará
+            la instalación con el modelo 50/50.</p>
+        </div>
+      </div>
+      <button class="btn-wa"
+        style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center" id="confirm-wa">
+        <i class="fa-brands fa-whatsapp" style="font-size:1rem"></i> Enviar pedido a WhatsApp
+      </button>
+
+      <div class="m-divider">o</div>
+      <p class="m-alt-text">¿Prefieres una visita virtual sin compromiso?</p>
+      <button class="btn-cal"
+        style="width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;justify-content:center"
+        id="modal-calendly">
+        <i class="fa-solid fa-calendar-check" style="font-size:1rem"></i> Agendar videollamada
+      </button>
+
+      <button class="m-cancel" id="modal-cancel">Cancelar y seguir comprando</button>
+    </div>
+  </div>
+
+  <!-- CALENDLY MODAL -->
+  <div id="calov">
+    <div id="calbox">
+      <div class="cal-head">
+        <div class="cal-head-l">
+          <div class="cal-icon"><i class="fa-solid fa-calendar-check"></i></div>
+          <div>
+            <h3>Agenda tu visita virtual</h3>
+            <p>Videollamada de 30 minutos para revisar las instalaciones de tu hogar y resolver dudas. Sin costo, sin
+              compromiso.</p>
+          </div>
+        </div>
+        <button class="modal-close" id="cal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="cal-info">
+        <i class="fa-solid fa-video"></i>
+        <div>
+          <strong>¿Cómo funciona?</strong>
+          Conectamos contigo por videollamada para ver juntos los espacios de tu hogar, recomendarte los dispositivos
+          ideales y aclarar todas las dudas antes de cualquier instalación.
+        </div>
+      </div>
+      <div id="cal-embed-wrap">
+        <div id="cal-widget"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEGAL MODAL -->
+  <div id="legov">
+    <div id="legbox">
+      <div class="leg-head">
+        <h3><i class="fa-solid fa-scale-balanced"></i> <span id="leg-title">Términos y condiciones</span></h3>
+        <button class="modal-close" id="leg-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="leg-body" id="leg-body"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"><span id="toast-msg"></span></div>
+
+  <script>
+    'use strict';
+
+    const WHATSAPP_NUMBER = '573052332703';
+    const CALENDLY_URL = 'https://calendly.com/famhalat01/30min?background_color=000000&text_color=ffffff&primary_color=00f8ff';
+
+    /* PRODUCTOS (sin precios visibles) */
+    const PRODUCTS = [
+      { id: 1, img: 'contenedor-basura', name: 'Sensor basura inteligente', icon: 'fa-trash-can', col: '#00C996', summary: 'Abre la tapa sin contacto mediante su sensor de proximidad, con una experiencia higiénica para la cocina.', compatibility: 'Sensor IR · Disponible en tamaños Pequeño, Mediano y Grande', features: ['Apertura sin contacto', 'Sensor IR'], variants: ['Pequeño', 'Mediano', 'Grande'] },
+      { id: 2, img: 'interruptor-tactil', name: 'Interruptor táctil inteligente', icon: 'fa-toggle-on', col: '#7B61FF', summary: 'Controla la iluminación con un toque o desde la app y suma rutinas a tus espacios.', compatibility: 'WiFi · App móvil · Escenas programables', features: ['Táctil', 'WiFi', 'App móvil'] },
+      { id: 3, img: 'interruptor-voz', name: 'Interruptor por voz', icon: 'fa-microphone-lines', col: '#00F0FF', summary: 'Controla tus luces con una orden de voz y conecta la iluminación con tus rutinas.', compatibility: 'Alexa · Google Home · Apple HomeKit · SmartThings', features: ['Alexa', 'Google Home', 'HomeKit', 'SmartThings'] },
+      { id: 4, img: 'kit-luces-led', name: 'Luces LED inteligentes', icon: 'fa-lightbulb', col: '#FFD700', summary: 'Crea ambientes y escenarios personalizados desde la app o por voz, según la forma en que usas cada espacio.', compatibility: 'App móvil · Alexa · Google Home · SmartThings', features: ['Escenarios personalizados', 'App móvil', 'Alexa', 'Google Home'], variants: ['Kit 1', 'Kit 2', 'Kit 4'] },
+      { id: 5, img: 'camara-seguridad', name: 'Cámara de seguridad', icon: 'fa-video', col: '#FF4444', summary: 'Recibe alertas en tu teléfono cuando detecta movimiento y consulta el espacio desde la app.', compatibility: 'Alertas en tiempo real · Visión nocturna · Seguimiento inteligente', features: ['Alertas en tiempo real', 'Visión nocturna', 'Seguimiento inteligente'] },
+      { id: 6, img: 'control-persiana', name: 'Control de persiana', icon: 'fa-blinds', col: '#FF9640', summary: 'Acciona tus persianas por voz o desde la app y configura escenas según tus horarios.', compatibility: 'Alexa · Google Home · Control remoto · Escenas programables', features: ['Alexa', 'Google Home', 'Control remoto', 'Escenas programables'] },
+      { id: 7, img: 'asistente-voz', name: 'Asistente de voz', icon: 'fa-robot', col: '#4A90E2', summary: 'Controla todo tu hogar con la voz: pide luces, música, rutinas y respuestas al instante.', compatibility: 'Alexa · Google Home · Apple HomeKit · SmartThings', features: ['Control por voz', 'Rutinas', 'Multi-ecosistema'], variants: ['Alexa', 'Google Nest', 'Genérico'] },
+      { id: 8, img: 'enchufe-inteligente', name: 'Enchufe inteligente versátil', icon: 'fa-plug', col: '#FF6B35', summary: 'Convierte cualquier electrodoméstico en inteligente: airfryer, cafetera, ventilador o lo que enchufes. Mide consumo y programa horarios.', compatibility: 'WiFi · App móvil · Alexa · Google Home · Programación horaria', features: ['Cualquier electrodoméstico', 'Programación horaria', 'Control remoto', 'Voz'], variants: ['1 unidad', 'Pack 2', 'Pack 4'] },
+      { id: 9, img: 'climatizacion', name: 'Climatización inteligente', icon: 'fa-temperature-high', col: '#FF4500', summary: 'Termostatos, válvulas de radiador y controladores de aire acondicionado. Ajusta la temperatura según tus hábitos, presencia y clima externo.', compatibility: 'Nest · Netatmo · Alfred Smart · App móvil · Voz', features: ['Termostato', 'Válvulas radiador', 'Control AC', 'Programación'], variants: ['Termostato', 'Válvula radiador', 'Control AC'] },
+      { id: 10, img: 'seguridad-avanzada', name: 'Seguridad avanzada', icon: 'fa-shield-halved', col: '#DC143C', summary: 'Cerraduras electrónicas, cámaras IP 360°, videoporteros y sensores de movimiento. Monitorea en tiempo real, accede sin llave y recibe alertas ante intrusiones.', compatibility: 'Ring · Tapo · Danalock · Verisure · App móvil', features: ['Cerradura electrónica', 'Cámara IP 360°', 'Videoportero', 'Sensor movimiento'], variants: ['Cerradura electrónica', 'Cámara IP 360°', 'Videoportero', 'Sensor movimiento'] },
+      { id: 11, img: 'sensores-entorno', name: 'Sensores de entorno', icon: 'fa-triangle-exclamation', col: '#FFB300', summary: 'Detectores de humo, gas, fugas de agua, humedad y temperatura. Activan alertas automáticas para prevenir accidentes o regular el clima de tu hogar.', compatibility: 'SwitchBot · Netatmo · App móvil · Alertas push', features: ['Detector humo', 'Detector gas', 'Fuga agua', 'Humedad/temperatura'], variants: ['Detector humo', 'Detector gas', 'Fuga de agua', 'Humedad-temperatura'] },
+      { id: 12, img: 'limpieza-exteriores', name: 'Limpieza y exteriores', icon: 'fa-robot', col: '#6A5ACD', summary: 'Robots aspiradores, sistemas de riego inteligente y automatización de persianas. Tu hogar limpio, tus plantas regadas y cortinas moviéndose solas.', compatibility: 'Roborock · Roomba · Somfy · Delta Dore · App móvil', features: ['Robot aspirador', 'Riego inteligente', 'Persiana automática'], variants: ['Robot aspirador', 'Riego inteligente', 'Persiana automática'] },
+    ];
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-grid');
+      if (!grid) return;
+      grid.innerHTML = PRODUCTS.map(p => `
+    <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}">
+      <div class="prod-img" style="color:${p.col}">
+        <img src="assets/productos/${p.img}.svg" alt="${p.name}" loading="lazy" style="max-width:100%;max-height:140px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <i class="fa-solid ${p.icon}" aria-hidden="true" style="display:none"></i>
+      </div>
+      <div class="product-copy">
+        <h3>${p.name}</h3>
+        <p>${p.summary}</p>
+        <div class="product-feats">${p.features.map(feature => `<span class="feat">${feature}</span>`).join('')}</div>
+        ${p.variants ? `<span class="variant-label">Selecciona una opción</span><div class="variant-row">${p.variants.map((variant, i) => `<button class="variant-btn${i === 0 ? ' active' : ''}" type="button" data-variant="${variant}">${variant}</button>`).join('')}</div>` : ''}
+      </div>
+      <div class="product-actions">
+        <button class="btn-c" type="button" onclick="addCatalogToCart(${p.id},this.closest('.product-card'))"><i class="fa-solid fa-plus"></i> Agregar al carrito</button>
+        <button class="btn-o" type="button" onclick="consultProduct(${p.id},this.closest('.product-card'))"><i class="fa-brands fa-whatsapp"></i> Consultar</button>
+      </div>
+    </article>
+  `).join('');
+      grid.querySelectorAll('.variant-row').forEach(row => {
+        row.querySelectorAll('.variant-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            row.querySelectorAll('.variant-btn').forEach(item => item.classList.remove('active'));
+            button.classList.add('active');
+          });
+        });
+      });
+    }
+
+    /* FAQ — visita virtual + originales relevantes + 20 nuevas */
+    const FAQS = [
+      {
+        q: '¿En qué consiste la visita virtual y cómo la agendo?',
+        a: 'Es una videollamada de 30 minutos a través de Calendly en la que un asesor revisa contigo los espacios de tu hogar, te muestra las instalaciones que se realizarían y aclara todas tus dudas antes de cualquier compra. Sin costo, sin compromiso. La agendas con un clic en cualquier botón "Agendar visita virtual" de la página.'
+      },
+      {
+        q: '¿Cómo funciona el pago 50/50?',
+        a: 'Al confirmar tu pedido por WhatsApp, pagas el 50 % del total como anticipo. El 50 % restante solo lo pagas cuando el técnico finaliza la instalación y estás completamente satisfecho. Sin letra pequeña.'
+      },
+      {
+        q: '¿Cuánto tiempo demora la instalación?',
+        a: 'Un dispositivo individual toma 30–60 minutos. Un kit completo del hogar puede tomar 2–4 horas. Recibirás una estimación exacta antes de agendar.'
+      },
+      {
+        q: '¿Qué es la domótica y cómo funciona?',
+        a: 'La domótica es la tecnología que permite automatizar y controlar diferentes sistemas y dispositivos del hogar (luces, cerraduras, termostatos, cámaras, etc.) de manera inteligente y remota. Funciona mediante sensores, controladores (un hub o el celular) y una red (WiFi, Bluetooth, Zigbee, etc.) que envían señales para ejecutar acciones.'
+      },
+      {
+        q: '¿Qué necesito para empezar con un sistema domótico?',
+        a: 'En general necesitas: un hub o central (Amazon Echo, Google Home, Apple HomeKit, etc.), dispositivos compatibles (bombillas, enchufes, sensores), una red WiFi estable y un celular o tablet para controlar todo desde una app.'
+      },
+      {
+        q: '¿Qué significa que un dispositivo sea "compatible" con Alexa, Google Home o Apple HomeKit?',
+        a: 'Significa que el dispositivo puede conectarse y ser controlado por el asistente de voz (Alexa, Google Assistant) o por la app Home de Apple. Por ejemplo: "Alexa, enciende la luz del salón".'
+      },
+      {
+        q: '¿Cuál es la diferencia entre WiFi, Zigbee y Z-Wave?',
+        a: '<strong>WiFi:</strong> usa tu red doméstica y suele ser fácil de instalar.<br><strong>Zigbee y Z-Wave:</strong> protocolos diseñados para domótica y comunicación entre dispositivos.<br><strong>Bluetooth:</strong> ideal para distancias cortas, aunque con alcance limitado.'
+      },
+      {
+        q: '¿Puedo mezclar marcas o protocolos en un mismo sistema?',
+        a: 'Sí, pero necesitas un hub central (Samsung SmartThings, Hubitat, Aqara) que actúe como puente entre los dispositivos de diferentes protocolos. Así puedes tener bombillas Zigbee y un termostato WiFi controlados desde la misma app.'
+      },
+      {
+        q: '¿Qué es un "hub" y por qué lo necesito?',
+        a: 'Un hub es un dispositivo que actúa como intermediario entre tus equipos domóticos y tu celular. Permite controlar todo desde una sola app, incluso si los dispositivos usan protocolos distintos. Algunos equipos básicos no necesitan hub, pero los sistemas más complejos sí.'
+      },
+      {
+        q: '¿Cómo sé si un dispositivo funciona con batería o necesita enchufarse?',
+        a: '<strong>Batería:</strong> sensores de movimiento, cerraduras (duran meses o años).<br><strong>Enchufado:</strong> cámaras, hubs y enchufes inteligentes que siempre están conectados.<br>Revisa siempre la descripción del producto.'
+      },
+      {
+        q: '¿Qué tipos de sensores existen?',
+        a: '<strong>Movimiento:</strong> enciende luces al detectar movimiento.<br><strong>Puerta/ventana:</strong> avisa si algo se abre.<br><strong>Temperatura/humedad:</strong> regula la climatización.<br><strong>Humo/gas:</strong> activa alarmas en emergencias.'
+      },
+      {
+        q: '¿Puedo automatizar mis dispositivos antiguos (luces no inteligentes)?',
+        a: 'Sí, con enchufes inteligentes o relés inteligentes. Por ejemplo, un enchufe inteligente te permite encender/apagar cualquier dispositivo enchufado (como una lámpara) desde el celular.'
+      },
+      {
+        q: '¿Qué es un "escenario" o "rutina"?',
+        a: 'Es una serie de acciones que se ejecutan automáticamente con una sola orden o al cumplirse condiciones. Ejemplos:<br><strong>Salir de casa:</strong> apaga luces, activa la alarma y baja persianas.<br><strong>Buenos días:</strong> enciende luces, sube persianas y pone música a las 7 AM.'
+      },
+      {
+        q: '¿Qué pasa si se va la luz o el internet?',
+        a: 'Los dispositivos con batería (sensores) siguen funcionando. Los WiFi no operan hasta que vuelva el internet. Algunos hubs (como Home Assistant) pueden seguir funcionando localmente sin conexión.'
+      },
+      {
+        q: '¿Cómo protejo mi sistema domótico de hackers?',
+        a: '• Usa contraseñas fuertes y únicas para tu WiFi y apps.<br>• Actualiza el firmware de tus dispositivos regularmente.<br>• No uses redes WiFi públicas para controlar tu hogar.<br>• Elige dispositivos con cifrado (WPA3 o AES-256).'
+      },
+      {
+        q: '¿Qué es el "cloud" (la nube) y por qué algunos dispositivos lo necesitan?',
+        a: 'Es un servidor remoto donde se guardan datos y se ejecutan acciones. Se usa para guardar grabaciones de cámaras, recibir actualizaciones y funcionar aunque no estés en casa. Su desventaja: si el servicio falla, el dispositivo puede dejar de operar.'
+      },
+      {
+        q: '¿Puedo controlar mi sistema domótico cuando estoy fuera de casa?',
+        a: 'Sí. Necesitas que los dispositivos estén conectados a internet, una app compatible (Tuya, Smart Life, Home Assistant) y que el proveedor del servicio no bloquee el acceso remoto.'
+      },
+      {
+        q: '¿Cuánto cuesta mantener un sistema domótico al mes?',
+        a: '<strong>Costo inicial:</strong> entre $50 y $500+ según la cantidad de dispositivos.<br><strong>Costo mensual:</strong> usualmente $0, salvo que uses servicios premium (almacenamiento en la nube para cámaras, por ejemplo).'
+      },
+      {
+        q: '¿Qué dispositivos NO debo comprar para empezar?',
+        a: 'Evita dispositivos no compatibles con los hubs o asistentes que ya tienes, productos de marcas desconocidas sin soporte técnico y sistemas que requieran cables complejos si no tienes experiencia.'
+      },
+      {
+        q: '¿Cómo elijo entre comprar dispositivos sueltos o un kit completo?',
+        a: '<strong>Kit completo:</strong> ideal si quieres empezar rápido y con garantía de compatibilidad (ej.: Philips Hue o TP-Link Tapo).<br><strong>Sueltos:</strong> mejor si ya tienes un sistema y solo necesitas un dispositivo específico.'
+      },
+      {
+        q: '¿Qué factores se revisan antes de automatizar un hogar?',
+        a: 'No hacemos promesas generales sobre el consumo. Revisamos las condiciones de cada hogar: hábitos de uso, orientación, aislamiento, horarios, clima, equipos existentes y la configuración prevista. En la visita hablamos de posibilidades concretas según esos factores, sin garantizar un resultado único.'
+      },
+      {
+        q: '¿Puedo integrar mi sistema domótico con otros servicios (Netflix, Spotify)?',
+        a: 'Algunos dispositivos permiten integraciones limitadas. Por ejemplo: usar un asistente de voz para controlar dispositivos y decir "Alexa, pon música en Spotify", o automatizar que las luces se atenúen al ver una película.'
+      },
+      {
+        q: '¿Qué hago si un dispositivo no funciona?',
+        a: '1. Revisa que esté conectado a la red (WiFi, Zigbee, etc.).<br>2. Verifica que la batería esté cargada (si es inalámbrico).<br>3. Reinicia el dispositivo y el hub.<br>4. Actualiza el firmware.<br>5. Si el problema sigue, escríbenos por WhatsApp y nuestro soporte 24/7 te ayuda.'
+      },
+    ];
+
+    /* LEGAL TEXTS */
+    const LEGAL = {
+      terms: {
+        title: 'Términos y condiciones',
+        body: `
+      <h4>1. Aceptación de los términos</h4>
+      <p>Al acceder y utilizar el sitio web de <strong>La Domotienda</strong> y al solicitar nuestros productos o servicios, aceptas íntegramente estos Términos y Condiciones. Si no estás de acuerdo, te pedimos no utilizar el sitio.</p>
+
+      <h4>2. Productos y servicios</h4>
+      <p>Comercializamos e instalamos dispositivos de domótica en Colombia. Las imágenes y descripciones del catálogo son de referencia; los precios definitivos se cotizan personalizadamente por WhatsApp en función del hogar de cada cliente.</p>
+
+      <h4>3. Modalidad de pago 50/50</h4>
+      <p>El cliente paga el <strong>50 %</strong> del valor cotizado al confirmar el pedido y el <strong>50 %</strong> restante al finalizar la instalación a satisfacción. Cualquier cambio en el alcance del servicio se informará por escrito antes de su ejecución.</p>
+
+      <h4>4. Visita virtual</h4>
+      <p>La visita virtual por videollamada (a través de Calendly) es <strong>gratuita y sin compromiso</strong>. Tiene fines informativos y consultivos; no obliga al cliente a realizar ninguna compra.</p>
+
+      <h4>5. Garantía y soporte</h4>
+      <p>Los dispositivos cuentan con la garantía del fabricante. La instalación está garantizada por <strong>12 meses</strong>. Brindamos acompañamiento personalizado <strong>24/7 post venta</strong> por WhatsApp y videollamada.</p>
+
+      <h4>6. Devoluciones</h4>
+      <p>Aplicamos la legislación colombiana vigente sobre derecho de retracto y devoluciones para productos no instalados. Los productos ya instalados solo se cubren bajo las condiciones de garantía.</p>
+
+      <h4>7. Limitación de responsabilidad</h4>
+      <p>La Domotienda no se responsabiliza por daños derivados del uso indebido de los dispositivos, modificaciones realizadas por terceros o fallas en la red eléctrica o de internet del cliente.</p>
+
+      <h4>8. Modificaciones</h4>
+      <p>Podemos modificar estos términos en cualquier momento. La versión vigente será siempre la publicada en este sitio.</p>
+
+      <h4>9. Contacto</h4>
+      <p>Para cualquier consulta sobre estos términos, escríbenos por WhatsApp al <strong>+57 305 233 2703</strong>.</p>
+    `
+      },
+      privacy: {
+        title: 'Política de privacidad',
+        body: `
+      <h4>1. Responsable del tratamiento</h4>
+      <p><strong>La Domotienda</strong> es responsable del tratamiento de los datos personales que recogemos a través de este sitio y de nuestros canales de atención (WhatsApp, videollamadas).</p>
+
+      <h4>2. Datos que recogemos</h4>
+      <ul>
+        <li>Datos de contacto: nombre, teléfono, correo electrónico.</li>
+        <li>Información del hogar para la cotización (dirección general, fotos opcionales del espacio).</li>
+        <li>Datos de la videollamada agendada por Calendly (fecha, hora, correo).</li>
+      </ul>
+
+      <h4>3. Finalidad</h4>
+      <ul>
+        <li>Brindar asesoría personalizada y agendar la visita virtual.</li>
+        <li>Cotizar y coordinar la instalación de los dispositivos solicitados.</li>
+        <li>Ofrecer soporte post venta y mejorar nuestros servicios.</li>
+      </ul>
+
+      <h4>4. Conservación</h4>
+      <p>Conservamos tus datos por el tiempo necesario para cumplir con la finalidad para la que fueron recogidos y atender cualquier obligación legal posterior.</p>
+
+      <h4>5. Compartición</h4>
+      <p>No vendemos ni cedemos tus datos a terceros con fines comerciales. Solo compartimos información con proveedores estrictamente necesarios para la prestación del servicio (Calendly para agendamiento, WhatsApp para comunicación).</p>
+
+      <h4>6. Tus derechos</h4>
+      <p>Conforme a la Ley 1581 de 2012 (Habeas Data) puedes ejercer en cualquier momento tus derechos de <strong>acceso, rectificación, actualización, supresión</strong> y revocación de la autorización, escribiéndonos por WhatsApp al <strong>+57 305 233 2703</strong>.</p>
+
+      <h4>7. Seguridad</h4>
+      <p>Aplicamos medidas técnicas y organizativas razonables para proteger tu información de accesos no autorizados, pérdida o alteración.</p>
+
+      <h4>8. Cookies y tecnologías similares</h4>
+      <p>Este sitio utiliza tecnologías mínimas (almacenamiento local del carrito) para mejorar tu experiencia. No utilizamos cookies de seguimiento publicitario.</p>
+
+      <h4>9. Cambios en esta política</h4>
+      <p>Podemos actualizar esta política. Publicaremos siempre la versión vigente en este sitio.</p>
+    `
+      }
+    };
+
+    /* CONTACTO RÁPIDO */
+    function openWhatsApp(customMsg) {
+      const msg = customMsg || '¡Hola La Domotienda! Quisiera información sobre los servicios de domótica para mi hogar.';
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+    }
+
+    /* CALENDLY MODAL */
+    let calendlyLoaded = false;
+    function loadCalendlyScript() {
+      if (calendlyLoaded) return;
+      calendlyLoaded = true;
+      const s = document.createElement('script');
+      s.src = 'https://assets.calendly.com/assets/external/widget.js';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+    function openCalendly() {
+      const wrap = document.getElementById('cal-widget');
+      if (!wrap.querySelector('.calendly-inline-widget')) {
+        const div = document.createElement('div');
+        div.className = 'calendly-inline-widget';
+        div.setAttribute('data-url', CALENDLY_URL);
+        div.style.minWidth = '280px';
+        div.style.height = '680px';
+        wrap.appendChild(div);
+        loadCalendlyScript();
+      }
+      document.getElementById('calov').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function scrollToCatalogo() {
+      const cat = document.getElementById('catalogo');
+      if (cat) {
+        cat.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    function closeCalendly() {
+      document.getElementById('calov').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* LEGAL MODAL */
+    function openLegal(kind) {
+      const data = LEGAL[kind];
+      document.getElementById('leg-title').textContent = data.title;
+      document.getElementById('leg-body').innerHTML = data.body;
+      document.getElementById('legov').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLegal() {
+      document.getElementById('legov').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* CARRITO (sin precios) */
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('domo3d_cart_v2') || '[]'); } catch (e) { }
+    const saveCart = () => { try { localStorage.setItem('domo3d_cart_v2', JSON.stringify(cart)); } catch (e) { } };
+
+    function updateBadge() {
+      const b = document.getElementById('cbadge');
+      const n = cart.reduce((s, i) => s + i.qty, 0);
+      if (n > 0) { b.textContent = n; b.style.display = 'flex'; }
+      else b.style.display = 'none';
+    }
+
+    function selectedSize(prodId) {
+      const row = document.querySelector(`.size-row[data-prod="${prodId}"]`);
+      if (!row) return null;
+      const btn = row.querySelector('.size-btn.active');
+      return btn ? btn.dataset.size : null;
+    }
+
+    function cartKey(id, size) { return size ? `${id}_${size}` : `${id}`; }
+
+    function catalogVariant(card) {
+      const active = card && card.querySelector('.variant-btn.active');
+      return active ? active.dataset.variant : null;
+    }
+
+    function addCatalogToCart(id, card) {
+      addToCart(id, catalogVariant(card));
+    }
+
+    function consultProduct(id, card) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+      const variant = catalogVariant(card);
+      const variantText = variant ? ` — Variante: ${variant}` : '';
+      openWhatsApp(`¡Hola La Domotienda! Quisiera cotizar ${p.name}${variantText}. Me gustaría conocer la instalación y compatibilidad para mi hogar.`);
+    }
+
+    function addToCart(id, variantOverride = null) {
+      const p = PRODUCTS.find(x => x.id === id);
+      const size = variantOverride || (p.variants ? p.variants[0] : null);
+      const key = cartKey(id, size);
+      const ex = cart.find(x => x.key === key);
+      if (ex) ex.qty++;
+      else cart.push({ key, id: p.id, name: p.name, size, qty: 1 });
+      saveCart(); updateBadge(); renderCart();
+      const b = document.getElementById('cbadge');
+      b.classList.add('bump'); setTimeout(() => b.classList.remove('bump'), 300);
+      const sizeStr = size ? ` (${size})` : '';
+      showToast(`<i class="fa-solid fa-circle-check" style="color:var(--c);margin-right:.4rem"></i>${p.name}${sizeStr} agregado`);
+    }
+
+    function removeFromCart(key) { cart = cart.filter(x => x.key !== key); saveCart(); updateBadge(); renderCart(); }
+    function changeQty(key, d) { const i = cart.find(x => x.key === key); if (i) { i.qty = Math.max(1, i.qty + d); saveCart(); updateBadge(); renderCart(); } }
+
+    function renderCart() {
+      const el = document.getElementById('cdr-items');
+      const em = document.getElementById('cdr-empty');
+      const ft = document.getElementById('cdr-foot');
+      el.innerHTML = '';
+      if (!cart.length) { el.style.display = 'none'; em.style.display = 'flex'; ft.style.display = 'none'; return; }
+      el.style.display = 'block'; em.style.display = 'none'; ft.style.display = 'block';
+      cart.forEach(item => {
+        const p = PRODUCTS.find(x => x.id === item.id);
+        const d = document.createElement('div'); d.className = 'ci';
+        d.innerHTML = `
+      <div class="ci-ic"><i class="fa-solid ${p.icon}" style="font-size:.8rem;color:${p.col}"></i></div>
+      <div class="ci-info">
+        <p>${item.name}</p>
+        ${item.size ? `<small>Tamaño: ${item.size}</small>` : '<small>Cotización por WhatsApp</small>'}
+      </div>
+      <div class="ci-ctrl">
+        <button onclick="changeQty('${item.key}',-1)"><i class="fa-solid fa-minus"></i></button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty('${item.key}',1)"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <button class="ci-del" onclick="removeFromCart('${item.key}')"><i class="fa-solid fa-trash"></i></button>`;
+        el.appendChild(d);
+      });
+    }
+
+    function buildCartMessage() {
+      const lines = cart.map(i => {
+        const sz = i.size ? ` — Tamaño ${i.size}` : '';
+        return `• ${i.qty}x ${i.name}${sz}`;
+      }).join('\n');
+      return `¡Hola La Domotienda! 👋\nMe interesa cotizar e instalar los siguientes dispositivos:\n\n${lines}\n\n¿Podrían enviarme el precio actualizado y agendar la instalación con el modelo 50/50? ¡Gracias!`;
+    }
+
+    /* DRAWER + MODAL CARRITO */
+    const openCart = () => { document.getElementById('cov').classList.add('open'); document.getElementById('cdr').classList.add('open'); document.body.style.overflow = 'hidden'; };
+    const closeCart = () => { document.getElementById('cov').classList.remove('open'); document.getElementById('cdr').classList.remove('open'); document.body.style.overflow = ''; };
+    const closeModal = () => { document.getElementById('mov').classList.remove('open'); document.body.style.overflow = ''; };
+
+    function openModal() {
+      document.getElementById('m-items').innerHTML = cart.map(i => {
+        const sz = i.size ? ` <span style="color:#7a9a9c;font-size:.72rem">(${i.size})</span>` : '';
+        return `<div class="m-item"><span>${i.name}${sz}</span><span class="qq">×${i.qty}</span></div>`;
+      }).join('');
+      document.getElementById('mov').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('cart-btn').addEventListener('click', openCart);
+    document.getElementById('cdr-close').addEventListener('click', closeCart);
+    document.getElementById('cov').addEventListener('click', closeCart);
+    document.getElementById('checkout-btn').addEventListener('click', () => { if (!cart.length) return; closeCart(); setTimeout(openModal, 200); });
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('modal-cancel').addEventListener('click', closeModal);
+    document.getElementById('modal-calendly').addEventListener('click', () => { closeModal(); setTimeout(openCalendly, 150); });
+    document.getElementById('mov').addEventListener('click', e => { if (e.target.id === 'mov') closeModal(); });
+    document.getElementById('confirm-wa').addEventListener('click', () => {
+      openWhatsApp(buildCartMessage());
+      closeModal();
+    });
+    document.getElementById('cal-close').addEventListener('click', closeCalendly);
+    document.getElementById('calov').addEventListener('click', e => { if (e.target.id === 'calov') closeCalendly(); });
+    document.getElementById('leg-close').addEventListener('click', closeLegal);
+    document.getElementById('legov').addEventListener('click', e => { if (e.target.id === 'legov') closeLegal(); });
+
+    /* SIZE BUTTONS */
+    document.querySelectorAll('.size-row').forEach(row => {
+      row.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          row.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+
+    document.querySelectorAll('.variant-row').forEach(row => {
+      row.querySelectorAll('.variant-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          row.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+
+    /* ═══════════════════════════════════════════════════
+       CHATBOT LUNA — asistente femenina, empática
+    ═══════════════════════════════════════════════════ */
+    const LUNA_GREETING = `¡Hola! Soy <strong>Luna</strong> 🌙, tu asistente virtual de La Domotienda. Puedo orientarte sobre control, confort, seguridad y compatibilidad, siempre considerando las condiciones particulares de tu hogar. ¿En qué puedo ayudarte hoy?`;
+
+    const LUNA_QUICK = [
+      '¿Qué es la domótica?',
+      '¿Qué WiFi necesito?',
+      '¿Cómo funciona el pago?',
+      '¿Cómo cubro mi apartamento?',
+      'Quiero agendar una visita',
+      '¿Cuánto tarda la instalación?',
+      '¿Funciona con Alexa?',
+      '¿Gasta mucha luz?',
+      '¿Tienen cerraduras inteligentes?',
+      '¿Tienen robots aspiradores?',
+      '¿Qué marcas manejan?',
+    ];
+
+    /* INTENTS — orden importa: primero las más específicas */
+    const INTENTS = [
+      {
+        id: 'greeting',
+        keys: ['hola', 'buenas', 'buenos dias', 'buenos días', 'buenas tardes', 'buenas noches', 'saludos', 'hey', 'que tal', 'qué tal', 'holi'],
+        response: `¡Hola! Qué gusto saludarte 💙. Soy Luna, asistente de La Domotienda. Cuéntame, ¿qué te gustaría saber sobre domótica?`,
+      },
+      {
+        id: 'thanks',
+        keys: ['gracias', 'muchas gracias', 'mil gracias', 'genial gracias', 'perfecto gracias'],
+        response: `¡Con todo el gusto! 🌟 Si surge cualquier otra duda, aquí estoy. ¿Te gustaría agendar una visita virtual sin compromiso para revisar tu hogar?`,
+        action: { label: 'Agendar visita virtual', icon: 'fa-calendar-check', fn: 'openCalendly' },
+      },
+      {
+        id: 'visit',
+        keys: ['visita', 'videollamada', 'video llamada', 'agendar', 'calendly', 'reunion', 'reunión', 'en persona', 'verlo', 'ver en persona', 'asesor', 'demo', 'demostracion', 'demostración', 'cita'],
+        response: `Entiendo, una visita virtual es la mejor forma de resolver tus dudas 💙. Es una <strong>videollamada gratuita de 30 minutos</strong> con un asesor: revisamos juntos tus espacios, te mostramos los dispositivos ideales y aclaramos todo, sin compromiso de compra.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+      },
+      {
+        id: 'payment',
+        keys: ['pago', 'pagar', 'precio', 'costo', 'cuesta', 'cuánto vale', 'cuanto vale', 'valor', 'plata', 'dinero', '50', 'anticipo', 'contra entrega', 'financiar', 'financiación', 'financiacion'],
+        response: `Te entiendo, la transparencia en el precio es clave 🤝. En La Domotienda usamos un modelo <strong>50/50</strong> muy claro:<br>• <strong>50 %</strong> al confirmar el pedido por WhatsApp.<br>• <strong>50 %</strong> solo cuando la instalación queda perfecta y estás 100 % satisfecha/o.<br>Sin sorpresas, sin letra pequeña. El precio exacto lo cotizamos según tu hogar.`,
+      },
+      {
+        id: 'what',
+        keys: ['que es la domotica', 'qué es la domótica', 'que es domotica', 'qué es domótica', 'definicion', 'definición', 'que significa domotica', 'para qué sirve', 'para que sirve la domotica'],
+        response: `Me encanta que preguntes 🌟. La <strong>domótica</strong> es la tecnología que automatiza tu hogar: luces, cerraduras, cámaras, persianas y sensores… todo controlado desde tu celular o por voz. Funciona con sensores y una red (WiFi, Zigbee) que ejecutan acciones según tus rutinas y preferencias.<br>¿Quieres ver ejemplos en tu hogar?`,
+        action: { label: 'Conocer en una videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+      },
+      {
+        id: 'install_time',
+        keys: ['cuanto tarda', 'cuánto tarda', 'tiempo', 'demora', 'dura', 'instalacion', 'instalación', 'instalan', 'instalar'],
+        response: `Buena pregunta 🛠️. El tiempo depende del alcance:<br>• <strong>Un dispositivo individual:</strong> 30–60 min.<br>• <strong>Kit completo del hogar:</strong> entre 2 y 4 horas.<br>Antes de agendar te damos una estimación exacta para que te organices con tranquilidad.`,
+      },
+      {
+        id: 'voice',
+        keys: ['alexa', 'google home', 'google assistant', 'siri', 'homekit', 'apple homekit', 'voz', 'asistente', 'smartthings', 'controlar con voz', 'por voz'],
+        response: `¡Sí! 🎙️ Casi todos nuestros dispositivos son compatibles con los principales asistentes de voz: <strong>Alexa, Google Home, Apple HomeKit y SmartThings</strong>. El control de persiana, por ejemplo, puede accionarse por voz o de forma remota desde la app. Si ya tienes un asistente, te ayudamos a integrar todo.`,
+      },
+      {
+        id: 'protocols',
+        keys: ['wifi', 'zigbee', 'z-wave', 'zwave', 'bluetooth', 'protocolo', 'protocolos', 'red'],
+        response: `Pregunta muy técnica, pero te explico claro 📡:<br>• <strong>WiFi:</strong> usa tu red, fácil de instalar.<br>• <strong>Zigbee / Z-Wave:</strong> protocolos pensados para domótica y comunicación entre dispositivos.<br>• <strong>Bluetooth:</strong> ideal para corto alcance (cerraduras).<br>Te asesoramos cuál conviene a tu caso.`,
+      },
+      {
+        id: 'hub',
+        keys: ['hub', 'central', 'controlador', 'centralita'],
+        response: `Buena 👌. Un <strong>hub</strong> es el cerebro que conecta todos tus dispositivos en una sola app, incluso si usan protocolos distintos. Para sistemas básicos no siempre es necesario; para hogares completos te lo recomendamos. Lo evaluamos en la visita virtual.`,
+      },
+      {
+        id: 'security',
+        keys: ['hacker', 'hackers', 'seguridad', 'privacidad', 'contrasena', 'contraseña', 'riesgo', 'seguro', 'vulnerable'],
+        response: `Tu seguridad es prioridad 🔒. Recomendamos:<br>• Contraseñas fuertes y únicas.<br>• Firmware actualizado.<br>• Cifrado WPA3 o AES-256.<br>• No usar redes WiFi públicas para controlar el hogar.<br>Trabajamos con marcas que cumplen estos estándares.`,
+      },
+      {
+        id: 'remote',
+        keys: ['fuera de casa', 'remoto', 'remota', 'desde lejos', 'viajar', 'en vacaciones', 'controlar lejos'],
+        response: `¡Claro que sí! ✈️ Mientras tus dispositivos tengan internet, los controlas desde cualquier parte del mundo con la app oficial. Útil para revisar cámaras, abrir la puerta o programar luces estando de viaje.`,
+      },
+      {
+        id: 'no_internet',
+        keys: ['se va la luz', 'sin internet', 'sin luz', 'sin wifi', 'apagon', 'apagón', 'corte de luz'],
+        response: `Buena previsión 💡. Los sensores con batería siguen funcionando aunque no haya luz. Los dispositivos WiFi se reactivan en cuanto vuelve la conexión. Algunos hubs avanzados pueden seguir operando localmente sin internet.`,
+      },
+      {
+        id: 'monthly',
+        keys: ['mensualidad', 'suscripcion', 'suscripción', 'mensual', 'cada mes', 'cuota'],
+        response: `Buena pregunta 💸. <strong>No hay mensualidad obligatoria.</strong> Solo pagas extra si quieres servicios premium opcionales (por ejemplo, almacenamiento en la nube de cámaras). El uso normal es <strong>$0 al mes</strong>.`,
+      },
+      {
+        id: 'old_devices',
+        keys: ['lampara antigua', 'lámpara antigua', 'dispositivos viejos', 'no inteligente', 'convertir', 'reciclar', 'tradicional'],
+        response: `¡Sí se puede! ♻️ Con <strong>enchufes inteligentes</strong> o <strong>relés inteligentes</strong> conviertes en "smart" cualquier dispositivo tradicional: lámparas, ventiladores, electrodomésticos… sin cambiar nada físico.`,
+      },
+      {
+        id: 'routines',
+        keys: ['rutina', 'rutinas', 'escenario', 'escenarios', 'automatizar', 'automatización', 'automatizacion'],
+        response: `Esto es lo más útil ✨. Las <strong>rutinas</strong> ejecutan varias acciones con una sola orden:<br>• "Salir de casa" → apaga luces, activa alarma, baja persianas.<br>• "Buenos días" → enciende luces, sube persianas, pone música.<br>Las personalizamos contigo en la instalación, de acuerdo con tus horarios y preferencias.`,
+      },
+      {
+        id: 'support',
+        keys: ['soporte', 'ayuda', 'no funciona', 'problema', 'falla', 'averia', 'avería', 'daño', 'dañado', 'reparar'],
+        response: `Tranqui/a, te apoyamos 💙. Pasos rápidos:<br>1) Verifica que el dispositivo esté conectado.<br>2) Revisa batería si es inalámbrico.<br>3) Reinicia dispositivo y hub.<br>4) Si persiste, te atendemos por WhatsApp <strong>24/7</strong>.`,
+        action: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' },
+      },
+      {
+        id: 'sensors',
+        keys: ['sensor', 'sensores', 'movimiento', 'puerta', 'ventana', 'humo', 'gas', 'temperatura', 'humedad'],
+        response: `Existen varios tipos de sensores 🛡️:<br>• <strong>Movimiento:</strong> enciende luces al detectar gente.<br>• <strong>Puerta/ventana:</strong> avisa si algo se abre.<br>• <strong>Temperatura/humedad:</strong> regula climatización.<br>• <strong>Humo/gas:</strong> activa alarmas en emergencias.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' }
+      },
+      {
+        id: 'kit_or_alone',
+        keys: ['kit', 'suelto', 'suelta', 'separado', 'de a uno', 'empezar', 'por donde empezar', 'primer paso'],
+        response: `Depende de ti 🎯. Si quieres empezar rápido y con todo compatible, un <strong>kit</strong> es ideal. Si ya tienes algo armado y quieres sumar piezas, los <strong>dispositivos sueltos</strong> son perfectos. En la visita virtual te recomendamos el camino ideal.`,
+      },
+      {
+        id: 'outcomes',
+        keys: ['ahorro', 'retorno', 'roi', 'vale la pena', 'beneficio', 'ventaja', 'ahorrar', 'consumo'],
+        response: `Es una pregunta importante. No ofrecemos cifras generales ni prometemos resultados de consumo. Revisamos los factores externos de cada hogar —hábitos, orientación, aislamiento, horarios, clima, equipos existentes y configuración— para explicar posibilidades realistas. La domótica sí puede darte más control, comodidad y automatización.`,
+      },
+      {
+        id: 'products',
+        keys: ['producto', 'productos', 'catalogo', 'catálogo', 'bombilla', 'luces', 'interruptor', 'camara', 'cámara', 'basura', 'sensor de basura', 'persiana', 'persianas', 'blinds', 'asistente voz', 'alexa', 'enchufe', 'termostato', 'cerradura', 'robot', 'sensor', 'riego'],
+        response: `Contamos con <strong>12 categorías</strong> de domótica para tu hogar:<br>1. Sensores de basura inteligente<br>2. Interruptores táctiles<br>3. Interruptores por voz<br>4. Luces LED inteligentes<br>5. Cámaras de seguridad<br>6. Control de persianas<br>7. Asistentes de voz<br>8. Enchufes inteligentes versátiles<br>9. Climatización (termostatos, AC)<br>10. Seguridad avanzada (cerraduras, videoporteros)<br>11. Sensores de entorno (humo, gas, fugas)<br>12. Limpieza y exteriores (robots, riego)<br>Puedes verlos todos en el catálogo y agregarlos al carrito para cotizar por WhatsApp.`,
+        action: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' },
+        altAction: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' }
+      },
+      {
+        id: 'name',
+        keys: ['como te llamas', 'cómo te llamas', 'quien eres', 'quién eres', 'tu nombre', 'eres humano', 'eres un bot', 'eres real'],
+        response: `Soy <strong>Luna</strong> 🌙, una asistente virtual creada por La Domotienda para ayudarte con domótica. No soy humana, pero sí muy real ayudándote 💙. Si quieres hablar con un asesor de carne y hueso, agendamos una videollamada.`,
+        action: { label: 'Hablar con un asesor', icon: 'fa-calendar-check', fn: 'openCalendly' },
+      },
+      {
+        id: 'wifi_coverage',
+        keys: ['repetidor', 'repetidores', 'mesh', 'cobertura', 'alcance', 'señal', 'senal', 'muros', 'paredes', 'zonas muertas', 'no llega', 'wifi debil', 'wifi débil'],
+        response: `Gran pregunta 📡. Para domótica necesitas <strong>WiFi estable en toda la casa</strong>. Si tienes muros gruesos o el apartamento es grande, la señal puede no llegar bien. Soluciones:<br>• <strong>Repetidores WiFi:</strong> económicos, fáciles, extienden la señal.<br>• <strong>Sistema mesh:</strong> más estable, una sola red con varios nodos.<br>• <strong>Puntos de acceso con cable:</strong> la opción más sólida si puedes cablear.<br>¿Cuántos m² tiene tu espacio? Te asesoro mejor.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' }
+      },
+      {
+        id: 'wifi_band',
+        keys: ['2.4', '2,4', '5g', '5ghz', 'banda', 'frecuencia', 'dual band', 'dualband'],
+        response: `Dato técnico importante 🎯: la mayoría de dispositivos de domótica funcionan en <strong>2.4 GHz</strong>, no en 5 GHz. La banda 2.4 GHz tiene más alcance y atraviesa mejor los muros, aunque es más lenta. Cuando instales un dispositivo, verifica que tu router tenga activada la red 2.4 GHz.`,
+        action: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' },
+        altAction: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' }
+      },
+      {
+        id: 'installation_work',
+        keys: ['obra', 'romper', 'romper muro', 'romper pared', 'canaleta', 'cablear', 'cableado', 'instalacion electrica', 'instalación eléctrica', 'interruptor existente', 'mecanismo'],
+        response: `Buena noticia 💡: la mayoría de dispositivos de domótica <strong>no requieren obra</strong>. Los interruptores inteligentes se instalan sobre la caja eléctrica existente. Las luces van en el mismo socket. Las cámaras se atornillan en pared. Solo sistemas avanzados como KNX requieren cableado nuevo. Si tienes dudas, agendamos una visita virtual y lo revisamos juntos.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' }
+      },
+      {
+        id: 'apartment_vs_house',
+        keys: ['apartamento', 'apto', 'casa', 'diferencias', 'cual conviene', 'qué conviene', 'que conviene'],
+        response: `Buena comparación 🏠. En <strong>apartamento</strong>: prioriza WiFi estable, cámaras compactas, sensores discretos, control de luces. No puedes hacer obra grande. En <strong>casa</strong>: más flexibilidad para cablear, más espacio para hubs y repetidores, y puedes automatizar zonas exteriores. En ambos casos, la visita virtual nos permite ver tu espacio real y recomendarte lo ideal.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' }
+      },
+      {
+        id: 'wifi_weak',
+        keys: ['wifi malo', 'internet lento', 'no tengo buena señal', 'se cae el wifi', 'se desconecta', 'inestable'],
+        response: `Tranquilo/a, tiene solución 💙. Si tu WiFi es inestable, la domótica puede fallar. Antes de invertir en dispositivos:<br>1) Verifica que tu router sea reciente (WiFi 5 o 6).<br>2) Si el router es del operador, considera cambiarlo o añadir un repetidor.<br>3) Ubica el router en un punto central, no en un armario cerrado.<br>Un buen WiFi es la base de una domótica confiable.`,
+        action: { label: 'Consultar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' },
+      },
+      {
+        id: 'consumption',
+        keys: ['consume', 'consumo electrico', 'consumo eléctrico', 'cuánta energia', 'cuanta energia', 'gasta mucha luz', 'factura sube', 'incrementa la factura'],
+        response: `Buena duda 💡. Los dispositivos consumen muy poco individualmente:<br>• Interruptor inteligente: menos de 1W en reposo.<br>• Cámara WiFi: 3-5W en uso.<br>• Hub: 2-4W.<br>En conjunto, un hogar automatizado puede consumir <strong>5-15W continuos</strong>, equivalente a muy poco en tu factura. El ahorro que genera (luces que se apagan solas, climatización eficiente) suele compensar.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' }
+      },
+      {
+        id: 'how_many_devices',
+        keys: ['cuántos dispositivos', 'cuantos dispositivos', 'cuántos equipos', 'cuantos equipos', 'limite', 'límite', 'máximo', 'maximo', 'router aguanta'],
+        response: `Buena pregunta técnica 🌐. Un router doméstico moderno soporta entre <strong>30 y 50 dispositivos</strong> conectados simultáneamente. Si planeas muchos dispositivos o un sistema mesh, puedes llegar a 100+ sin problemas. Si tu router es viejo o básico, podría saturarse con 10-15 dispositivos. En la visita virtual revisamos tu caso.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' }
+      },
+      {
+        id: 'first_steps',
+        keys: ['empezar', 'comenzar', 'primer paso', 'por donde', 'por dónde', 'nunca he tenido', 'novato', 'principiante', 'no se nada', 'no sé nada'],
+        response: `Me encanta acompañarte en el inicio 🌱. Mi recomendación:<br>1) <strong>Verifica tu WiFi</strong> (2.4 GHz estable en toda la casa).<br>2) Empieza con <strong>un kit básico</strong>: luces + un interruptor + una cámara.<br>3) Cuando te sientas cómodo/a, amplía con sensores y automatizaciones.<br>No necesitas invertir mucho de golpe. En una videollamada gratuita de 30 min te ayudo a definir el kit ideal.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+      },
+      {
+        id: 'climate',
+        keys: ['climatizacion', 'climatización', 'termostato', 'temperatura', 'aire acondicionado', 'aire acondicionado', 'ac', 'calefaccion', 'calefacción', 'radiador', 'valvula', 'válvula', 'nest', 'netatmo'],
+        response: `Excelente 🎯. Tenemos soluciones de climatización inteligente:<br>• <strong>Termostatos:</strong> ajustan la temperatura según tus hábitos y presencia.<br>• <strong>Válvulas de radiador:</strong> control por habitación, sin desperdiciar energía.<br>• <strong>Controladores de AC:</strong> encienden/apagan el aire acondicionado a distancia o por horario.<br>Marcas como Nest, Netatmo y Alfred Smart son compatibles. ¿Quieres que un asesor te recomiende según tu espacio?`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' }
+      },
+      {
+        id: 'physical_security',
+        keys: ['cerradura', 'cerraduras', 'chapa', 'videoportero', 'portero', 'camara 360', 'cámara 360', 'intrusion', 'intrusión', 'robo', 'allanamiento', 'ring', 'tapo', 'danalock', 'verisure'],
+        response: `Excelente elección 🛡️. Tenemos varias opciones de seguridad física:<br>• <strong>Cerraduras electrónicas:</strong> acceso sin llave desde app o huella.<br>• <strong>Videoporteros:</strong> ves y hablas con quien llega desde el móvil.<br>• <strong>Cámaras IP 360°:</strong> monitoreo total con alertas push.<br>• <strong>Sensores de movimiento:</strong> activan alarmas o encienden luces.<br>Marcas como Ring, Tapo, Danalock y Verisure son compatibles. ¿Quieres asesoría personalizada?`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' }
+      },
+      {
+        id: 'smart_plug',
+        keys: ['enchufe', 'enchufes', 'tomacorriente', 'airfryer', 'freidora', 'cafetera', 'ventilador', 'electrodomestico', 'electrodoméstico', 'electrodomesticos', 'electrodomésticos', 'conectar', 'adaptable'],
+        response: `¡Es una de nuestras categorías más versátiles! 🔌 Con un <strong>enchufe inteligente</strong> conviertes <em>cualquier</em> electrodoméstico en inteligente: airfryer, cafetera, ventilador, televisor, cargador, plancha, lo que enchufes.<br>• Mides consumo<br>• Programas encendido/apagado<br>• Controlas desde app o por voz<br>¿Quieres cotizar unidades o un pack?`,
+        action: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' },
+        altAction: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' }
+      },
+      {
+        id: 'cleaning_robots',
+        keys: ['robot', 'robots', 'aspirador', 'aspiradora', 'roborock', 'roomba', 'limpieza automatica', 'limpieza automática', 'aspirado'],
+        response: `Buena opción 🧹. Trabajamos con <strong>robots aspiradores</strong> que se programan desde el móvil, mapean tu hogar y se recargan solos. Marcas como Roborock y Roomba son compatibles. Pueden integrarse con tu rutina de domótica: por ejemplo, activarse cuando sales de casa. ¿Te asesoro?`,
+        action: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' },
+        altAction: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' }
+      },
+      {
+        id: 'irrigation',
+        keys: ['riego', 'regar', 'plantas', 'jardin', 'jardín', 'exterior', 'exteriores', 'persiana exterior', 'somfy', 'delta dore', 'automatizacion exterior', 'automatización exterior'],
+        response: `Perfecto para exteriores 🌿. Ofrecemos:<br>• <strong>Riego inteligente:</strong> riega tus plantas según el clima, sin desperdiciar agua.<br>• <strong>Automatización de persianas:</strong> las mueve según la luz solar o tu horario.<br>• <strong>Control de accesos exteriores:</strong> portones, toldos, iluminación.<br>Marcas como Somfy y Delta Dore son compatibles. ¿Quieres una visita virtual para revisar tu espacio?`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' }
+      },
+      {
+        id: 'env_sensors_detail',
+        keys: ['humo', 'incendio', 'gas', 'fuga', 'fugas', 'inundacion', 'inundación', 'humedad', 'switchbot'],
+        response: `Muy buena prevención ⚠️. Tenemos <strong>sensores de entorno</strong> que te alertan al instante:<br>• <strong>Detector de humo:</strong> avisa ante posible incendio.<br>• <strong>Detector de gas:</strong> alerta fugas antes de que sean peligrosas.<br>• <strong>Sensor de fuga de agua:</strong> detecta inundaciones en cocina o baño.<br>• <strong>Humedad y temperatura:</strong> regula el clima interior.<br>Marcas como SwitchBot y Netatmo son compatibles.`,
+        action: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+        altAction: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' }
+      },
+      {
+        id: 'brands',
+        keys: ['marca', 'marcas', 'compatible', 'compatibles', 'compatibilidad', 'que marcas', 'qué marcas', 'nest', 'ring', 'tapo', 'roborock', 'roomba', 'verisure', 'somfy', 'netatmo', 'switchbot', 'danalock', 'delta dore'],
+        response: `Trabajamos con las marcas líderes del mercado 🏆:<br>• <strong>Asistentes:</strong> Alexa, Google Home, Apple HomeKit, SmartThings.<br>• <strong>Climatización:</strong> Nest, Netatmo, Alfred Smart.<br>• <strong>Seguridad:</strong> Ring, Tapo, Danalock, Verisure.<br>• <strong>Sensores:</strong> SwitchBot, Netatmo.<br>• <strong>Limpieza:</strong> Roborock, Roomba.<br>• <strong>Exteriores:</strong> Somfy, Delta Dore.<br>Si ya tienes alguna marca, podemos integrarla. ¿Quieres revisar tu caso con un asesor?`,
+        action: { label: 'Ver catálogo', icon: 'fa-solid fa-box', fn: 'scrollToCatalogo' },
+        altAction: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' }
+      },
+      {
+        id: 'goodbye',
+        keys: ['adios', 'adiós', 'chao', 'hasta luego', 'nos vemos', 'bye'],
+        response: `¡Hasta pronto! 🌙 Ha sido un placer. Recuerda que estoy aquí 24/7 cuando necesites volver. Que tengas un día maravilloso 💙.`,
+      },
+    ];
+
+    /* fallback fuera del array para garantizar respuesta */
+    const FALLBACK = {
+      response: `Entiendo tu inquietud, déjame ayudarte 💙. No tengo esa información puntual en este momento, pero nuestro equipo de soporte está disponible <strong>24/7 por WhatsApp</strong>. ¿Te gustaría que te conectemos con un asesor o agendar una videollamada gratuita?`,
+      action: { label: 'Hablar por WhatsApp', icon: 'fa-brands fa-whatsapp', fn: 'openWhatsApp', cls: 'wa' },
+      altAction: { label: 'Agendar videollamada', icon: 'fa-calendar-check', fn: 'openCalendly' },
+    };
+
+    function normalize(s) {
+      return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[¿?¡!.,;:]/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function findIntent(text) {
+      const n = normalize(text);
+      if (!n) return null;
+      let best = null, bestScore = 0;
+      for (const intent of INTENTS) {
+        for (const k of intent.keys) {
+          const nk = normalize(k);
+          if (n.includes(nk)) {
+            const score = nk.length;
+            if (score > bestScore) { bestScore = score; best = intent; }
+          }
+        }
+      }
+      return best;
+    }
+
+    const chatState = { lastIntent: null, msgCount: 0 };
+
+    function appendMsg(role, html, opts = {}) {
+      const wrap = document.getElementById('chat-messages');
+      const m = document.createElement('div');
+      m.className = 'msg ' + role;
+      const av = role === 'bot'
+        ? `<div class="msg-av"><i class="fa-solid fa-moon"></i></div>`
+        : `<div class="msg-av"><i class="fa-solid fa-user"></i></div>`;
+      let bubble = `<div class="msg-bubble">${html}`;
+      if (opts.action) {
+        const a = opts.action;
+        bubble += `<br><button class="msg-action ${a.cls || ''}" onclick="${a.fn}()"><i class="fa-solid ${a.icon}"></i> ${a.label}</button>`;
+      }
+      if (opts.altAction) {
+        const a = opts.altAction;
+        bubble += ` <button class="msg-action" onclick="${a.fn}()" style="background:rgba(0,240,255,.12);color:var(--c);box-shadow:none;border:1px solid rgba(0,240,255,.32)"><i class="fa-solid ${a.icon}"></i> ${a.label}</button>`;
+      }
+      bubble += `</div>`;
+      m.innerHTML = av + bubble;
+      wrap.appendChild(m);
+      wrap.scrollTop = wrap.scrollHeight;
+      chatState.msgCount++;
+    }
+
+    function appendTyping() {
+      const wrap = document.getElementById('chat-messages');
+      const m = document.createElement('div');
+      m.className = 'msg bot'; m.id = '__typing__';
+      m.innerHTML = `<div class="msg-av"><i class="fa-solid fa-moon"></i></div><div class="typing"><span></span><span></span><span></span></div>`;
+      wrap.appendChild(m);
+      wrap.scrollTop = wrap.scrollHeight;
+    }
+    function removeTyping() {
+      const t = document.getElementById('__typing__');
+      if (t) t.remove();
+    }
+
+    function renderQuick() {
+      const c = document.getElementById('chat-quick');
+      c.innerHTML = '';
+      LUNA_QUICK.forEach(q => {
+        const b = document.createElement('button');
+        b.className = 'qchip';
+        b.textContent = q;
+        b.onclick = () => sendUserMessage(q);
+        c.appendChild(b);
+      });
+    }
+
+    function sendUserMessage(text) {
+      const t = (text || '').trim();
+      if (!t) return;
+      appendMsg('user', t.replace(/[<>]/g, ''));
+      document.getElementById('chat-input').value = '';
+      setTimeout(() => {
+        appendTyping();
+        const intent = findIntent(t);
+        const reply = intent || FALLBACK;
+        const delay = 650 + Math.min(900, reply.response.length * 6);
+        setTimeout(() => {
+          removeTyping();
+          appendMsg('bot', reply.response, { action: reply.action, altAction: reply.altAction });
+          chatState.lastIntent = intent ? intent.id : 'fallback';
+        }, delay);
+      }, 180);
+    }
+
+    function initChatbot() {
+      const wrap = document.getElementById('chat-messages');
+      if (!wrap) return;
+      appendMsg('bot', LUNA_GREETING);
+      renderQuick();
+      const form = document.getElementById('chat-form');
+      const input = document.getElementById('chat-input');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        sendUserMessage(input.value);
+      });
+    }
+
+    /* TOAST */
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').innerHTML = msg;
+      t.classList.add('show'); clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initChatbot();
+      renderCatalog();
+      renderCart();
+      updateBadge();
+    });
+  </script>
+  <!-- MODAL RECAPTCHA -->
+  <div id="recaptcha-modal" class="recaptcha-modal" aria-hidden="true">
+    <div class="recaptcha-box">
+      <button id="recaptcha-close" class="recaptcha-close" aria-label="Cerrar">✕</button>
+      <h3>Verificación de seguridad</h3>
+      <p>Para continuar, confirma que no eres un robot. Esto protege tu conversación y nuestros canales de contacto.</p>
+      <div id="recaptcha-widget"></div>
+      <p id="recaptcha-error" class="recaptcha-error" style="display:none;"></p>
+    </div>
+  </div>
+
+<!-- MODAL RECAPTCHA -->
+<div id="recaptcha-modal" class="recaptcha-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="recaptcha-box">
+    <button id="recaptcha-close" class="recaptcha-close" aria-label="Cerrar">✕</button>
+    <h3>Verificación de seguridad</h3>
+    <p>Para continuar, confirma que no eres un robot. Esto protege tu conversación y nuestros canales de contacto.</p>
+    <div id="recaptcha-widget"></div>
+    <p id="recaptcha-error" class="recaptcha-error"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SITE_KEY = '6LeFegMuAAAAAJNTqsJTnzicgAuvCZl2J6vAKeD-';
+  var OK_KEY = 'recaptcha_ok_until';
+  var TTL = 30 * 60 * 1000;
+  var pending = null;
+  var widgetId = null;
+  var modal = document.getElementById('recaptcha-modal');
+  var wrap = document.getElementById('recaptcha-widget');
+  var errEl = document.getElementById('recaptcha-error');
+
+  function isVerified(){
+    var until = Number(sessionStorage.getItem(OK_KEY) || 0);
+    return Date.now() < until;
+  }
+  function markVerified(){
+    sessionStorage.setItem(OK_KEY, String(Date.now() + TTL));
+  }
+  function showErr(msg){ errEl.textContent = msg; errEl.style.display = 'block'; }
+  function clearErr(){ errEl.textContent = ''; errEl.style.display = 'none'; }
+  function ensureGrecaptcha(cb, tries){
+    tries = tries || 0;
+    if (window.grecaptcha && window.grecaptcha.render) return cb();
+    if (tries > 100) { showErr('No se pudo cargar la verificación. Recarga la página.'); return; }
+    setTimeout(function(){ ensureGrecaptcha(cb, tries + 1); }, 100);
+  }
+  function openModal(action){
+    pending = action;
+    clearErr();
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    ensureGrecaptcha(function(){
+      if (widgetId === null) {
+        widgetId = grecaptcha.render('recaptcha-widget', {
+          sitekey: SITE_KEY,
+          callback: onSuccess,
+          'expired-callback': function(){ grecaptcha.reset(widgetId); },
+          'error-callback': function(){ showErr('Error al cargar la verificación.'); }
+        });
+      } else {
+        grecaptcha.reset(widgetId);
+      }
+    });
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    pending = null;
+  }
+  function onSuccess(token){
+    fetch('/.netlify/functions/verify-recaptcha', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token })
+    }).then(function(r){ return r.json(); }).then(function(data){
+      if (!data.success) {
+        showErr('La verificación no fue válida. Intenta de nuevo.');
+        if (widgetId !== null) grecaptcha.reset(widgetId);
+        return;
+      }
+      markVerified();
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      var action = pending;
+      pending = null;
+      if (typeof action === 'function') action();
+    }).catch(function(){
+      showErr('No se pudo verificar. Revisa tu conexión e intenta de nuevo.');
+      if (widgetId !== null) grecaptcha.reset(widgetId);
+    });
+  }
+  function gate(action){
+    if (isVerified()) { action(); return; }
+    openModal(action);
+  }
+  document.getElementById('recaptcha-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+
+  var wrapped = false;
+  var attempts = 0;
+  function tryWrap(){
+    if (wrapped) return;
+    attempts++;
+    if (attempts > 50) { console.warn('[reCAPTCHA] No se pudieron envolver las funciones'); return; }
+    var wa = window.openWhatsApp;
+    var cal = window.openCalendly;
+    var msg = window.sendUserMessage;
+    if (typeof wa === 'function' && typeof cal === 'function' && typeof msg === 'function') {
+      window.openWhatsApp = function(){ var args = arguments; var ctx = this; gate(function(){ wa.apply(ctx, args); }); };
+      window.openCalendly = function(){ var args = arguments; var ctx = this; gate(function(){ cal.apply(ctx, args); }); };
+      window.sendUserMessage = function(){ var args = arguments; var ctx = this; gate(function(){ msg.apply(ctx, args); }); };
+      wrapped = true;
+      console.log('[reCAPTCHA] Gate instalado en WhatsApp, Calendly y Luna');
+    } else {
+      setTimeout(tryWrap, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryWrap);
+  } else {
+    tryWrap();
+  }
+})();
+</script>
+</body>
+
+</html>
