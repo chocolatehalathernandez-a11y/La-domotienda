@@ -2207,6 +2207,11 @@
 .recaptcha-close:hover{color:#fff}
 .recaptcha-error{color:#ff6b6b;font-size:.8rem;margin-top:.8rem;display:none}
 #recaptcha-widget{display:flex;justify-content:center;margin:1rem 0;min-height:78px}
+
+.social-links{display:flex;gap:.5rem;align-items:center}
+.social-links a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.2);color:#00F0FF;text-decoration:none;transition:all .25s ease}
+.social-links a:hover{background:rgba(0,240,255,.18);border-color:rgba(0,240,255,.55);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,240,255,.25)}
+.social-links a i{font-size:1rem}
 </style>
   <script type="application/ld+json">
 {
@@ -2557,6 +2562,14 @@
           <button onclick="openLegal('privacy')">Privacidad</button>
           <button onclick="openWhatsApp()">Contacto</button>
         </nav>
+        <div class="social-links">
+          <a href="https://www.instagram.com/ladomotienda" target="_blank" rel="noopener me" aria-label="Instagram de La Domotienda" title="Síguenos en Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://wa.me/573052332703" target="_blank" rel="noopener" aria-label="WhatsApp de La Domotienda" title="Escríbenos por WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+        </div>
         <p class="fcopy">© 2026 La Domotienda · Todos los derechos reservados</p>
       </div>
     </footer>
