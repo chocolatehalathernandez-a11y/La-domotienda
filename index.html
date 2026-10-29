@@ -2483,6 +2483,24 @@
       { id: 12, imgs: ['limpieza-exteriores 1', 'limpieza-exteriores 2'], name: 'Limpieza y exteriores', icon: 'fa-robot', col: '#6A5ACD', summary: 'Robots aspiradores, sistemas de riego inteligente y automatización de persianas. Tu hogar limpio, tus plantas regadas y cortinas moviéndose solas.', compatibility: 'Roborock · Roomba · Somfy · Delta Dore · App móvil', features: ['Robot aspirador', 'Trapeadora'], variants: ['Robot aspirador', 'Trapeadora'] },
     ];
 
+    // Función para el carrusel de imágenes
+    window.moveCarousel = function(btn, dir) {
+      const carousel = btn.closest('.prod-carousel');
+      if (!carousel) return;
+      
+      const imgs = carousel.querySelectorAll('.carousel-img');
+      if (imgs.length <= 1) return;
+      
+      let current = 0;
+      imgs.forEach((img, i) => { 
+        if (img.style.display !== 'none') current = i; 
+      });
+      
+      imgs[current].style.display = 'none';
+      let next = (current + dir + imgs.length) % imgs.length;
+      imgs[next].style.display = 'block';
+    };
+
     function renderCatalog() {
       const grid = document.getElementById('catalog-grid');
       if (!grid) return;
@@ -2534,16 +2552,7 @@
       });
     }
 
-    window.moveCarousel = function(btn, dir) {
-      const carousel = btn.closest('.prod-carousel');
-      const imgs = carousel.querySelectorAll('.carousel-img');
-      let current = 0;
-      imgs.forEach((img, i) => { if (img.style.display !== 'none') current = i; });
-      
-      imgs[current].style.display = 'none';
-      let next = (current + dir + imgs.length) % imgs.length;
-      imgs[next].style.display = 'block';
-    };
+    
 
 
     /* FAQ — visita virtual + originales relevantes + 20 nuevas */
