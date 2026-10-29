@@ -2439,7 +2439,6 @@
       const grid = document.getElementById('catalog-grid');
       if (!grid) return;
       grid.innerHTML = PRODUCTS.map(p => {
-        // Lógica para carrusel (si tiene p.imgs) o imagen única (p.img)
         const hasCarousel = Array.isArray(p.imgs) && p.imgs.length > 1;
         const images = hasCarousel ? p.imgs : [p.img || ''];
         
@@ -2492,7 +2491,6 @@
       });
     }
 
-    // Función para el carrusel
     window.moveCarousel = function(btn, dir) {
       const carousel = btn.closest('.prod-carousel');
       const imgs = carousel.querySelectorAll('.carousel-img');
@@ -2502,9 +2500,8 @@
       imgs[current].style.display = 'none';
       let next = (current + dir + imgs.length) % imgs.length;
       imgs[next].style.display = 'block';
-    };);
-      });
-    }
+    };
+
 
     /* FAQ — visita virtual + originales relevantes + 20 nuevas */
     const FAQS = [
