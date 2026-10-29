@@ -2200,7 +2200,25 @@
       width: 100% !important;
       position: relative !important;
     }
-  </style>
+  
+/* EN MÓVILES: La tarjeta cambia a un layout vertical (Imagen arriba, texto abajo) */
+    @media (max-width: 768px) {
+      .prod-img {
+        aspect-ratio: 1 / 1 !important; /* Imagen más cuadrada y alta */
+        border-radius: 12px 12px 0 0 !important;
+      }
+      .product-copy {
+        position: relative !important; /* Ya no flota sobre la imagen */
+        transform: none !important;
+        background: rgba(10, 20, 22, 0.95) !important;
+        padding: 1rem !important;
+        border-top: none !important;
+      }
+      .product-card {
+        background: #0d1a1c !important; /* Fondo sólido para toda la tarjeta */
+      }
+    }
+</style>
 </head>
 
 <body>
