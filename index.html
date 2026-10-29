@@ -2233,20 +2233,7 @@
         z-index: 15;
         border-radius: 12px;
       }
-      /* Botón de cerrar en móvil */
-      .mobile-close-btn {
-        display: flex !important;
-        position: absolute;
-        top: 10px; right: 10px;
-        background: rgba(255,255,255,0.1);
-        color: #fff;
-        border: 1px solid rgba(255,255,255,0.3);
-        width: 30px; height: 30px;
-        border-radius: 50%;
-        align-items: center; justify-content: center;
-        cursor: pointer;
-        z-index: 25;
-      }
+      
     }
 </style>
 </head>
@@ -2554,14 +2541,13 @@
       if (!grid) return;
       grid.innerHTML = PRODUCTS.map(p => {
         return `
-    <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}" onclick="if(window.innerWidth <= 768 && !event.target.closest('.btn-c, .btn-o, .variant-btn, .mobile-close-btn')) this.classList.toggle('active')">
+    <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}" onclick="if(window.innerWidth <= 768 && !event.target.closest('.btn-c, .btn-o, .variant-btn')) this.classList.toggle('active')">
       <div class="prod-img">
         <img src="assets/productos/${p.img}.png" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <i class="fa-solid ${p.icon}" aria-hidden="true" style="display:none;font-size:4rem;color:${p.col};position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)"></i>
         
         <!-- OVERLAY DENTRO DE LA IMAGEN -->
-        <button class="mobile-close-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
-        <div class="product-copy">
+                <div class="product-copy">
           <h3 style="margin-bottom:.3rem; font-size:1.1rem; color:#fff">${p.name}</h3>
           <p style="font-size:.8rem; margin-bottom:.5rem; line-height:1.4; color:#a0bcbe">${p.summary}</p>
           <div class="product-feats" style="margin-bottom:0">${p.features.map(feature => `<span class="feat" style="font-size:.7rem; padding:.2rem .4rem">${feature}</span>`).join('')}</div>
