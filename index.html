@@ -2201,21 +2201,51 @@
       position: relative !important;
     }
   
-/* EN MÓVILES: La tarjeta cambia a un layout vertical (Imagen arriba, texto abajo) */
+/* EN MÓVILES: Tocar la tarjeta para ver detalles */
     @media (max-width: 768px) {
       .prod-img {
-        aspect-ratio: 1 / 1 !important; /* Imagen más cuadrada y alta */
-        border-radius: 12px 12px 0 0 !important;
+        aspect-ratio: 4 / 3 !important;
+        border-radius: 12px !important;
       }
       .product-copy {
-        position: relative !important; /* Ya no flota sobre la imagen */
-        transform: none !important;
-        background: rgba(10, 20, 22, 0.95) !important;
-        padding: 1rem !important;
-        border-top: none !important;
+        position: absolute !important;
+        top: 0; left: 0; right: 0; bottom: 0;
+        transform: translateY(100%) !important; /* Oculto por defecto */
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease !important;
+        border-radius: 12px !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto; /* Scroll interno si el texto es muy largo */
+        z-index: 20 !important;
       }
-      .product-card {
-        background: #0d1a1c !important; /* Fondo sólido para toda la tarjeta */
+      /* Cuando la tarjeta tiene la clase 'active' */
+      .product-card.active .product-copy {
+        transform: translateY(0) !important;
+        opacity: 1;
+      }
+      /* Oscurecer un poco la imagen de fondo */
+      .product-card.active .prod-img::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: rgba(0,0,0,0.3);
+        z-index: 15;
+        border-radius: 12px;
+      }
+      /* Botón de cerrar en móvil */
+      .mobile-close-btn {
+        display: flex !important;
+        position: absolute;
+        top: 10px; right: 10px;
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.3);
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        align-items: center; justify-content: center;
+        cursor: pointer;
+        z-index: 25;
       }
     }
 </style>
@@ -2524,12 +2554,13 @@
       if (!grid) return;
       grid.innerHTML = PRODUCTS.map(p => {
         return `
-    <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}">
+    <article class="product-card" id="product-card-${p.id}" data-product-id="${p.id}" onclick="if(window.innerWidth <= 768 && !event.target.closest('.btn-c, .btn-o, .variant-btn, .mobile-close-btn')) this.classList.toggle('active')">
       <div class="prod-img">
         <img src="assets/productos/${p.img}.png" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
         <i class="fa-solid ${p.icon}" aria-hidden="true" style="display:none;font-size:4rem;color:${p.col};position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)"></i>
         
         <!-- OVERLAY DENTRO DE LA IMAGEN -->
+        <button class="mobile-close-btn" onclick="event.stopPropagation(); this.closest('.product-card').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
         <div class="product-copy">
           <h3 style="margin-bottom:.3rem; font-size:1.1rem; color:#fff">${p.name}</h3>
           <p style="font-size:.8rem; margin-bottom:.5rem; line-height:1.4; color:#a0bcbe">${p.summary}</p>
