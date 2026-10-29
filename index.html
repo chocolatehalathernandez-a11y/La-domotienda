@@ -2484,23 +2484,24 @@
     ];
 
     // Función para el carrusel de imágenes
+    
     window.moveCarousel = function(btn, dir) {
-      const carousel = btn.closest('.prod-carousel');
+      var carousel = btn.closest('.prod-carousel');
       if (!carousel) return;
       
-      const imgs = carousel.querySelectorAll('.carousel-img');
+      var imgs = Array.from(carousel.querySelectorAll('.carousel-img'));
       if (imgs.length <= 1) return;
       
-      let current = 0;
-      imgs.forEach((img, i) => { 
-        if (img.style.display !== 'none') current = i; 
-      });
+      var current = parseInt(carousel.getAttribute('data-index') || '0', 10);
       
       imgs[current].style.display = 'none';
-      let next = (current + dir + imgs.length) % imgs.length;
+      
+      var next = (current + dir + imgs.length) % imgs.length;
+      
       imgs[next].style.display = 'block';
+      carousel.setAttribute('data-index', next);
     };
-
+    
     function renderCatalog() {
       const grid = document.getElementById('catalog-grid');
       if (!grid) return;
@@ -2511,11 +2512,11 @@
         let imageHTML = '';
         if (hasCarousel) {
           imageHTML = `
-            <div class="prod-carousel">
+            <div class="prod-carousel" data-index="0">
               ${images.map((img, idx) => `
                 <img src="assets/productos/${img}.png" alt="${p.name} ${idx+1}" loading="lazy" class="carousel-img" style="display:${idx === 0 ? 'block' : 'none'};" onerror="this.style.display='none'">
               `).join('')}
-              <button type="button" class="carousel-prev" onclick="moveCarousel(this, -1)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:rgba(0,240,255,0.2);border:1px solid rgba(0,240,255,0.4);color:#00F0FF;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:15"><i class="fa-solid fa-chevron-left" style="font-size:12px"></i></button>
+              <button type="button" class="carousel-prev" onclick="event.stopPropagation(); moveCarousel(this, -1)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:rgba(0,240,255,0.2);border:1px solid rgba(0,240,255,0.4);color:#00F0FF;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:15"><i class="fa-solid fa-chevron-left" style="font-size:12px"></i></button>
               <button type="button" class="carousel-next" onclick="moveCarousel(this, 1)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(0,240,255,0.2);border:1px solid rgba(0,240,255,0.4);color:#00F0FF;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:15"><i class="fa-solid fa-chevron-right" style="font-size:12px"></i></button>
             </div>
           `;
