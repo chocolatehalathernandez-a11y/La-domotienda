@@ -2200,42 +2200,51 @@
       width: 100% !important;
       position: relative !important;
     }
-  
-/* EN MÓVILES: Tocar la tarjeta para ver detalles */
+
+    /* EN MÓVILES: Tocar la tarjeta para ver detalles */
     @media (max-width: 768px) {
       .prod-img {
         aspect-ratio: 4 / 3 !important;
         border-radius: 12px !important;
       }
+
       .product-copy {
         position: absolute !important;
-        top: 0; left: 0; right: 0; bottom: 0;
-        transform: translateY(100%) !important; /* Oculto por defecto */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transform: translateY(100%) !important;
+        /* Oculto por defecto */
         opacity: 0;
         transition: transform 0.3s ease, opacity 0.3s ease !important;
         border-radius: 12px !important;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        overflow-y: auto; /* Scroll interno si el texto es muy largo */
+        overflow-y: auto;
+        /* Scroll interno si el texto es muy largo */
         z-index: 20 !important;
       }
+
       /* Cuando la tarjeta tiene la clase 'active' */
       .product-card.active .product-copy {
         transform: translateY(0) !important;
         opacity: 1;
       }
+
       /* Oscurecer un poco la imagen de fondo */
       .product-card.active .prod-img::after {
         content: '';
-        position: absolute; inset: 0;
-        background: rgba(0,0,0,0.3);
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
         z-index: 15;
         border-radius: 12px;
       }
-      
+
     }
-</style>
+  </style>
 </head>
 
 <body>
@@ -2515,7 +2524,7 @@
   <script>
     'use strict';
 
-    const WHATSAPP_NUMBER = '573052332703';
+    const WHATSAPP_NUMBER = '573053146510';
     const CALENDLY_URL = 'https://calendly.com/famhalat01/30min?background_color=000000&text_color=ffffff&primary_color=00f8ff';
 
     /* PRODUCTOS (sin precios visibles) */
@@ -2535,7 +2544,7 @@
 
     // Función para el carrusel de imágenes
 
-    
+
     function renderCatalog() {
       const grid = document.getElementById('catalog-grid');
       if (!grid) return;
@@ -2561,7 +2570,7 @@
     </article>
   `;
       }).join('');
-      
+
       grid.querySelectorAll('.variant-row').forEach(row => {
         row.querySelectorAll('.variant-btn').forEach(button => {
           button.addEventListener('click', () => {
@@ -2701,7 +2710,7 @@
       <p>Podemos modificar estos términos en cualquier momento. La versión vigente será siempre la publicada en este sitio.</p>
 
       <h4>9. Contacto</h4>
-      <p>Para cualquier consulta sobre estos términos, escríbenos por WhatsApp al <strong>+57 305 233 2703</strong>.</p>
+      <p>Para cualquier consulta sobre estos términos, escríbenos por WhatsApp al <strong>+57 305 314 6510</strong>.</p>
     `
       },
       privacy: {
@@ -2731,7 +2740,7 @@
       <p>No vendemos ni cedemos tus datos a terceros con fines comerciales. Solo compartimos información con proveedores estrictamente necesarios para la prestación del servicio (Calendly para agendamiento, WhatsApp para comunicación).</p>
 
       <h4>6. Tus derechos</h4>
-      <p>Conforme a la Ley 1581 de 2012 (Habeas Data) puedes ejercer en cualquier momento tus derechos de <strong>acceso, rectificación, actualización, supresión</strong> y revocación de la autorización, escribiéndonos por WhatsApp al <strong>+57 305 233 2703</strong>.</p>
+      <p>Conforme a la Ley 1581 de 2012 (Habeas Data) puedes ejercer en cualquier momento tus derechos de <strong>acceso, rectificación, actualización, supresión</strong> y revocación de la autorización, escribiéndonos por WhatsApp al <strong>+57 305 314 6510</strong>.</p>
 
       <h4>7. Seguridad</h4>
       <p>Aplicamos medidas técnicas y organizativas razonables para proteger tu información de accesos no autorizados, pérdida o alteración.</p>
@@ -3309,10 +3318,10 @@
       renderCart();
       updateBadge();
     });
-  
-    
 
-</script>
+
+
+  </script>
 </body>
 
 </html>
